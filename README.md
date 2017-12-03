@@ -1,4 +1,4 @@
-Incursion del rio
+Incursión del rio
 =================
 
 A single-frame River Raid clone for Vector-06c home computer.
