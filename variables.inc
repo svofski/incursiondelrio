@@ -61,41 +61,46 @@ foe_8:
     ; terrain data
     ; terrain_left, terrain_water must be one word
 terrain_current:            
-terrain_left:               db 4
-terrain_water:              db 12 ; 24
-terrain_islandwidth:        db 0
+terrain_left:           db 4
+terrain_water:          db 12 ; 24
+terrain_islandwidth:    db 0
 
 terrain_next:
 terrain_next_left:          db 4
 terrain_next_water:         db 24
 terrain_next_islandwidth:   db 0
 
-pf_next_bridgeflag:         db 0
-pf_next1_bridgeflag:        db 0
+pf_next_bridgeflag:     db 0
+pf_next1_bridgeflag:    db 0
 
 terrain_act:
-terrain_act_left:           db 4
-terrain_act_water:          db 24
-terrain_act_islandwidth:    db 0
+terrain_act_left:       db 4
+terrain_act_water:      db 24
+terrain_act_islandwidth:db 0
 
 ; current block in level (max=BLOCKS_IN_LEVEL)
-pf_blockcount:              db 1
-pf_bridgeflag:              db 0
-pf_roadflag:                db 0
-pf_blockline:               db 0
+pf_blockcount:          db 1
+pf_bridgeflag:          db 0
+pf_roadflag:            db 0
+pf_blockline:           db 0
 
 
-foe_left:                   db 0
-foe_water:                  db 0
-foe_right:                  db 0
+foe_left:               db 0
+foe_water:              db 0
+foe_right:              db 0
 
-foe_clearance:              db 1
+foe_clearance:          db 1
 
+                        ;
+                        ; input map: $ff = key/button down
+                        ; sizeof(inputs) = 6
 inputs:                     
-input_down:                 db 0
-input_right:                db 0
-input_up:                   db 0
-input_left:                 db 0
+input_down:             db 0
+input_right:            db 0
+input_up:               db 0
+input_left:             db 0
+input_fire:             db 0
+input_dummy:            db 0
 
 ; vi:syntax=m80
 ; vi:ts=8

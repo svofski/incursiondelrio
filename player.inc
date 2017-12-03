@@ -252,7 +252,7 @@ psw_layer:
 	mov a, b
 	cma  			; a = mask
 	ana m 			; a = m & mask
-					; collision = m != (m & mask)
+			        ; collision = m != (m & mask)
 	cmp m
 	jz .+4
 	inr d
