@@ -55,19 +55,44 @@ ss_silence:
 	out I8253_CH0
 	ret
 
+;        ; this version sounds FANTASTIC on high speed, for a toy robot
+;SoundNoise:
+;	call nextRandomSnd
+;	lda playerYspeed
+;        ora a  
+;        rlc
+;	sui YSPEED_DEFAULT
+;	cma
+;	adi $80
+;	mov b, a
+;	;mvi b, $80
+;	lda random_sndLo
+;	ani $3f
+;	add b
+;	out I8253_CH1
+;	ret
+
+
 SoundNoise:
-	call nextRandomSnd
+        call nextRandomSnd
+
 	lda playerYspeed
+        ora a
+        rrc
+        rrc
+        ani $3f
 	sui YSPEED_DEFAULT
 	cma
 	adi $80
-	mov b, a
-	;mvi b, $80
-	lda random_sndLo
-	ani $3f
-	add b
+        ; this randomizer makes sound less boring, but it sucks
+        mov b, a
+        lda random_sndLo
+        cmp b
+        jm $+4
+        mov a, b
 	out I8253_CH1
 	ret
+
 
 SoundFadeOut:
 	push d 
@@ -152,3 +177,8 @@ nextRandomSnd:
 random_snd:
 random_sndLo:	db $14
 random_sndHi:	db $a8
+
+
+; vi:syntax=m80
+; vi:ts=8
+; vi:sts=8

@@ -132,9 +132,6 @@ jamas_1:
     lxi d, foe_3
     call foe_in_de
     lxi d, foe_4
-
-    call SoundNoise
-
     call foe_in_de
     lxi d, foe_5
     call foe_in_de
