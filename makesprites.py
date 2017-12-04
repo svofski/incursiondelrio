@@ -48,10 +48,12 @@ class Sprite:
         print '\tlxi h, 0'
         print '\tdad sp'
         print '\tshld %s+1' % returnLabel   
-        #print '\t.nolist' 
+        print '\t.nolist' 
 
         if not self.isWhite():
-            layer = self.makeLayer('13578', shift, orientation)     # layer 0
+            #layer = self.makeLayer('13578', shift, orientation)     # layer 0
+            # not sure about inclusion of 8 in this, 8 is useful as non-colliding black
+            layer = self.makeLayer('1357', shift, orientation)     # layer 0
             if (len(layer) > 0):
                 print ';; layer 0 (8000)'
                 print '\tmov h, d'        
@@ -519,6 +521,63 @@ class PlayerBank(BlitSprite):
 #class PlayerBankL(PlayerBank):
 #    def getName(self): return "player_bl"
 
+class Debris(Sprite):
+    def getDirections(self): return ['ltr']
+
+    def isDoubleWidth(false):
+        return False
+
+class Debris1(Debris):
+    pic = ['                ',
+           '                ',
+           '       8        ',
+           '     8 8 88     ', 
+           '      8 8       ', 
+           '     8  8 8     ',
+           '      8         ',
+           '                ']
+
+    def getName(self):
+        return "debris1"
+
+class Debris2(Debris):
+    pic = ['                ',
+           '                ',
+           '       8        ',
+           '  8  8  8 8     ', 
+           '      8 8       ', 
+           '     8    8     ',
+           '                ',
+           '                ']
+
+    def getName(self):
+        return "debris2"
+
+class Debris3(Debris):
+    pic = ['                ',
+           '    8           ',
+           '       8     8  ',
+           '  8  8    8     ', 
+           '        8       ', 
+           '     8    8     ',
+           '                ',
+           '                ']
+
+    def getName(self):
+        return "debris3"
+
+class Debris4(Debris):
+    pic = ['   8            ',
+           '          8     ',
+           '       8     8  ',
+           '8   8           ', 
+           '        8   8   ', 
+           '                ',
+           '   8       8    ',
+           '                ']
+
+    def getName(self):
+        return "debris4"
 
 
         
@@ -545,6 +604,10 @@ Euuuu().makeAll()
 Luuuu().makeAll()
 PlayerStraight().makeAll()
 PlayerBank().makeAll()
+Debris1().makeAll()
+Debris2().makeAll()
+Debris3().makeAll()
+Debris4().makeAll()
 print '.list'
 
 

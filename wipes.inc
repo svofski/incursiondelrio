@@ -256,6 +256,34 @@ wipe_fuel_ret:
         lxi sp, 0
         ret
 
+wipe_debris:
+    mov a, e
+    adi 4
+    mov e, a
+    lxi h, 0
+    dad sp
+    shld wipe_debris_ret+1
+;; layer 3 (e000)
+    lxi h, $6000
+    dad d
+    ;xchg
+    sphl
+    lxi b, 0
+
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
+
+wipe_debris_ret:
+    lxi sp, 0
+    ret
+
 
 ; vi:syntax=m80
 ; vi:ts=8

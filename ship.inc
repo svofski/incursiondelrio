@@ -15,6 +15,7 @@ ship_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld ship_ltr_inf_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -166,6 +167,7 @@ ship_ltr0:
 	lxi h, 0
 	dad sp
 	shld ship_ltr0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -300,6 +302,7 @@ ship_ltr1:
 	lxi h, 0
 	dad sp
 	shld ship_ltr1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -452,6 +455,7 @@ ship_ltr2:
 	lxi h, 0
 	dad sp
 	shld ship_ltr2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -600,6 +604,7 @@ ship_ltr3:
 	lxi h, 0
 	dad sp
 	shld ship_ltr3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -750,6 +755,7 @@ ship_ltr4:
 	lxi h, 0
 	dad sp
 	shld ship_ltr4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -900,6 +906,7 @@ ship_ltr5:
 	lxi h, 0
 	dad sp
 	shld ship_ltr5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1050,6 +1057,7 @@ ship_ltr6:
 	lxi h, 0
 	dad sp
 	shld ship_ltr6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1198,6 +1206,7 @@ ship_ltr7:
 	lxi h, 0
 	dad sp
 	shld ship_ltr7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1363,6 +1372,7 @@ ship_rtl0:
 	lxi h, 0
 	dad sp
 	shld ship_rtl0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1514,6 +1524,7 @@ ship_rtl1:
 	lxi h, 0
 	dad sp
 	shld ship_rtl1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1668,6 +1679,7 @@ ship_rtl2:
 	lxi h, 0
 	dad sp
 	shld ship_rtl2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1816,6 +1828,7 @@ ship_rtl3:
 	lxi h, 0
 	dad sp
 	shld ship_rtl3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -1966,6 +1979,7 @@ ship_rtl4:
 	lxi h, 0
 	dad sp
 	shld ship_rtl4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2116,6 +2130,7 @@ ship_rtl5:
 	lxi h, 0
 	dad sp
 	shld ship_rtl5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2266,6 +2281,7 @@ ship_rtl6:
 	lxi h, 0
 	dad sp
 	shld ship_rtl6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2414,6 +2430,7 @@ ship_rtl7:
 	lxi h, 0
 	dad sp
 	shld ship_rtl7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2578,6 +2595,7 @@ copter_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld copter_ltr_inf_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2706,6 +2724,7 @@ copter_ltr0:
 	lxi h, 0
 	dad sp
 	shld copter_ltr0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2813,6 +2832,7 @@ copter_ltr1:
 	lxi h, 0
 	dad sp
 	shld copter_ltr1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -2944,6 +2964,7 @@ copter_ltr2:
 	lxi h, 0
 	dad sp
 	shld copter_ltr2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3075,6 +3096,7 @@ copter_ltr3:
 	lxi h, 0
 	dad sp
 	shld copter_ltr3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3212,6 +3234,7 @@ copter_ltr4:
 	lxi h, 0
 	dad sp
 	shld copter_ltr4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3349,6 +3372,7 @@ copter_ltr5:
 	lxi h, 0
 	dad sp
 	shld copter_ltr5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3486,6 +3510,7 @@ copter_ltr6:
 	lxi h, 0
 	dad sp
 	shld copter_ltr6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3621,6 +3646,7 @@ copter_ltr7:
 	lxi h, 0
 	dad sp
 	shld copter_ltr7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3767,6 +3793,7 @@ copter_rtl0:
 	lxi h, 0
 	dad sp
 	shld copter_rtl0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -3895,6 +3922,7 @@ copter_rtl1:
 	lxi h, 0
 	dad sp
 	shld copter_rtl1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4030,6 +4058,7 @@ copter_rtl2:
 	lxi h, 0
 	dad sp
 	shld copter_rtl2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4165,6 +4194,7 @@ copter_rtl3:
 	lxi h, 0
 	dad sp
 	shld copter_rtl3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4302,6 +4332,7 @@ copter_rtl4:
 	lxi h, 0
 	dad sp
 	shld copter_rtl4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4439,6 +4470,7 @@ copter_rtl5:
 	lxi h, 0
 	dad sp
 	shld copter_rtl5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4576,6 +4608,7 @@ copter_rtl6:
 	lxi h, 0
 	dad sp
 	shld copter_rtl6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4707,6 +4740,7 @@ copter_rtl7:
 	lxi h, 0
 	dad sp
 	shld copter_rtl7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4850,6 +4884,7 @@ redcopter_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr_inf_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4924,6 +4959,7 @@ redcopter_ltr0:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -4987,6 +5023,7 @@ redcopter_ltr1:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5063,6 +5100,7 @@ redcopter_ltr2:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5139,6 +5177,7 @@ redcopter_ltr3:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5217,6 +5256,7 @@ redcopter_ltr4:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5295,6 +5335,7 @@ redcopter_ltr5:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5373,6 +5414,7 @@ redcopter_ltr6:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5450,6 +5492,7 @@ redcopter_ltr7:
 	lxi h, 0
 	dad sp
 	shld redcopter_ltr7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5538,6 +5581,7 @@ redcopter_rtl0:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl0_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5612,6 +5656,7 @@ redcopter_rtl1:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl1_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5689,6 +5734,7 @@ redcopter_rtl2:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl2_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5766,6 +5812,7 @@ redcopter_rtl3:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl3_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5844,6 +5891,7 @@ redcopter_rtl4:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl4_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -5922,6 +5970,7 @@ redcopter_rtl5:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl5_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -6000,6 +6049,7 @@ redcopter_rtl6:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl6_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -6076,6 +6126,7 @@ redcopter_rtl7:
 	lxi h, 0
 	dad sp
 	shld redcopter_rtl7_ret+1
+	.nolist
 ;; layer 0 (8000)
 	mov h, d
 	mov l, e
@@ -6164,6 +6215,7 @@ propellerA_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr_inf_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6198,6 +6250,7 @@ propellerA_ltr0:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6227,6 +6280,7 @@ propellerA_ltr1:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr1_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6263,6 +6317,7 @@ propellerA_ltr2:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr2_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6299,6 +6354,7 @@ propellerA_ltr3:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr3_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6334,6 +6390,7 @@ propellerA_ltr4:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6369,6 +6426,7 @@ propellerA_ltr5:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr5_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6404,6 +6462,7 @@ propellerA_ltr6:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr6_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6439,6 +6498,7 @@ propellerA_ltr7:
 	lxi h, 0
 	dad sp
 	shld propellerA_ltr7_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6484,6 +6544,7 @@ propellerA_rtl0:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6518,6 +6579,7 @@ propellerA_rtl1:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl1_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6552,6 +6614,7 @@ propellerA_rtl2:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl2_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6587,6 +6650,7 @@ propellerA_rtl3:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl3_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6622,6 +6686,7 @@ propellerA_rtl4:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6657,6 +6722,7 @@ propellerA_rtl5:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl5_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6692,6 +6758,7 @@ propellerA_rtl6:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl6_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6728,6 +6795,7 @@ propellerA_rtl7:
 	lxi h, 0
 	dad sp
 	shld propellerA_rtl7_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6776,6 +6844,7 @@ propellerB_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr_inf_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6811,6 +6880,7 @@ propellerB_ltr0:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6841,6 +6911,7 @@ propellerB_ltr1:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr1_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6877,6 +6948,7 @@ propellerB_ltr2:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr2_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6913,6 +6985,7 @@ propellerB_ltr3:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr3_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6947,6 +7020,7 @@ propellerB_ltr4:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -6981,6 +7055,7 @@ propellerB_ltr5:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr5_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7016,6 +7091,7 @@ propellerB_ltr6:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr6_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7051,6 +7127,7 @@ propellerB_ltr7:
 	lxi h, 0
 	dad sp
 	shld propellerB_ltr7_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7097,6 +7174,7 @@ propellerB_rtl0:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7132,6 +7210,7 @@ propellerB_rtl1:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl1_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7167,6 +7246,7 @@ propellerB_rtl2:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl2_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7202,6 +7282,7 @@ propellerB_rtl3:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl3_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7237,6 +7318,7 @@ propellerB_rtl4:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7271,6 +7353,7 @@ propellerB_rtl5:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl5_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7305,6 +7388,7 @@ propellerB_rtl6:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl6_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7341,6 +7425,7 @@ propellerB_rtl7:
 	lxi h, 0
 	dad sp
 	shld propellerB_rtl7_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7389,6 +7474,7 @@ jet_ltr_inf:
 	lxi h, 0
 	dad sp
 	shld jet_ltr_inf_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7431,6 +7517,7 @@ jet_ltr0:
 	lxi h, 0
 	dad sp
 	shld jet_ltr0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7473,6 +7560,7 @@ jet_ltr4:
 	lxi h, 0
 	dad sp
 	shld jet_ltr4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7533,6 +7621,7 @@ jet_rtl0:
 	lxi h, 0
 	dad sp
 	shld jet_rtl0_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7581,6 +7670,7 @@ jet_rtl4:
 	lxi h, 0
 	dad sp
 	shld jet_rtl4_ret+1
+	.nolist
 	xchg
 	lxi d, $4000
 	dad d
@@ -7644,6 +7734,7 @@ bridgeTop_ltr0:
 	lxi h, 0
 	dad sp
 	shld bridgeTop_ltr0_ret+1
+	.nolist
 ;; layer 2 (c000)
 	lxi h, $4000
 	dad d
@@ -7804,6 +7895,7 @@ bridgeBottom_ltr0:
 	lxi h, 0
 	dad sp
 	shld bridgeBottom_ltr0_ret+1
+	.nolist
 ;; layer 2 (c000)
 	lxi h, $4000
 	dad d
@@ -7964,6 +8056,7 @@ fuuuu_ltr0:
 	lxi h, 0
 	dad sp
 	shld fuuuu_ltr0_ret+1
+	.nolist
 ;; layer 1 (a000)
 	lxi h, $2000
 	dad d
@@ -8026,6 +8119,7 @@ uuuuu_ltr0:
 	lxi h, 0
 	dad sp
 	shld uuuuu_ltr0_ret+1
+	.nolist
 ;; layer 2 (c000)
 	lxi h, $4000
 	dad d
@@ -8088,6 +8182,7 @@ euuuu_ltr0:
 	lxi h, 0
 	dad sp
 	shld euuuu_ltr0_ret+1
+	.nolist
 ;; layer 1 (a000)
 	lxi h, $2000
 	dad d
@@ -8149,6 +8244,7 @@ luuuu_ltr0:
 	lxi h, 0
 	dad sp
 	shld luuuu_ltr0_ret+1
+	.nolist
 ;; layer 2 (c000)
 	lxi h, $4000
 	dad d
@@ -8357,4 +8453,1562 @@ player_bank_rtl7:
 	dw $0000, $0000, $0000, $0000, $0000, $0000, $0303, $0303, $0707, $0f1f, $1b03, $070e, $0000, $0080, $c0e0, $7000, $0080, $c000,
 
 ;; end of sprite group player_bank
+debris1_ltr_dispatch:
+	dw debris1_ltr_inf
+	dw debris1_ltr0
+	dw debris1_ltr1
+	dw debris1_ltr2
+	dw debris1_ltr3
+	dw debris1_ltr4
+	dw debris1_ltr5
+	dw debris1_ltr6
+	dw debris1_ltr7
+debris1_ltr_spritegroup:
+debris1_ltr_inf:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr_inf_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[               8        ] 0000000100
+;[             8 8 88     ] 0000000560
+;[              8 8       ] 0000000280
+;[             8  8 8     ] 00000004a0
+;[              8         ] 0000000200
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0105
+	push h
+	lxi h, $0204
+	push h
+	lxi h, $0200
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0060
+	push h
+	lxi h, $80a0
+	push h
+	push b
+
+debris1_ltr_inf_ret:
+	lxi sp, 0
+	ret
+debris1_ltr0:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr0_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                ] 0000000000
+;[                ] 0000000000
+;[       8        ] 0000000100
+;[     8 8 88     ] 0000000560
+;[      8 8       ] 0000000280
+;[     8  8 8     ] 00000004a0
+;[      8         ] 0000000200
+;[                ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	lxi h, $0105
+	push h
+	lxi h, $0204
+	push h
+	lxi h, $0200
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0060
+	push h
+	lxi h, $80a0
+	push h
+	push b
+
+debris1_ltr0_ret:
+	lxi sp, 0
+	ret
+debris1_ltr1:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr1_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[        8               ] 0000008000
+;[      8 8 88            ] 000002b000
+;[       8 8              ] 0000014000
+;[      8  8 8            ] 0000025000
+;[       8                ] 0000010000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	lxi h, $0002
+	push h
+	lxi h, $0102
+	push h
+	lxi h, $0100
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $80b0
+	push h
+	lxi h, $4050
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris1_ltr1_ret:
+	lxi sp, 0
+	ret
+debris1_ltr2:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr2_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[         8              ] 0000004000
+;[       8 8 88           ] 0000015800
+;[        8 8             ] 000000a000
+;[       8  8 8           ] 0000012800
+;[        8               ] 0000008000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	lxi h, $0001
+	push h
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $4058
+	push h
+	lxi h, $a028
+	push h
+	lxi h, $8000
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris1_ltr2_ret:
+	lxi sp, 0
+	ret
+debris1_ltr3:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr3_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[          8             ] 0000002000
+;[        8 8 88          ] 000000ac00
+;[         8 8            ] 0000005000
+;[        8  8 8          ] 0000009400
+;[         8              ] 0000004000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $20ac
+	push h
+	lxi h, $5094
+	push h
+	lxi h, $4000
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris1_ltr3_ret:
+	lxi sp, 0
+	ret
+debris1_ltr4:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr4_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[           8            ] 0000001000
+;[         8 8 88         ] 0000005600
+;[          8 8           ] 0000002800
+;[         8  8 8         ] 0000004a00
+;[          8             ] 0000002000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $1056
+	push h
+	lxi h, $284a
+	push h
+	lxi h, $2000
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris1_ltr4_ret:
+	lxi sp, 0
+	ret
+debris1_ltr5:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr5_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[            8           ] 0000000800
+;[          8 8 88        ] 0000002b00
+;[           8 8          ] 0000001400
+;[          8  8 8        ] 0000002500
+;[           8            ] 0000001000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $082b
+	push h
+	lxi h, $1425
+	push h
+	lxi h, $1000
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris1_ltr5_ret:
+	lxi sp, 0
+	ret
+debris1_ltr6:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr6_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[             8          ] 0000000400
+;[           8 8 88       ] 0000001580
+;[            8 8         ] 0000000a00
+;[           8  8 8       ] 0000001280
+;[            8           ] 0000000800
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0415
+	push h
+	lxi h, $0a12
+	push h
+	lxi h, $0800
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0080
+	push h
+	push h
+	push b
+
+debris1_ltr6_ret:
+	lxi sp, 0
+	ret
+debris1_ltr7:
+	lxi h, 0
+	dad sp
+	shld debris1_ltr7_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[              8         ] 0000000200
+;[            8 8 88      ] 0000000ac0
+;[             8 8        ] 0000000500
+;[            8  8 8      ] 0000000940
+;[             8          ] 0000000400
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $020a
+	push h
+	lxi h, $0509
+	push h
+	lxi h, $0400
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $00c0
+	push h
+	lxi h, $0040
+	push h
+	push b
+
+debris1_ltr7_ret:
+	lxi sp, 0
+	ret
+;; end of sprite group debris1
+debris2_ltr_dispatch:
+	dw debris2_ltr_inf
+	dw debris2_ltr0
+	dw debris2_ltr1
+	dw debris2_ltr2
+	dw debris2_ltr3
+	dw debris2_ltr4
+	dw debris2_ltr5
+	dw debris2_ltr6
+	dw debris2_ltr7
+debris2_ltr_spritegroup:
+debris2_ltr_inf:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr_inf_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[               8        ] 0000000100
+;[          8  8  8 8     ] 00000024a0
+;[              8 8       ] 0000000280
+;[             8    8     ] 0000000420
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0124
+	push h
+	lxi h, $0204
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $00a0
+	push h
+	lxi h, $8020
+	push h
+
+debris2_ltr_inf_ret:
+	lxi sp, 0
+	ret
+debris2_ltr0:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr0_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                ] 0000000000
+;[                ] 0000000000
+;[       8        ] 0000000100
+;[  8  8  8 8     ] 00000024a0
+;[      8 8       ] 0000000280
+;[     8    8     ] 0000000420
+;[                ] 0000000000
+;[                ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0124
+	push h
+	lxi h, $0204
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $00a0
+	push h
+	lxi h, $8020
+	push h
+
+debris2_ltr0_ret:
+	lxi sp, 0
+	ret
+debris2_ltr1:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr1_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[        8               ] 0000008000
+;[   8  8  8 8            ] 0000125000
+;[       8 8              ] 0000014000
+;[      8    8            ] 0000021000
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0012
+	push h
+	lxi h, $0102
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $8050
+	push h
+	lxi h, $4010
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	push b
+	push b
+
+debris2_ltr1_ret:
+	lxi sp, 0
+	ret
+debris2_ltr2:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr2_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[         8              ] 0000004000
+;[    8  8  8 8           ] 0000092800
+;[        8 8             ] 000000a000
+;[       8    8           ] 0000010800
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0009
+	push h
+	lxi h, $0001
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $4028
+	push h
+	lxi h, $a008
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	push b
+	push b
+
+debris2_ltr2_ret:
+	lxi sp, 0
+	ret
+debris2_ltr3:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr3_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[          8             ] 0000002000
+;[     8  8  8 8          ] 0000049400
+;[         8 8            ] 0000005000
+;[        8    8          ] 0000008400
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0004
+	push h
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $2094
+	push h
+	lxi h, $5084
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	push b
+	push b
+
+debris2_ltr3_ret:
+	lxi sp, 0
+	ret
+debris2_ltr4:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr4_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[           8            ] 0000001000
+;[      8  8  8 8         ] 0000024a00
+;[          8 8           ] 0000002800
+;[         8    8         ] 0000004200
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0002
+	push h
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $104a
+	push h
+	lxi h, $2842
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	push b
+	push b
+
+debris2_ltr4_ret:
+	lxi sp, 0
+	ret
+debris2_ltr5:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr5_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[            8           ] 0000000800
+;[       8  8  8 8        ] 0000012500
+;[           8 8          ] 0000001400
+;[          8    8        ] 0000002100
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	lxi h, $0001
+	push h
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0825
+	push h
+	lxi h, $1421
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	push b
+	push b
+
+debris2_ltr5_ret:
+	lxi sp, 0
+	ret
+debris2_ltr6:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr6_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[             8          ] 0000000400
+;[        8  8  8 8       ] 0000009280
+;[            8 8         ] 0000000a00
+;[           8    8       ] 0000001080
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0492
+	push h
+	lxi h, $0a10
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0080
+	push h
+	push h
+
+debris2_ltr6_ret:
+	lxi sp, 0
+	ret
+debris2_ltr7:
+	lxi h, 0
+	dad sp
+	shld debris2_ltr7_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[                        ] 0000000000
+;[              8         ] 0000000200
+;[         8  8  8 8      ] 0000004940
+;[             8 8        ] 0000000500
+;[            8    8      ] 0000000840
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 1 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0249
+	push h
+	lxi h, $0508
+	push h
+	lxi h, 256+4
+	dad sp
+	sphl
+	lxi h, $0040
+	push h
+	push h
+
+debris2_ltr7_ret:
+	lxi sp, 0
+	ret
+;; end of sprite group debris2
+debris3_ltr_dispatch:
+	dw debris3_ltr_inf
+	dw debris3_ltr0
+	dw debris3_ltr1
+	dw debris3_ltr2
+	dw debris3_ltr3
+	dw debris3_ltr4
+	dw debris3_ltr5
+	dw debris3_ltr6
+	dw debris3_ltr7
+debris3_ltr_spritegroup:
+debris3_ltr_inf:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr_inf_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[            8           ] 0000000800
+;[               8     8  ] 0000000104
+;[          8  8    8     ] 0000002420
+;[                8       ] 0000000080
+;[             8    8     ] 0000000420
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0008
+	push h
+	lxi h, $0124
+	push h
+	lxi h, $0004
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $0420
+	push h
+	lxi h, $8020
+	push h
+
+debris3_ltr_inf_ret:
+	lxi sp, 0
+	ret
+debris3_ltr0:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr0_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                ] 0000000000
+;[    8           ] 0000000800
+;[       8     8  ] 0000000104
+;[  8  8    8     ] 0000002420
+;[        8       ] 0000000080
+;[     8    8     ] 0000000420
+;[                ] 0000000000
+;[                ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	lxi h, $0008
+	push h
+	lxi h, $0124
+	push h
+	lxi h, $0004
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $0420
+	push h
+	lxi h, $8020
+	push h
+
+debris3_ltr0_ret:
+	lxi sp, 0
+	ret
+debris3_ltr1:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr1_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[     8                  ] 0000040000
+;[        8     8         ] 0000008200
+;[   8  8    8            ] 0000121000
+;[         8              ] 0000004000
+;[      8    8            ] 0000021000
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	lxi h, $0004
+	push h
+	lxi h, $0012
+	push h
+	lxi h, $0002
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $8210
+	push h
+	lxi h, $4010
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris3_ltr1_ret:
+	lxi sp, 0
+	ret
+debris3_ltr2:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr2_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[      8                 ] 0000020000
+;[         8     8        ] 0000004100
+;[    8  8    8           ] 0000090800
+;[          8             ] 0000002000
+;[       8    8           ] 0000010800
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	lxi h, $0002
+	push h
+	lxi h, $0009
+	push h
+	lxi h, $0001
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $4108
+	push h
+	lxi h, $2008
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+
+debris3_ltr2_ret:
+	lxi sp, 0
+	ret
+debris3_ltr3:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr3_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[       8                ] 0000010000
+;[          8     8       ] 0000002080
+;[     8  8    8          ] 0000048400
+;[           8            ] 0000001000
+;[        8    8          ] 0000008400
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	lxi h, $0001
+	push h
+	lxi h, $0004
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $2084
+	push h
+	lxi h, $1084
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $8000
+	push h
+	push b
+
+debris3_ltr3_ret:
+	lxi sp, 0
+	ret
+debris3_ltr4:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr4_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[        8               ] 0000008000
+;[           8     8      ] 0000001040
+;[      8  8    8         ] 0000024200
+;[            8           ] 0000000800
+;[         8    8         ] 0000004200
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	push b
+	lxi h, $0002
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0080
+	push h
+	lxi h, $1042
+	push h
+	lxi h, $0842
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $4000
+	push h
+	push b
+
+debris3_ltr4_ret:
+	lxi sp, 0
+	ret
+debris3_ltr5:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr5_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[         8              ] 0000004000
+;[            8     8     ] 0000000820
+;[       8  8    8        ] 0000012100
+;[             8          ] 0000000400
+;[          8    8        ] 0000002100
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	push b
+	lxi h, $0001
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0040
+	push h
+	lxi h, $0821
+	push h
+	lxi h, $0421
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $2000
+	push h
+	push b
+
+debris3_ltr5_ret:
+	lxi sp, 0
+	ret
+debris3_ltr6:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr6_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[          8             ] 0000002000
+;[             8     8    ] 0000000410
+;[        8  8    8       ] 0000009080
+;[              8         ] 0000000200
+;[           8    8       ] 0000001080
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0020
+	push h
+	lxi h, $0490
+	push h
+	lxi h, $0210
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $1080
+	push h
+	lxi h, $0080
+	push h
+
+debris3_ltr6_ret:
+	lxi sp, 0
+	ret
+debris3_ltr7:
+	lxi h, 0
+	dad sp
+	shld debris3_ltr7_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[                        ] 0000000000
+;[           8            ] 0000001000
+;[              8     8   ] 0000000208
+;[         8  8    8      ] 0000004840
+;[               8        ] 0000000100
+;[            8    8      ] 0000000840
+;[                        ] 0000000000
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 1
+	push b
+	push b
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0010
+	push h
+	lxi h, $0248
+	push h
+	lxi h, $0108
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $0840
+	push h
+	lxi h, $0040
+	push h
+
+debris3_ltr7_ret:
+	lxi sp, 0
+	ret
+;; end of sprite group debris3
+debris4_ltr_dispatch:
+	dw debris4_ltr_inf
+	dw debris4_ltr0
+	dw debris4_ltr1
+	dw debris4_ltr2
+	dw debris4_ltr3
+	dw debris4_ltr4
+	dw debris4_ltr5
+	dw debris4_ltr6
+	dw debris4_ltr7
+debris4_ltr_spritegroup:
+debris4_ltr_inf:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr_inf_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[           8            ] 0000001000
+;[                  8     ] 0000000020
+;[               8     8  ] 0000000104
+;[        8   8           ] 0000008800
+;[                8   8   ] 0000000088
+;[                        ] 0000000000
+;[           8       8    ] 0000001010
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	push b
+	push b
+	push b
+	push b
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $1000
+	push h
+	lxi h, $0188
+	push h
+	push b
+	lxi h, $1000
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0020
+	push h
+	lxi h, $0400
+	push h
+	lxi h, $8800
+	push h
+	lxi h, $1000
+	push h
+
+debris4_ltr_inf_ret:
+	lxi sp, 0
+	ret
+debris4_ltr0:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr0_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[   8            ] 0000001000
+;[          8     ] 0000000020
+;[       8     8  ] 0000000104
+;[8   8           ] 0000008800
+;[        8   8   ] 0000000088
+;[                ] 0000000000
+;[   8       8    ] 0000001010
+;[                ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $1000
+	push h
+	lxi h, $0188
+	push h
+	push b
+	lxi h, $1000
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0020
+	push h
+	lxi h, $0400
+	push h
+	lxi h, $8800
+	push h
+	lxi h, $1000
+	push h
+
+debris4_ltr0_ret:
+	lxi sp, 0
+	ret
+debris4_ltr1:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr1_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[    8                   ] 0000080000
+;[           8            ] 0000001000
+;[        8     8         ] 0000008200
+;[ 8   8                  ] 0000440000
+;[         8   8          ] 0000004400
+;[                        ] 0000000000
+;[    8       8           ] 0000080800
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $0800
+	push h
+	lxi h, $0044
+	push h
+	push b
+	lxi h, $0800
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0010
+	push h
+	lxi h, $8200
+	push h
+	lxi h, $4400
+	push h
+	lxi h, $0800
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+	push b
+
+debris4_ltr1_ret:
+	lxi sp, 0
+	ret
+debris4_ltr2:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr2_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[     8                  ] 0000040000
+;[            8           ] 0000000800
+;[         8     8        ] 0000004100
+;[  8   8                 ] 0000220000
+;[          8   8         ] 0000002200
+;[                        ] 0000000000
+;[     8       8          ] 0000040400
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $0400
+	push h
+	lxi h, $0022
+	push h
+	push b
+	lxi h, $0400
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0008
+	push h
+	lxi h, $4100
+	push h
+	lxi h, $2200
+	push h
+	lxi h, $0400
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	push b
+	push b
+	push b
+	push b
+
+debris4_ltr2_ret:
+	lxi sp, 0
+	ret
+debris4_ltr3:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr3_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[      8                 ] 0000020000
+;[             8          ] 0000000400
+;[          8     8       ] 0000002080
+;[   8   8                ] 0000110000
+;[           8   8        ] 0000001100
+;[                        ] 0000000000
+;[      8       8         ] 0000020200
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $0200
+	push h
+	lxi h, $0011
+	push h
+	push b
+	lxi h, $0200
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0004
+	push h
+	lxi h, $2000
+	push h
+	lxi h, $1100
+	push h
+	lxi h, $0200
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	push b
+	lxi h, $8000
+	push h
+	push b
+	push b
+
+debris4_ltr3_ret:
+	lxi sp, 0
+	ret
+debris4_ltr4:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr4_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[       8                ] 0000010000
+;[              8         ] 0000000200
+;[           8     8      ] 0000001040
+;[    8   8               ] 0000088000
+;[            8   8       ] 0000000880
+;[                        ] 0000000000
+;[       8       8        ] 0000010100
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $0100
+	push h
+	lxi h, $0008
+	push h
+	push b
+	lxi h, $0100
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0002
+	push h
+	lxi h, $1080
+	push h
+	lxi h, $0800
+	push h
+	lxi h, $0100
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	push b
+	lxi h, $4000
+	push h
+	lxi h, $8000
+	push h
+	push b
+
+debris4_ltr4_ret:
+	lxi sp, 0
+	ret
+debris4_ltr5:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr5_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[        8               ] 0000008000
+;[               8        ] 0000000100
+;[            8     8     ] 0000000820
+;[     8   8              ] 0000044000
+;[             8   8      ] 0000000440
+;[                        ] 0000000000
+;[        8       8       ] 0000008080
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	push b
+	lxi h, $0004
+	push h
+	push b
+	push b
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $8001
+	push h
+	lxi h, $0840
+	push h
+	lxi h, $0400
+	push h
+	lxi h, $8000
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	push b
+	lxi h, $2000
+	push h
+	lxi h, $4000
+	push h
+	lxi h, $8000
+	push h
+
+debris4_ltr5_ret:
+	lxi sp, 0
+	ret
+debris4_ltr6:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr6_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[         8              ] 0000004000
+;[                8       ] 0000000080
+;[             8     8    ] 0000000410
+;[      8   8             ] 0000022000
+;[              8   8     ] 0000000220
+;[                        ] 0000000000
+;[         8       8      ] 0000004040
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	push b
+	lxi h, $0002
+	push h
+	push b
+	push b
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $4000
+	push h
+	lxi h, $0420
+	push h
+	lxi h, $0200
+	push h
+	lxi h, $4000
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0080
+	push h
+	lxi h, $1000
+	push h
+	lxi h, $2000
+	push h
+	lxi h, $4000
+	push h
+
+debris4_ltr6_ret:
+	lxi sp, 0
+	ret
+debris4_ltr7:
+	lxi h, 0
+	dad sp
+	shld debris4_ltr7_ret+1
+	.nolist
+;; layer 3 (e000)
+	lxi h, $6000
+	dad d
+	sphl
+;[          8             ] 0000002000
+;[                 8      ] 0000000040
+;[              8     8   ] 0000000208
+;[       8   8            ] 0000011000
+;[               8   8    ] 0000000110
+;[                        ] 0000000000
+;[          8       8     ] 0000002020
+;[                        ] 0000000000
+; stripped pairs: leading: 0 trailing: 0
+	push b
+	lxi h, $0001
+	push h
+	push b
+	push b
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $2000
+	push h
+	lxi h, $0210
+	push h
+	lxi h, $0100
+	push h
+	lxi h, $2000
+	push h
+	lxi h, 256+8
+	dad sp
+	sphl
+	lxi h, $0040
+	push h
+	lxi h, $0800
+	push h
+	lxi h, $1000
+	push h
+	lxi h, $2000
+	push h
+
+debris4_ltr7_ret:
+	lxi sp, 0
+	ret
+;; end of sprite group debris4
 .list

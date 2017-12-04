@@ -28,4 +28,6 @@ incursion:	incursion.asm ship.inc $(PASM) $(CSS) $(NAV)
 clean:
 	rm incursion.hex incursion.rom
 
+tags:	make-tags.sh *.asm *.inc
+	./make-tags.sh
 

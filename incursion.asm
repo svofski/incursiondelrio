@@ -1,30 +1,37 @@
 ; River Raid for Vector-06C
 
-    .binfile asaltodelrio.rom
-    .nodump
+        .binfile incursiondelrio.rom
+        .nodump
+        .nohex
+                        
+BOTTOM_HEIGHT           equ 60
+TOP_HEIGHT              equ 16
+SCREEN_WIDTH_BYTES      equ 32
 
-BOTTOM_HEIGHT       equ 60
-TOP_HEIGHT          equ 16
-SCREEN_WIDTH_BYTES  equ 32
+FOE_MAX                 equ 8  
+BLOCKS_IN_LEVEL         equ 16
+BLOCK_HEIGHT            equ 64
+HALFBRIDGE_WIDTH        equ 4
+NARROWEST               equ 4   ; narrowest passage around an island
+ENOUGH_FOR_ISLAND       equ 9   ; if water this wide, island fits
 
-FOE_MAX             equ 8  
-BLOCKS_IN_LEVEL     equ 16
-BLOCK_HEIGHT        equ 64
-HALFBRIDGE_WIDTH    equ 4
-NARROWEST           equ 4   ; narrowest passage around an island
-ENOUGH_FOR_ISLAND   equ 9   ; if water this wide, island fits
-
-ROAD_WIDTH          equ 28
-ROAD_BOTTOM         equ 23
+ROAD_WIDTH              equ 28
+ROAD_BOTTOM             equ 23
 
 ; regular foe id's $00..$1f
-FOEID_NONE          equ 0
-FOEID_SHIP          equ 1
-FOEID_COPTER        equ 2
-FOEID_RCOPTER       equ 3
-FOEID_JET           equ 4
-FOEID_BRIDGE        equ 16
-FOEID_FUEL          equ 17
+FOEID_NONE              equ 0
+FOEID_SHIP              equ 1
+FOEID_COPTER            equ 2
+FOEID_RCOPTER           equ 3
+FOEID_JET               equ 4
+FOEID_BRIDGE            equ 16
+FOEID_FUEL              equ 17
+
+FOEID_DEBRIS_1          equ 32
+FOEID_DEBRIS_2          equ 33
+FOEID_DEBRIS_3          equ 34
+FOEID_DEBRIS_4          equ 35
+FOEID_DEBRIS_END        equ 36
 
 FOEID_WIPE_FLAG     equ $80 ; this bit set in id == foe needs to be wiped
 
@@ -40,7 +47,7 @@ KEY_RIGHT           equ $40
 KEY_UP              equ $20
 KEY_LEFT            equ $10
 
-    .org $100
+        .org $100
 
 clrscr:
     di
@@ -923,7 +930,7 @@ foe_byId:
     ; .. .
     ; . .  .   .
     mov a, b
-    ani $1f
+    ani $3f
     cpi FOEID_SHIP
     jnz $+9
     lxi h, wipe_ship
@@ -936,16 +943,19 @@ foe_byId:
     jnz $+9
     lxi h, wipe_bridge
     jmp foe_wipe_disp
+    cpi FOEID_DEBRIS_END
+    jz  foe_wipe_finalize
     lxi h, wipe_copter
 foe_wipe_disp
     shld foe_frame_wipe_dispatch+1
 
     ; Clear foe ID (probably advance it to a kaboom sprite later)
-    xra a
+    ;xra a
+    mvi a, FOEID_DEBRIS_1
     sta foeBlock + foeId
 
     ; wipe the sprite area
-    lxi h, wipe_ship
+    ; wtf lxi h, wipe_ship
 foe_frame_wipe:
     lda foeBlock + foeColumn
     adi $80                 ; $80 + foeColumn (high of base addr)
@@ -953,7 +963,15 @@ foe_frame_wipe:
     lda foeBlock + foeY
     mov e, a
 foe_frame_wipe_dispatch:
-    jmp wipe_ship
+    jmp wipe_ship               ; modified code!
+
+foe_wipe_finalize:              ; wipe out the debris and clear foe id
+        xra a
+        sta foeBlock + foeId
+        lxi h, wipe_debris      ; because regular wipes don't wipe black
+        shld foe_frame_wipe_dispatch+1
+        jmp foe_frame_wipe
+        
     
 foe_notblownup:
     ; check Y and clear the foe if below the bottom line
@@ -983,6 +1001,9 @@ foe_infield:
     jz  fuel_frame
     cpi FOEID_BRIDGE
     jz  bridge_frame
+    ; so this is perhaps DEBRIS ? 32 to 35, 36 ends
+    cpi FOEID_DEBRIS_1
+    jp debris_frame
     ; default: return  
     ret
 
@@ -1328,6 +1349,43 @@ sprite_ltr_rtl_dispatchjump:
     shld .+4
     lhld 0000   
     pchl
+
+        ; Animate explosion debris
+        ; Called first after the main sprite has just been wiped out
+        ; After the animation cycle ends, sets $80 bit to signal the main
+        ; loop that the debris should also be wiped and the block freed.
+debris_frame:
+        lda frame_scroll                ; slow down the animation, skip frames
+        rrc
+        rc
+        lxi h, foeBlock+foeDirection    
+        mvi m, 0
+        lxi h, foeBlock
+        mov a, m
+        cpi FOEID_DEBRIS_1
+        lxi h, debris1_ltr_dispatch
+        jz debfr_loadfb
+        lxi h, debris2_ltr_dispatch
+        cpi FOEID_DEBRIS_2
+        jz debfr_loadfb
+        lxi h, debris3_ltr_dispatch
+        cpi FOEID_DEBRIS_3
+        jz debfr_loadfb
+        lxi h, debris4_ltr_dispatch
+debfr_loadfb
+        shld foeBlock_LTR
+        shld foeBlock_RTL
+        call foe_frame
+        lxi h, foeBlock
+        mov a, m
+        inr a
+        cpi FOEID_DEBRIS_END
+        jnz $+5
+        ori $80                 ; set blow up flag again: see [foe_infield]
+        mov m, a
+        ret
+        
+
 
     .include random.inc
     .include palette.inc
