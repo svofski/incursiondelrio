@@ -1,4 +1,4 @@
-MISSILE_START_ROW       equ 94
+MISSILE_START_ROW       equ 90
 
 missile_tab:
 	db 1, 10000000b
@@ -37,9 +37,12 @@ mm_fire:                        ; new missile
 
 mm_move:                        ; propel the missile forward
         lxi h, missile_y
-        inr m                   ; 2 lines / frame seems to be fine
-        inr m                   ; as long as MISSILE_START_ROW is even
-        rnz                     ; this check should be fine
+        mov a, m
+        adi 4
+        mov m, a
+        cpi 250
+        rc
+        ;rnz                     ; this check should be fine
         dcx h                   ; h = &missile_onscreen
         dcr m                   ; missile_onscreen = 0
 
@@ -290,10 +293,15 @@ missl_collision_test:
 
 
 MissileWipe:
-        lda missile_onscreen
+        lda missile_onscreen    ; is missile on screen at all?
         ora a
-        rz
-
+        jnz mw_wipe             ; yes, wipe is needed
+        lda missile_hit         ; is it a recent hit?
+        ora a
+        rz                      ; no, okay
+        xra a                   ; clear missile_hit flag and wipe
+        sta missile_hit
+mw_wipe:
  	lxi h, $c000
 	lda missile_y
 	mov l, a

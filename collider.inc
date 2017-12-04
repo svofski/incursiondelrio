@@ -4,8 +4,9 @@ CollisionMissileFoe:
         ora a
         rz                      ; no hit in sight
 
-        xra a                   ; clear the flag 
-        sta missile_hit
+        ; the flag will be cleared by MissileWipe
+        ;xra a                   ; clear the flag 
+        ;sta missile_hit
 
         ; Hit, check every foe: if it's in that general region, that must be it
 

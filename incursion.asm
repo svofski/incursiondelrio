@@ -919,10 +919,9 @@ foe_byId:
     jz foe_notblownup
 
     ; find out what kind of foe it was to wipe clean
-    ; TODO
-    ; ...
-    ; ....
-    ; ..
+    ; . .
+    ; .. .
+    ; . .  .   .
     mov a, b
     ani $1f
     cpi FOEID_SHIP
@@ -945,7 +944,7 @@ foe_wipe_disp
     xra a
     sta foeBlock + foeId
 
-    ; must wipe the sprite instead
+    ; wipe the sprite area
     lxi h, wipe_ship
 foe_frame_wipe:
     lda foeBlock + foeColumn
@@ -955,7 +954,6 @@ foe_frame_wipe:
     mov e, a
 foe_frame_wipe_dispatch:
     jmp wipe_ship
-     
     
 foe_notblownup:
     ; check Y and clear the foe if below the bottom line
@@ -1334,156 +1332,7 @@ sprite_ltr_rtl_dispatchjump:
     .include random.inc
     .include palette.inc
     .include ship.inc
-
-wipe_ship:
-    lxi h, 0
-    dad sp
-    shld wipe_ship_ret+1
-;; layer 0 (8000)
-    xchg
-    sphl
-    lxi b, 0
-
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
-
-    lxi h, $1b08
-    dad sp
-    sphl        ; advance to layer $a000
-
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
-
-    lxi h, $1b08
-    dad sp
-    sphl        ; advance to layer $c000
-
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
-
-
-wipe_ship_ret:
-    lxi sp, 0
-    ret
-
-wipe_copter
-    mov a, e
-    adi 4
-    mov e, a
-    lxi h, 0
-    dad sp
-    shld wipe_copter_ret+1
-;; layer 0 (8000)
-    xchg
-    sphl
-    lxi b, 0
-
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
-
-    lxi h, $1e0c
-    dad sp
-    sphl        ; advance to layer $a000
-
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
-
-    lxi h, $1e0c
-    dad sp
-    sphl        ; advance to layer $c000
-
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
-
-wipe_copter_ret:
-    lxi sp, 0
-    ret
-
-wipe_fuel
-    jmp wipe_ship
-
-wipe_bridge
-    jmp wipe_ship
-
-
+    .include wipes.inc
     ;; Depuración y basura
     ; pintar los colores
 showlayers:
@@ -1562,4 +1411,8 @@ pf_tabwater     equ $7900
 ;pf_tabwater:
 ;                           .org .+$100
 
+
 ; vi:syntax=m80
+; vi:ts=8
+; vi:sts=8
+
