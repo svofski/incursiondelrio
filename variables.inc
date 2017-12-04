@@ -89,6 +89,7 @@ foe_left:               db 0
 foe_water:              db 0
 foe_right:              db 0
 
+; vertical clearance before next foe can be injected 
 foe_clearance:          db 1
 
                         ;

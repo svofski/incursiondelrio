@@ -99,10 +99,22 @@ jamas_1:
     ei
 
     call AnimateSprites
-
     call PlayerMotion
+
+    ; poop border  
+    mvi a, 6    
+    out 2
+
     call MissileMotion
     call MissileSprite
+
+    ; if missile collided, is it with a foe or terrain and if a foe, which one?
+    call CollisionMissileFoe
+    ; --
+
+    ; black border
+    mvi a, 5
+    out 2
 
     lxi d, foe_1
     call foe_in_de
@@ -200,6 +212,7 @@ PlayFieldRoll:
 
     .include player.inc
     .include missile.inc
+    .include collider.inc
 
     .include input.inc
 

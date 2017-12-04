@@ -14,6 +14,11 @@ missile_onscreen:       db 0    ; 1 = missile is on screen
 missile_y:	        db 0    ; missile position
 missile_hit:            db 0    ; 1 = hit detected
 
+missile_hit_column      db 0    ; column
+missile_hit_index       db 0    ; where a hit was detected: index
+missile_hit_y:          db 0    ; where a hit was detected: row
+missile_hit_x:          db 0
+
 MissileMotion:
         lxi h, missile_onscreen ; missile flying already?
         mov a, m
@@ -45,6 +50,9 @@ MissileSprite:
         lda missile_onscreen    ; if missile is not there, return right away
         ora a
         rz
+
+        xra a
+        sta missile_hit
 
         lxi h, $a000            ; test collision on layer $a000
         call MissileTest
@@ -265,6 +273,15 @@ missl_collision_test:
         sta missile_hit
         ora a
         rz
+        lda missile_y
+        mov d, a
+        lda frame_scroll
+        add d
+        sta missile_hit_y
+        lda player_column
+        sta missile_hit_column
+        lda player_index
+        sta missile_hit_index
         ; enable next missile 
         xra a
         sta missile_onscreen
@@ -273,7 +290,11 @@ missl_collision_test:
 
 
 MissileWipe:
-	lxi h, $c000
+        lda missile_onscreen
+        ora a
+        rz
+
+ 	lxi h, $c000
 	lda missile_y
 	mov l, a
 	lda frame_scroll_prev
