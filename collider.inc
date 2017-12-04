@@ -40,7 +40,10 @@ cmf_yscan
         ret
 
 cmf_victim_found
-        mvi m, FOEID_NONE       
+        ;mvi m, FOEID_NONE       
+        mov a, m
+        ori FOEID_WIPE_FLAG
+        mov m, a
         ret
 
         ; input h = & struct foe
@@ -164,7 +167,11 @@ cmf_height_found
         ret
 
 cmf_foe_ded
-        mvi m, FOEID_NONE
+        jmp $
+        mvi a, FOEID_WIPE_FLAG
+        ora m
+        mov m, a
+        ; mvi m, FOEID_NONE
         ret
 
         

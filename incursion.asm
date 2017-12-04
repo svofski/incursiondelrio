@@ -17,7 +17,7 @@ ENOUGH_FOR_ISLAND   equ 9   ; if water this wide, island fits
 ROAD_WIDTH          equ 28
 ROAD_BOTTOM         equ 23
 
-
+; regular foe id's $00..$1f
 FOEID_NONE          equ 0
 FOEID_SHIP          equ 1
 FOEID_COPTER        equ 2
@@ -25,6 +25,8 @@ FOEID_RCOPTER       equ 3
 FOEID_JET           equ 4
 FOEID_BRIDGE        equ 16
 FOEID_FUEL          equ 17
+
+FOEID_WIPE_FLAG     equ $80 ; this bit set in id == foe needs to be wiped
 
 CLEARANCE_DEFAULT   equ 14
 CLEARANCE_BRIDGE    equ 32
@@ -910,8 +912,52 @@ foe_byId:
     ; if (foe.Id == 0) return;
     ora a
     rz
-    mov b, a    
+    mov b, a                ; b = foe.id
 
+    ; check if blow up flag is set
+    ani $80
+    jz foe_notblownup
+
+    ; find out what kind of foe it was to wipe clean
+    ; TODO
+    ; ...
+    ; ....
+    ; ..
+    mov a, b
+    ani $1f
+    cpi FOEID_SHIP
+    jnz $+9
+    lxi h, wipe_ship
+    jmp foe_wipe_disp
+    cpi FOEID_FUEL
+    jnz $+9
+    lxi h, wipe_fuel
+    jmp foe_wipe_disp
+    cpi FOEID_BRIDGE
+    jnz $+9
+    lxi h, wipe_bridge
+    jmp foe_wipe_disp
+    lxi h, wipe_copter
+foe_wipe_disp
+    shld foe_frame_wipe_dispatch+1
+
+    ; Clear foe ID (probably advance it to a kaboom sprite later)
+    xra a
+    sta foeBlock + foeId
+
+    ; must wipe the sprite instead
+    lxi h, wipe_ship
+foe_frame_wipe:
+    lda foeBlock + foeColumn
+    adi $80                 ; $80 + foeColumn (high of base addr)
+    mov d, a
+    lda foeBlock + foeY
+    mov e, a
+foe_frame_wipe_dispatch:
+    jmp wipe_ship
+     
+    
+foe_notblownup:
     ; check Y and clear the foe if below the bottom line
     lda frame_scroll
     mov l, a
@@ -1288,6 +1334,155 @@ sprite_ltr_rtl_dispatchjump:
     .include random.inc
     .include palette.inc
     .include ship.inc
+
+wipe_ship:
+    lxi h, 0
+    dad sp
+    shld wipe_ship_ret+1
+;; layer 0 (8000)
+    xchg
+    sphl
+    lxi b, 0
+
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
+
+    lxi h, $1b08
+    dad sp
+    sphl        ; advance to layer $a000
+
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
+
+    lxi h, $1b08
+    dad sp
+    sphl        ; advance to layer $c000
+
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 1
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 2
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 3
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 4
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
+    lxi h, 256+8
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
+
+
+wipe_ship_ret:
+    lxi sp, 0
+    ret
+
+wipe_copter
+    mov a, e
+    adi 4
+    mov e, a
+    lxi h, 0
+    dad sp
+    shld wipe_copter_ret+1
+;; layer 0 (8000)
+    xchg
+    sphl
+    lxi b, 0
+
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
+
+    lxi h, $1e0c
+    dad sp
+    sphl        ; advance to layer $a000
+
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
+
+    lxi h, $1e0c
+    dad sp
+    sphl        ; advance to layer $c000
+
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
+    lxi h, 256+12
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
+
+wipe_copter_ret:
+    lxi sp, 0
+    ret
+
+wipe_fuel
+    jmp wipe_ship
+
+wipe_bridge
+    jmp wipe_ship
+
 
     ;; Depuración y basura
     ; pintar los colores

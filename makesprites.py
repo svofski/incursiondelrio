@@ -239,6 +239,8 @@ class Ship(Sprite):
     def getName(self):
         return "ship"
 
+
+
 class Copter(Sprite):
     pic = ['       7777777  ',
            '77   77777777777',
@@ -321,7 +323,6 @@ class Jet(Sprite):
 
     def includeShift(self, shift):
         return shift in [-1, 0, 4]
-
 
 class Bridge(Sprite):
     def isDoubleWidth(false):
