@@ -29,8 +29,11 @@ cmf_yscan
         push h
         call cmf_check_foe_y
         pop h
-        jc cmf_victim_found
-        lxi b, 8        ; next foe[]
+        push h
+        cc cmf_check_foe_x      ; x-coordinate must also match
+        pop h
+        jc cmf_victim_found     ; if cmf_verify_x returns C, definitely ded
+        lxi b, 8                ; he's fine, next foe[]
         dad b
         lda cmf_yscan_ctr
         dcr a
@@ -41,14 +44,13 @@ cmf_yscan
         ret
 
 cmf_victim_found
-        ;mvi m, FOEID_NONE       
         mov a, m
         ori FOEID_WIPE_FLAG
         mov m, a
         ret
 
         ; input h = & struct foe
-        ; 
+        ; return CY if Y coordinates intersect
 cmf_check_foe_y
         mov c, m        ; foeid to infer foe height
         xra a
@@ -71,36 +73,86 @@ cmf_getheight
 
         ; glory! de = [y1, y2]
 
-        ; hit if: foe.y1 <= missile.y1 <= foe.y2 ||
-        ;         foe.y1 <= missile.y2 <= foe.y2
-        ;
-        ; condition 1a: foe.y1 <= missile.y1
-        lda missile_hit_y
-        cmp d           ; m.y1 - foe.y1 : must be +
-        jp cmf_c1a_true
-        jmp cmf_test_cond2
-cmf_c1a_true
-        cmp e           ; m.y1 - foe.y1 must be zero or neg
-        jm cmf_intersects_y
-        jz cmf_intersects_y
-        jmp cmf_intersects_not
 
-cmf_test_cond2
-        ; condition 2
-        adi 8           ; m.y2
-        cmp d
-        jm cmf_intersects_not    ; m.y2 - foe.y1 < 0, fail
-        cmp e           ; m.y2 - foe.y2 should be minus or zero
-        jm cmf_intersects_y
-        jz cmf_intersects_y
-        jmp cmf_intersects_not
-        
-cmf_intersects_y
-        stc
-        ret
-cmf_intersects_not
+        lda missile_hit_y
+        mov h, a
+        adi 8
+        mov l, a
+        xchg
+        jmp intersects_test
+        ; end of cmf_check_foe_y
+
+        ; check x coordinate intersection
+        ; input h = & struct foe
+        ; return CY if X coordinates intersect
+cmf_check_foe_x
+        ; get foe width
+        mov c, m
+        mvi b, 0
+        xchg            ; save h
+        lxi h, foe_width_tbl
+        dad b
+        mov c, m        ; c = foe width
+        xchg            ; restore h
+        ; get foe x position
+        inx h
+        mov a, m        ; column
+        rlc
+        rlc
+        rlc 
+        ani $f8         ; column * 8
+        inx h           
+        add m           ; a = foe.x = foe.column * 8 + foe.index
+
+        mov h, a        ; h = foe.x1
+        add c           ; foe width
+        mov l, a        ; l = foe.x2
+        lda missile_hit_x
+
+        ; this is weird but missile x seems to be offset relative to foes?
+        adi 16
+
+        mov d, a
+        inr a
+        mov e, a        ; de = missile.x1, missile.x2
+        jmp intersects_test
+
+        ; check intersection of two intervals
+        ; True if:
+        ; a1 --- a2
+        ;     b1 --- b2
+        ; or
+        ;         a1 --- a2
+        ;     b1 --- b2
+        ; Input: D=a1 E=a2
+        ;        H=b1 L=b2
+        ; Returns:
+        ;       CY if intervals intersect
+intersects_test
+        mov a, d        
+        cmp h                   ; a1 - b1 must be +
+        jp $+6
+        jmp xt_cond2
+        cmp l                   ; a1 - b2 must be - or 0  
+        jm xt_true
+        jz xt_true
+        ; condition 1 is false, check condition 2
+xt_cond2
+        mov a, e                ; a = a2
+        cmp h                   ; 
+        jm xt_false             ; a2 - b1 < 0, fail
+        cmp l                   ; a2 - b2 <= 0
+        jm xt_true
+        jz xt_true
+xt_false
         ora a
         ret
+xt_true
+        stc
+        ret
+
+        ret
+
 
 cmf_yscan_ctr   db 0
 foe_height_tbl
@@ -111,126 +163,13 @@ foe_height_tbl
         ;       16      17
         db      28,     24
 
+foe_width_tbl
+        ;       NONE    SHIP    COPTER  COPTER  COPTER 
+        db      0,      32,     24,     24,     24,     0,      0,      0,
+        db      0,      0,      0,      0,      0,      0,      0,      0,
+        ;       BRIDGE  FUEL
+        db      64,     16
 
-
-
-
-
-
-
-
-
-cmf_height_found
-
-        ; foeY = +4  
-        lxi b, 4
-        dad b
-
-        
-
-        lda missile_hit_y
-        mov l, a
-        lda frame_scroll
-        add l                   ; a = absolute Y of missile
-        mov d, a
-
-        
-        rrc
-        rrc
-        ani $38                 ; a = offset to foe block rel to foe_1
-
-        mov c, a
-        mvi b, 0
-        lxi h, foe_1
-        dad b                   ; h = foe block that we need
-        shld foe_candidate_1_ptr
-
-        ;;;;;;;;
-        ;;jmp cmf_foe_ded
-        ;;;;;;;;
-
-        mov a, d
-        rrc
-        rrc
-        adi 8
-        ani $38                 ; foe[A+1]
-        mov c, a
-        lxi h, foe_1
-        dad b
-        shld foe_candidate_2_ptr
-
-        lhld foe_candidate_2_ptr
-        call cmf_try_foe_in_hl
-        jc cmf_foe_ded
-        lhld foe_candidate_1_ptr
-        call cmf_try_foe_in_hl
-        jc cmf_foe_ded
-        ret
-
-cmf_foe_ded
-        jmp $
-        mvi a, FOEID_WIPE_FLAG
-        ora m
-        mov m, a
-        ; mvi m, FOEID_NONE
-        ret
-
-        
-
-        ; inputs:
-        ;       missile_hit_x   byte    missile X position
-        ;       hl              pointer to foe block
-        ; outputs:
-        ;       hl              unmodified
-        ;       CF              if foe ded
-cmf_try_foe_in_hl
-        ; load foe X position
-        inx h                   ; h->foe.column
-        mov a, m                ; a = column
-        rlc 
-        rlc
-        rlc
-        ani $f8
-        inx h                   ; h->foe.index
-        add m                   ; a = foe X
-        sta foe_candidate_x1
-        mov d, a
-        ; normal foe has width 16 ($10)
-        ; ship has width 28 ($1c)
-        lxi b, $101c
-        dcx h
-        dcx h                   ; h->foe.id
-        mov a, m
-        cpi FOEID_SHIP
-        jnz $+4                 ; skip next 1-byte instr
-        mov b, c
-        mov a, d
-        add b                   ; a = foe_candidate_x2
-        sta foe_candidate_x2
-        mov e, a
-        
-        ; missile_x >= foe_candidate_x1 && missile_x <= foe_candidate_x2
-        lda missile_hit_x
-        inr a                   ; account for missile thickness (2)
-        cmp e
-        jz cmf_surehit1         ; missile_x == foe_candidate_x2
-        jp cmf_surenot1         ; missile_x > foe_candidate_x2, miss
-        dcr a                   ; missile_x
-        cmp d                   ; foe_candidate_x1
-        jz cmf_surehit1
-        jm cmf_surenot1
-cmf_surehit1    ; decidedly a hit
-        ora a
-        cmc
-        ret
-cmf_surenot1
-        ora a
-        ret
-        
-foe_candidate_1_ptr     dw 0
-foe_candidate_2_ptr     dw 0
-foe_candidate_x1        db 0
-foe_candidate_x2        db 0
 
 
 ; vi:syntax=m80
