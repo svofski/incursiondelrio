@@ -85,11 +85,11 @@ SoundNoise:
 	cma
 	adi $80
         ; this randomizer makes sound less boring, but it sucks
-        mov b, a
-        lda random_sndLo
-        cmp b
-        jm $+4
-        mov a, b
+        ;mov b, a
+        ;lda random_sndLo
+        ;cmp b
+        ;jm $+4
+        ;mov a, b
 	out I8253_CH1
 	ret
 
