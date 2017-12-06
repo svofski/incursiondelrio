@@ -59,7 +59,7 @@ class Sprite:
                 print '\tmov h, d'        
                 print '\tmov l, e'        
                 print '\tsphl'
-                print '\tlxi b, 0'
+                #print '\tlxi b, 0'
                 print layer
 
             layer = self.makeLayer('2367', shift, orientation)      # layer 1
@@ -68,6 +68,7 @@ class Sprite:
                 print '\tlxi h, $2000'
                 print '\tdad d'
                 print '\tsphl'
+                #print '\tlxi b, 0'
                 print layer
 
             layer = self.makeLayer('4567', shift, orientation)        # layer 2
@@ -76,6 +77,7 @@ class Sprite:
                 print '\tlxi h, $4000'
                 print '\tdad d'
                 print '\tsphl'
+                #print '\tlxi b, 0'
                 print layer
 
             layer = self.makeLayer('8', shift, orientation)        # layer 3
@@ -84,6 +86,7 @@ class Sprite:
                 print '\tlxi h, $6000'
                 print '\tdad d'
                 print '\tsphl'
+                #print '\tlxi b, 0'
                 print layer
         else:
             # only white layer

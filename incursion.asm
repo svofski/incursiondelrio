@@ -227,45 +227,50 @@ PlayFieldRoll:
     .include input.inc
 
     ;; ---------------------------------------------- -   - 
-    ;; Process foe with descriptor in HL
+    ;; Process foe with descriptor in DE
     ;; ----------------------------------------------------------
 foe_in_de:
-    push d
-    lxi h, 0                ; 12
-    dad sp                  ; 12
-    shld copyfoe_restoresp+1    ; 20
-    xchg                    ; 8
-    sphl                    ; 8  
+        push d
 
-    pop h                   ; 12
-    shld foeBlock           ; 20
-    pop h                   ; 12
-    shld foeBlock + 2       ; 20
-    pop h                   ; 12
-    shld foeBlock + 4       ; 20
-    pop h                   ; 12
-    shld foeBlock + 6       ; 20
+        lxi h, 0                        ; 12
+        dad sp                          ; 12
+        shld copyfoe_restoresp+1        ; 20
+        shld copyfoeback_restoresp+1
+        xchg                            ; 4
+        sphl                            ; 8     =56
+       
+        pop h   ; h = src + 0           ; 12
+        shld foeBlock + 0               ; 20
+        pop h   ; h = src + 2           ; 12
+        pop d   ; d = src + 4           ; 12
+        pop b   ; b = src + 6           ; 12
+        lxi sp, foeBlock + 8            ; 12
+        push b  ; dst + 6 = b           ; 16
+        push d  ; dst + 4 = d           ; 16
+        push h  ; dst + 2 = h           ; 16   =128
 copyfoe_restoresp:
-    lxi sp, 0
+        lxi sp, 0                       ; 12   =196
 
-    call foe_byId
+        call foe_byId
 
-    ; copy foe block back
-    ; only the first 4 bytes of foeBlock need to be copied back
-    ; it's faster to do it by byte
-    lhld foeBlock + 2   ; 20
-    pop d               ; 16
-    xchg                ; 8 
-    lda foeBlock        ; 12
-    mov m, a            ; 8
-    inx h               ; 8
-    lda foeBlock + 1    ; 12
-    mov m, a            ; 8
-    inx h               ; 8
-    mov m, e            ; 8
-    inx h               ; 8
-    mov m, d            ; = 116
-    ret
+        ; copy foe block back
+        ; only the first 4 bytes of foeBlock need to be copied back
+        ; it's faster to do it by byte
+
+        lhld foeBlock
+        xchg
+        pop h
+        mov m, e
+        inx h
+        mov m, d
+        inx h
+        lda foeBlock+2
+        mov m, a
+        inx h
+        lda foeBlock+3
+        mov m, a        ; = 124
+
+        ret
 
 
 setpalette:
@@ -1347,8 +1352,11 @@ sprite_ltr_rtl_dispatchjump:
     mov c, a
     dad b       
     ;jmp [h]
-    shld .+4
-    lhld 0000   
+    mov a, m
+    inx h
+    mov h, m
+    mov l, a
+    lxi b, 0        ; b is a zero source
     pchl
 
         ; Animate explosion debris
