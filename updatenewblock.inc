@@ -137,3 +137,8 @@ unb_noisland:
     sta terrain_next_islandwidth
 UpdateNewBlock_Exit:
     ret
+
+; vi:syntax=m80
+; vi:ts=8
+; vi:sts=8
+

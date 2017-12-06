@@ -4,17 +4,17 @@
 nextRandom16:
 		lhld random
 		mov a, h 		; randomHi
-       	rlc            
-       	rlc            
-       	rlc    
-       	xra h
-       	rlc
-       	mov h, a
-       	mov a, l
-       	ral 
-       	mov l, a
-       	mov a, h
-       	ral
+                rlc            
+                rlc            
+                rlc    
+                xra h
+                rlc
+                mov h, a
+                mov a, l
+                ral 
+                mov l, a
+                mov a, h
+                ral
 		mov h, a
 		shld random
 		ret
@@ -41,3 +41,8 @@ randomHi:	db $a8
 ; (JTZ: randomHi is very random, randomLo is NOT when more than one bit is used,
 ; because: randomLo[x+1] = randomLo[x]*2 + 0/1, but randomLo is used more often,
 ; randomHi only for new enemy and which. This could make the game a bit predictable.)
+
+; vi:syntax=m80
+; vi:ts=8
+; vi:sts=8
+

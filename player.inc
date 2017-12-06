@@ -1,5 +1,5 @@
 ;; Player Y position (fixed)
-player_y	        equ 64+20
+PLAYER_Y	        equ 64+20
 
 player_collision:	db 0
 
@@ -175,28 +175,40 @@ pm_Exit:
 	ret
 
 PlayerSprite:
+        ; Precalculate player bitmap in d
+        lhld player_ptr         ; load player base pointer
+        mvi d, 0
+        lda player_index        ; player column offset
+        ora a
+        ral
+        mov e, a
+        dad d                   ; hl = player_ptr[player_index]
+        mov e, m        
+        inx h
+        mov d, m                ; de = &bitmap
+        
+        push d                  ; will need it three times
+        push d
+
 	lxi h, $8000
 	shld psw_layer+1
-	lda frame_scroll
-	mov b, a
 	call PlayerSprite_W     ; mask non-player layers (FUEL) and collision
 	mov a, d
 	sta player_collision
 
 	lxi h, $a000
 	shld psw_layer+1
-	lda frame_scroll
-	mov b, a
+        pop d                   ; bitmap in d
 	call PlayerSprite_W
 
-        xra a                   ; 4
-        ora d                   ; 4
-        jz $+6                  ; 12    = 20 if no collision
-        sta player_collision    ; 16
+        xra a
+        ora d
+        jz $+6
+        sta player_collision
 
 	lxi h, $c000
 	shld psx_layer+1
-        ; needs both inverted and positive
+        pop d                   ; bitmap in d
 	call PlayerSprite_X     ; draw and detect collision
         xra a
         ora d
@@ -212,25 +224,11 @@ PlayerWipe:
 	call PlayerSprite_C
 	ret
 
-        ; Mask out bits in layer H (e.g. for flying over FUEL)
+        ; Mask out bits in layer psw_layer+1 (e.g. for flying over FUEL)
         ; Also detect collisions
+        ; Inputs: 
+        ;         de = pointer to bitmap
 PlayerSprite_W:
-
-	; hl -> player_ptr
-	lhld player_ptr
-	mvi d, 0
-	lda player_index
-	ora a
-	ral 
-	mov e, a
-	dad d
-	; hl -> player_ptr[player_index]
-
-	mov e, m
-	inx h
-	mov d, m
-	; de -> &bits
-
 	lxi h, 0
 	dad sp 
 	shld psw_restoreSP+1
@@ -241,8 +239,8 @@ psw_layer:
 	add h
 	mov h, a
 
-	mvi a, player_y
-	add b  ; frame_scroll in b
+        lda frame_scroll
+        adi PLAYER_Y
 	mov l, a
 	; hl -> screen location
 
@@ -556,23 +554,10 @@ psw_restoreSP:
 	ret
 
 
+        ; Draw the main sprite and detect collision
+        ; Inputs:
+        ;       de = pointer to bitmap
 PlayerSprite_X:
-
-	; hl -> player_ptr
-	lhld player_ptr
-	mvi d, 0
-	lda player_index
-	ora a
-	ral 
-	mov e, a
-	dad d
-	; hl -> player_ptr[player_index]
-
-	mov e, m
-	inx h
-	mov d, m
-	; de -> &bits
-
 	lxi h, 0
 	dad sp 
 	shld psx_restoreSP+1
@@ -582,10 +567,9 @@ psx_layer:
 	lda player_column
 	add h
 	mov h, a
-
-	mvi b, player_y
-	lda frame_scroll
-	add b
+        
+        lda frame_scroll
+        adi PLAYER_Y
 	mov l, a
 	; hl -> screen location
 
@@ -973,7 +957,6 @@ psx_layer:
 	mov l, e
 	; column end
 
-
 psx_restoreSP:
 	lxi sp, 0
 	ret
@@ -1007,7 +990,7 @@ psc_layer:
 	add h
 	mov h, a
 
-	mvi a, player_y
+	mvi a, PLAYER_Y
 	add b  ; frame_scroll in b
 	mov l, a
 	; hl -> screen location
