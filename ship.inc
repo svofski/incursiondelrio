@@ -8302,47 +8302,47 @@ player_up_ltr_spritegroup:
 player_up_ltr_inf:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0101, $0103, $070f, $1d19, $0307, $0d00, $8080, $80c0, $e0f0, $b898, $c0e0, $b000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $fefe, $fefc, $f8f0, $e2e6, $fcf8, $f2ff, $7f7f, $7f3f, $1f0f, $4767, $3f1f, $4fff,
 
 player_up_ltr0:
 .list
 ;; white pixels
-	dw $0101, $0103, $070f, $1d19, $0307, $0d00, $8080, $80c0, $e0f0, $b898, $c0e0, $b000, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $fefe, $fefc, $f8f0, $e2e6, $fcf8, $f2ff, $7f7f, $7f3f, $1f0f, $4767, $3f1f, $4fff, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_up_ltr1:
 .list
 ;; white pixels
-	dw $0000, $0001, $0307, $0e0c, $0103, $0600, $c0c0, $c0e0, $f0f8, $dccc, $e0f0, $d800, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $fffe, $fcf8, $f1f3, $fefc, $f9ff, $3f3f, $3f1f, $0f07, $2333, $1f0f, $27ff, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_up_ltr2:
 .list
 ;; white pixels
-	dw $0000, $0000, $0103, $0706, $0001, $0300, $6060, $60f0, $f8fc, $6e66, $f0f8, $6c00, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $fefc, $f8f9, $fffe, $fcff, $9f9f, $9f0f, $0703, $9199, $0f07, $93ff, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_up_ltr3:
 .list
 ;; white pixels
-	dw $0000, $0000, $0001, $0303, $0000, $0100, $3030, $3078, $fcfe, $b733, $78fc, $b600, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $fffe, $fcfc, $ffff, $feff, $cfcf, $cf87, $0301, $48cc, $8703, $49ff, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_up_ltr4:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0101, $0000, $0000, $1818, $183c, $7eff, $db99, $3c7e, $db00, $0000, $0000, $0000, $8080, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $fefe, $ffff, $ffff, $e7e7, $e7c3, $8100, $2466, $c381, $24ff, $ffff, $ffff, $ffff, $7f7f, $ffff, $ffff,
 
 player_up_ltr5:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0c0c, $0c1e, $3f7f, $edcc, $1e3f, $6d00, $0000, $0000, $0080, $c0c0, $0000, $8000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f3f3, $f3e1, $c080, $1233, $e1c0, $92ff, $ffff, $ffff, $ff7f, $3f3f, $ffff, $7fff,
 
 player_up_ltr6:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0606, $060f, $1f3f, $7666, $0f1f, $3600, $0000, $0000, $80c0, $e060, $0080, $c000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f9f9, $f9f0, $e0c0, $8999, $f0e0, $c9ff, $ffff, $ffff, $7f3f, $1f9f, $ff7f, $3fff,
 
 player_up_ltr7:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0303, $0307, $0f1f, $3b33, $070f, $1b00, $0000, $0080, $c0e0, $7030, $80c0, $6000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $fcfc, $fcf8, $f0e0, $c4cc, $f8f0, $e4ff, $ffff, $ff7f, $3f1f, $8fcf, $7f3f, $9fff,
 
 ;; end of sprite group player_up
 player_bank_ltr_dispatch:
@@ -8359,47 +8359,47 @@ player_bank_ltr_spritegroup:
 player_bank_ltr_inf:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0101, $0103, $070f, $1d01, $0103, $0700, $8080, $8080, $c0c0, $e0f0, $b080, $c0e0,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $fefe, $fefc, $f8f0, $e2fe, $fefc, $f8ff, $7f7f, $7f7f, $3f3f, $1f0f, $4f7f, $3f1f,
 
 player_bank_ltr0:
 .list
 ;; white pixels
-	dw $0101, $0103, $070f, $1d01, $0103, $0700, $8080, $8080, $c0c0, $e0f0, $b080, $c0e0, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $fefe, $fefc, $f8f0, $e2fe, $fefc, $f8ff, $7f7f, $7f7f, $3f3f, $1f0f, $4f7f, $3f1f, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_ltr1:
 .list
 ;; white pixels
-	dw $0000, $0001, $0307, $0e00, $0001, $0300, $c0c0, $c0c0, $e0e0, $f0f8, $d8c0, $e070, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $fffe, $fcf8, $f1ff, $fffe, $fcff, $3f3f, $3f3f, $1f1f, $0f07, $273f, $1f8f, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_ltr2:
 .list
 ;; white pixels
-	dw $0000, $0000, $0103, $0700, $0000, $0100, $6060, $60e0, $f0f0, $787c, $6ce0, $f038, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $fefc, $f8ff, $ffff, $feff, $9f9f, $9f1f, $0f0f, $8783, $931f, $0fc7, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_ltr3:
 .list
 ;; white pixels
-	dw $0000, $0000, $0001, $0300, $0000, $0000, $3030, $3070, $f8f8, $bc3e, $3670, $f81c, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $fffe, $fcff, $ffff, $ffff, $cfcf, $cf8f, $0707, $43c1, $c98f, $07e3, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_ltr4:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0100, $0000, $0000, $1818, $1838, $7cfc, $de1f, $1b38, $7c0e, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $feff, $ffff, $ffff, $e7e7, $e7c7, $8303, $21e0, $e4c7, $83f1, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_ltr5:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0c0c, $0c1c, $3e7e, $ef0f, $0d1c, $3e07, $0000, $0000, $0000, $0080, $8000, $0000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f3f3, $f3e3, $c181, $10f0, $f2e3, $c1f8, $ffff, $ffff, $ffff, $ff7f, $7fff, $ffff,
 
 player_bank_ltr6:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0606, $060e, $1f3f, $7707, $060e, $1f03, $0000, $0000, $0000, $80c0, $c000, $0080,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f9f9, $f9f1, $e0c0, $88f8, $f9f1, $e0fc, $ffff, $ffff, $ffff, $7f3f, $3fff, $ff7f,
 
 player_bank_ltr7:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0303, $0307, $0f1f, $3b03, $0307, $0f01, $0000, $0000, $8080, $c0e0, $6000, $80c0,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $fcfc, $fcf8, $f0e0, $c4fc, $fcf8, $f0fe, $ffff, $ffff, $7f7f, $3f1f, $9fff, $7f3f,
 
 ;; end of sprite group player_bank
 player_bank_rtl_dispatch:
@@ -8415,42 +8415,42 @@ player_bank_rtl_spritegroup:
 player_bank_rtl0:
 .list
 ;; white pixels
-	dw $0101, $0101, $0303, $070f, $0d01, $0307, $8080, $80c0, $e0f0, $b880, $80c0, $e000, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $fefe, $fefe, $fcfc, $f8f0, $f2fe, $fcf8, $7f7f, $7f3f, $1f0f, $477f, $7f3f, $1fff, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_rtl1:
 .list
 ;; white pixels
-	dw $0000, $0000, $0101, $0307, $0600, $0103, $c0c0, $c0e0, $f0f8, $dcc0, $c0e0, $f080, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $fefe, $fcf8, $f9ff, $fefc, $3f3f, $3f1f, $0f07, $233f, $3f1f, $0f7f, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_rtl2:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0103, $0300, $0001, $6060, $6070, $f8fc, $eee0, $6070, $f8c0, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $fefc, $fcff, $fffe, $9f9f, $9f8f, $0703, $111f, $9f8f, $073f, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_rtl3:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0001, $0100, $0000, $3030, $3038, $7c7e, $f7f0, $b038, $7ce0, $0000, $0000, $0000, $0000, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $fffe, $feff, $ffff, $cfcf, $cfc7, $8381, $080f, $4fc7, $831f, $ffff, $ffff, $ffff, $ffff, $ffff, $ffff,
 
 player_bank_rtl4:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $1818, $181c, $3e3f, $7bf8, $d81c, $3e70, $0000, $0000, $0000, $8000, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $e7e7, $e7e3, $c1c0, $8407, $27e3, $c18f, $ffff, $ffff, $ffff, $7fff, $ffff, $ffff,
 
 player_bank_rtl5:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0c0c, $0c0e, $1f1f, $3d7c, $6c0e, $1f38, $0000, $0000, $0080, $c000, $0000, $0000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f3f3, $f3f1, $e0e0, $c283, $93f1, $e0c7, $ffff, $ffff, $ff7f, $3fff, $ffff, $ffff,
 
 player_bank_rtl6:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0606, $0607, $0f0f, $1e3e, $3607, $0f1c, $0000, $0000, $80c0, $e000, $0000, $8000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $f9f9, $f9f8, $f0f0, $e1c1, $c9f8, $f0e3, $ffff, $ffff, $7f3f, $1fff, $ffff, $7fff,
 
 player_bank_rtl7:
 .list
 ;; white pixels
-	dw $0000, $0000, $0000, $0000, $0000, $0000, $0303, $0303, $0707, $0f1f, $1b03, $070e, $0000, $0080, $c0e0, $7000, $0080, $c000,
+	dw $ffff, $ffff, $ffff, $ffff, $ffff, $ffff, $fcfc, $fcfc, $f8f8, $f0e0, $e4fc, $f8f1, $ffff, $ff7f, $3f1f, $8fff, $ff7f, $3fff,
 
 ;; end of sprite group player_bank
 debris1_ltr_dispatch:

@@ -88,189 +88,167 @@ MissileSprite:
 	mov c, a
 	mvi b, 0
 	dad b
-	mov b, m
+        mov a, m                ; pre-invert the sprite in bc
+        cma
+	mov b, a
 	inx h
-	mov c, m
+	mov a, m
+        cma
+        mov c, a
 
 	xchg
 	lxi d, 0
 
-	mov a, b                ; a = sprite bits (high)
-	cma                     ; a = sprite mask
-	mov e, m                ; e = *screen_ptr
-	ana e                   ; mask current value
-	cmp e                   ; masking changed masked bits? 
-	jz .+4                  ; no, skip next instr
-	inr d                   ; increment collision flag
-	ora b                   ; set sprite bits in a
-	mov m, a                ; store new value
-	inr h                   ; next column
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        inr h                   ; next column
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr h                   ; previous column
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        ; block 16x2 end
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        inr h                   ; next column
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr h                   ; previous column
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        ; block 16x2 end
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        inr h                   ; next column
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr h                   ; previous column
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        ; block 16x2 end
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        inr h                   ; next column
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        mov a, m
+        ana c                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra c                   ; set bits
+        mov m, a
+        dcr h                   ; previous column
+        mov a, m
+        ana b                   ; a = m & high(mask)
+        cmp m                   ; if masked value differs, 
+        jz .+4
+        inr d                   ; increment collision flag
+        cma                     ; invert mask, sprite bits
+        xra b                   ; set bits
+        mov m, a
+        dcr l                   ; next row
+        ; block 16x2 end
 
-	mov a, c                ; a = sprite bits (low)
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l                   ; next row
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr h                   ; previous column
-
-	mov a, b                ; a = sprite bits(high)
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	dcr l                   ; next row
-
-	mov a, b                ; a = sprite bits(high)
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	inr h                   ; next column, etc
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr h
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	dcr l
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	inr h
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr h
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	dcr l
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	inr h
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr h
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-	jz .+4
-	inr d
-	ora b
-	mov m, a
-	dcr l
-
+;;;;
 missl_collision_test:
         mov a, d
         sta missile_hit
@@ -466,139 +444,106 @@ MissileTest:
 	mov c, a
 	mvi b, 0
 	dad b
-	mov b, m
+	mov a, m
+        cma
+        mov b, a
 	inx h
-	mov c, m
+	mov a, m
+        cma
+        mov c, a
 
 	xchg
 	lxi d, $100             ; d = 1, assume collision
 
-	mov a, b                ; a = sprite bits (high)
-	cma                     ; a = sprite mask
-	mov e, m                ; e = *screen_ptr
-	ana e                   ; mask current value
-	cmp e                   ; masking changed masked bits? 
-	rnz                     ; if different, collision: return with d = 1
-	inr h                   ; next column
 
-	mov a, c                ; a = sprite bits (low)
-	cma 
-	mov e, m
-	ana e
-	cmp e
+        mov a, m                ; a = bits
+        ana b                   ; screen & high(mask)
+        cmp m                   ; if different?
+        rnz                     ;   it's a collision, return with d = 1
+        inr h                   ; next column
+        mov a, m                ; same for low(mask)
+        ana c
+        cmp m
         rnz
 	dcr l                   ; next row
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
+	mov a, m
+	ana c
+	cmp m
         rnz
 	dcr h                   ; previous column
-
-	mov a, b                ; a = sprite bits(high)
-	cma 
-	mov e, m
-	ana e
-	cmp e
+	mov a, m
+        ana b
+        cmp m
         rnz
 	dcr l                   ; next row
+        ; end of 16x2 block 1
 
-	mov a, b                ; a = sprite bits(high)
-	cma 
-	mov e, m
-	ana e
-	cmp e
+        mov a, m                ; a = bits
+        ana b                   ; screen & high(mask)
+        cmp m                   ; if different?
+        rnz                     ;   it's a collision, return with d = 1
+        inr h                   ; next column
+        mov a, m                ; same for low(mask)
+        ana c
+        cmp m
         rnz
-	inr h                   ; next column, etc
+	dcr l                   ; next row
+	mov a, m
+	ana c
+	cmp m
+        rnz
+	dcr h                   ; previous column
+	mov a, m
+        ana b
+        cmp m
+        rnz
+	dcr l                   ; next row
+        ; end of 16x2 block 2
 
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
+        mov a, m                ; a = bits
+        ana b                   ; screen & high(mask)
+        cmp m                   ; if different?
+        rnz                     ;   it's a collision, return with d = 1
+        inr h                   ; next column
+        mov a, m                ; same for low(mask)
+        ana c
+        cmp m
         rnz
-	dcr l
+	dcr l                   ; next row
+	mov a, m
+	ana c
+	cmp m
+        rnz
+	dcr h                   ; previous column
+	mov a, m
+        ana b
+        cmp m
+        rnz
+	dcr l                   ; next row
+        ; end of 16x2 block 3
 
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
+        mov a, m                ; a = bits
+        ana b                   ; screen & high(mask)
+        cmp m                   ; if different?
+        rnz                     ;   it's a collision, return with d = 1
+        inr h                   ; next column
+        mov a, m                ; same for low(mask)
+        ana c
+        cmp m
         rnz
-	dcr h
+	dcr l                   ; next row
+	mov a, m
+	ana c
+	cmp m
+        rnz
+	dcr h                   ; previous column
+	mov a, m
+        ana b
+        cmp m
+        rnz
+	dcr l                   ; next row
+        ; end of 16x2 block 4
 
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr l
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	inr h
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr l
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr h
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr l
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	inr h
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr l
-
-	mov a, c
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
-	dcr h
-
-	mov a, b
-	cma 
-	mov e, m
-	ana e
-	cmp e
-        rnz
 	dcr d                   ; no collisions, return d = 0
 	ret
 

@@ -218,12 +218,13 @@ class BlitSprite(Sprite):
             for y in xrange(0, height, 2):   
                 popor = pic[y][column*8:column*8+8] + pic[y+1][column*8:column*8+8]
                 b = self.filter(popor, layerchar)
-                result = ('%s $%04x,' % (result, b));
+                result = ('%s $%04x,' % (result, self.operator(b)));
 
         result = result + '\n';
         return comment + result
 
-
+    def operator(self, dw):
+        return dw
 
 
 class Ship(Sprite):
@@ -499,6 +500,8 @@ class PlayerStraight(BlitSprite):
 
     def getDirections(self): return ['ltr']
 
+    def operator(self, dw): return (~dw) & 0xffff
+
 class PlayerBank(BlitSprite):
     pic = ['       44       ',
            '       44       ',
@@ -514,6 +517,8 @@ class PlayerBank(BlitSprite):
            '        444     '];
 
     def getName(self): return "player_bank"
+
+    def operator(self, dw): return (~dw) & 0xffff
 
 #class PlayerBankR(PlayerBank):
 #    def getName(self): return "player_br"

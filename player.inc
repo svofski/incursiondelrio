@@ -179,7 +179,7 @@ PlayerSprite:
 	shld psw_layer+1
 	lda frame_scroll
 	mov b, a
-	call PlayerSprite_W
+	call PlayerSprite_W     ; mask non-player layers (FUEL) and collision
 	mov a, d
 	sta player_collision
 
@@ -188,16 +188,20 @@ PlayerSprite:
 	lda frame_scroll
 	mov b, a
 	call PlayerSprite_W
-	lda player_collision
-	add d
-	sta player_collision
+
+        xra a                   ; 4
+        ora d                   ; 4
+        jz $+6                  ; 12    = 20 if no collision
+        sta player_collision    ; 16
 
 	lxi h, $c000
 	shld psx_layer+1
-	call PlayerSprite_X
-	lda player_collision
-	add d
-	sta player_collision
+        ; needs both inverted and positive
+	call PlayerSprite_X     ; draw and detect collision
+        xra a
+        ora d
+        rz
+        sta player_collision
 	ret
 
 PlayerWipe:
@@ -208,6 +212,8 @@ PlayerWipe:
 	call PlayerSprite_C
 	ret
 
+        ; Mask out bits in layer H (e.g. for flying over FUEL)
+        ; Also detect collisions
 PlayerSprite_W:
 
 	; hl -> player_ptr
@@ -249,345 +255,301 @@ psw_layer:
 	mov e, l
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-			        ; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-
+        ;
 	inr h
 	mov l, e
 	; column end
 
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-				; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-
+ 
+        ;; --
 	inr h
 	mov l, e
 	; column end
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-				; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
+	mov m, a
+	dcr l
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
-	cmp m
-	jz .+4
-	inr d
+        mov a, m                
+        ana b                   ; a = m & mask
+        cmp m                   ; m != (m & mask) ?
+	jz .+4                  
+	inr d                   ; not equal, collision
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
+        mov a, m
+        ana c
+        cmp m
 	jz .+4
 	inr d
 	mov m, a
-
-	inr h
-	mov l, e
-	; column end
-
 
 psw_restoreSP:
 	lxi sp, 0
@@ -635,124 +597,125 @@ psx_layer:
 	mvi d, 0
 	;; le big pop
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
+        ;
 
 	inr h
 	mov l, e
@@ -760,248 +723,251 @@ psx_layer:
 
 	;; le big pop
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
+        ;
 
 	inr h
 	mov l, e
 	; column end
+
 	;; le big pop
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
-	;
+        ;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
+        cmp m
+	jz .+4
+	inr d
+        cma
+        xra b
+	mov m, a
+	dcr l
+	mov a, m
+	ana c
 	cmp m
 	jz .+4
 	inr d
-	ora b
+        cma
+        xra c
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	cmp m
-	jz .+4
-	inr d
-	ora c
-	mov m, a
-	dcr l
+        ;
 
 	inr h
 	mov l, e
@@ -1013,7 +979,7 @@ psx_restoreSP:
 	ret
 
 
-
+        ; Clear the player sprite from layer $c000
 PlayerSprite_C:
 
 	; hl -> player_ptr
@@ -1050,85 +1016,68 @@ psc_layer:
 	sphl
 	xchg
 
-	mvi d, 0
-
 	mov e, l
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-				; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
+	dcr l
+	;
 
 	inr h
 	mov l, e
@@ -1136,161 +1085,131 @@ psc_layer:
 
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-				; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
+	dcr l
+	;
 
 	inr h
 	mov l, e
 	; column end
+
 	;; le big pop
 	pop b
-	mov a, b
-	cma  			; a = mask
-	ana m 			; a = m & mask
-				; collision = m != (m & mask)
-	cmp m
-	jz .+4
-	inr d
-
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
+        mov a, m
+        ana c
+        mov m, a
 	dcr l
 	;
 	pop b
-	mov a, b
-	cma 
-	ana m
+        mov a, m
+        ana b
 	mov m, a
 	dcr l
-	mov a, c
-	cma
-	ana m
-	mov m, a
-	; column end
+        mov a, m
+        ana c
+        mov m, a
+	dcr l
+        ; column end
 
 
 psc_restoreSP:

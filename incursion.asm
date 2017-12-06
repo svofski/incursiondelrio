@@ -151,22 +151,26 @@ jamas_1:
     ; pink border
     mvi a, 4
     out 2
-    call DrawBlinds
+    call DrawBlinds             ; cover 2 lines of PF at the bottom
+
     ; white border
     mvi a, 2
     out 2
+
     call PlayerSprite
     lda  frame_scroll
     sta frame_scroll_prev
 
+    ; poop border
     mvi a, 6
     out 2
+
     call PlayFieldRoll
 
     ; black border
     mvi a, 5
     out 2
-    call ClearBlinds
+    call ClearBlinds            ; uncover 2 lines of PF at the top
     call SoundNoise
 
     mvi a, 8
