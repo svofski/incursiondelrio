@@ -1080,57 +1080,36 @@ bridge_frame:
     call foe_paint
     ret
 
-    ;; ---------------------------------------------- -   - 
-    ;; Fuel: prepare and draw
-    ;; ----------------------------------------------------------
+        ;; ---------------------------------------------- -   - 
+        ;; Fuel: prepare and draw (call directly bypassing dispatch)
+        ;; ----------------------------------------------------------
 fuel_frame:
-    lxi h, luuuu_ltr_dispatch
-    shld foeBlock_LTR
-    shld foeBlock_RTL
-    lda foeBlock + foeColumn
-    mov e, a
-    lda foeBlock + foeY
-    mvi h, 0
-    mov c, h
-    call foe_paint
+        lda foeBlock + foeColumn
+        adi $7f                         ; FIXME should be $80
+        mov d, a
+        lda foeBlock + foeY
 
-    lxi h, euuuu_ltr_dispatch
-    shld foeBlock_LTR
-    shld foeBlock_RTL
-    lda foeBlock + foeColumn
-    mov e, a
-    lda foeBlock + foeY
-    adi 6
-    sta foeBlock + foeY
-    mvi h, 0
-    mov c, h
-    call foe_paint
+        mov e, a                        ; de == base addr
+        push d
+        adi 6
+        mov e, a
+        push d
+        adi 6
+        mov e, a
+        push d
+        adi 6
+        mov e, a
 
-    lxi h, uuuuu_ltr_dispatch
-    shld foeBlock_LTR
-    shld foeBlock_RTL
-    lda foeBlock + foeColumn
-    mov e, a
-    lda foeBlock + foeY
-    adi 6
-    sta foeBlock + foeY
-    mvi h, 0
-    mov c, h
-    call foe_paint
+        lxi b, 0
+        call fuuuu_ltr0
+        pop d
+        call uuuuu_ltr0
+        pop d 
+        call euuuu_ltr0
+        pop d
+        call luuuu_ltr0
 
-    lxi h, fuuuu_ltr_dispatch
-    shld foeBlock_LTR
-    shld foeBlock_RTL
-    lda foeBlock + foeColumn
-    mov e, a
-    lda foeBlock + foeY
-    adi 6
-    sta foeBlock + foeY
-    mvi h, 0
-    mov c, h
-    call foe_paint
-
-    ret
+        ret
 
     ;; ---------------------------------------------- -   - 
     ;; Jet: prepare and draw
@@ -1292,6 +1271,7 @@ foe_paint_preload:
     ;; foeBlock movement calculation ends here
 
     ;; actual paint
+    ;; Input e = column
 foe_paint:
     ;; paint foe
     ; e contains column

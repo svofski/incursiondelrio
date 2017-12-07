@@ -6169,7 +6169,6 @@ propellerA_ltr_inf:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[             444444     ] 00000007e0
 ;[                 4444444] 000000007f
@@ -6204,7 +6203,6 @@ propellerA_ltr0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[     444444     ] 00000007e0
 ;[         4444444] 000000007f
@@ -6234,7 +6232,6 @@ propellerA_ltr1:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[      444444            ] 000003f000
 ;[          4444444       ] 0000003f80
@@ -6271,7 +6268,6 @@ propellerA_ltr2:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[       444444           ] 000001f800
 ;[           4444444      ] 0000001fc0
@@ -6308,7 +6304,6 @@ propellerA_ltr3:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[        444444          ] 000000fc00
 ;[            4444444     ] 0000000fe0
@@ -6344,7 +6339,6 @@ propellerA_ltr4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[         444444         ] 0000007e00
 ;[             4444444    ] 00000007f0
@@ -6380,7 +6374,6 @@ propellerA_ltr5:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[          444444        ] 0000003f00
 ;[              4444444   ] 00000003f8
@@ -6416,7 +6409,6 @@ propellerA_ltr6:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[           444444       ] 0000001f80
 ;[               4444444  ] 00000001fc
@@ -6452,7 +6444,6 @@ propellerA_ltr7:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[            444444      ] 0000000fc0
 ;[                4444444 ] 00000000fe
@@ -6498,7 +6489,6 @@ propellerA_rtl0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[     444444             ] 000007e000
 ;[4444444                 ] 0000fe0000
@@ -6533,7 +6523,6 @@ propellerA_rtl1:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[      444444            ] 000003f000
 ;[ 4444444                ] 00007f0000
@@ -6568,7 +6557,6 @@ propellerA_rtl2:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[       444444           ] 000001f800
 ;[  4444444               ] 00003f8000
@@ -6604,7 +6592,6 @@ propellerA_rtl3:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[        444444          ] 000000fc00
 ;[   4444444              ] 00001fc000
@@ -6640,7 +6627,6 @@ propellerA_rtl4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[         444444         ] 0000007e00
 ;[    4444444             ] 00000fe000
@@ -6676,7 +6662,6 @@ propellerA_rtl5:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[          444444        ] 0000003f00
 ;[     4444444            ] 000007f000
@@ -6712,7 +6697,6 @@ propellerA_rtl6:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[           444444       ] 0000001f80
 ;[      4444444           ] 000003f800
@@ -6749,7 +6733,6 @@ propellerA_rtl7:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[            444444      ] 0000000fc0
 ;[       4444444          ] 000001fc00
@@ -6798,7 +6781,6 @@ propellerB_ltr_inf:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[                 4444444] 000000007f
 ;[             4444444    ] 00000007f0
@@ -6834,7 +6816,6 @@ propellerB_ltr0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[         4444444] 000000007f
 ;[     4444444    ] 00000007f0
@@ -6865,7 +6846,6 @@ propellerB_ltr1:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[          4444444       ] 0000003f80
 ;[      4444444           ] 000003f800
@@ -6902,7 +6882,6 @@ propellerB_ltr2:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[           4444444      ] 0000001fc0
 ;[       4444444          ] 000001fc00
@@ -6939,7 +6918,6 @@ propellerB_ltr3:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[            4444444     ] 0000000fe0
 ;[        4444444         ] 000000fe00
@@ -6974,7 +6952,6 @@ propellerB_ltr4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[             4444444    ] 00000007f0
 ;[         4444444        ] 0000007f00
@@ -7009,7 +6986,6 @@ propellerB_ltr5:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[              4444444   ] 00000003f8
 ;[          4444444       ] 0000003f80
@@ -7045,7 +7021,6 @@ propellerB_ltr6:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[               4444444  ] 00000001fc
 ;[           4444444      ] 0000001fc0
@@ -7081,7 +7056,6 @@ propellerB_ltr7:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[                4444444 ] 00000000fe
 ;[            4444444     ] 0000000fe0
@@ -7128,7 +7102,6 @@ propellerB_rtl0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[4444444                 ] 0000fe0000
 ;[    4444444             ] 00000fe000
@@ -7164,7 +7137,6 @@ propellerB_rtl1:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[ 4444444                ] 00007f0000
 ;[     4444444            ] 000007f000
@@ -7200,7 +7172,6 @@ propellerB_rtl2:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[  4444444               ] 00003f8000
 ;[      4444444           ] 000003f800
@@ -7236,7 +7207,6 @@ propellerB_rtl3:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[   4444444              ] 00001fc000
 ;[       4444444          ] 000001fc00
@@ -7272,7 +7242,6 @@ propellerB_rtl4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[    4444444             ] 00000fe000
 ;[        4444444         ] 000000fe00
@@ -7307,7 +7276,6 @@ propellerB_rtl5:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[     4444444            ] 000007f000
 ;[         4444444        ] 0000007f00
@@ -7342,7 +7310,6 @@ propellerB_rtl6:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[      4444444           ] 000003f800
 ;[          4444444       ] 0000003f80
@@ -7379,7 +7346,6 @@ propellerB_rtl7:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[       4444444          ] 000001fc00
 ;[           4444444      ] 0000001fc0
@@ -7428,7 +7394,6 @@ jet_ltr_inf:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[        44              ] 000000c000
 ;[        4444      4444  ] 000000f03c
@@ -7471,7 +7436,6 @@ jet_ltr0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[44              ] 000000c000
 ;[4444      4444  ] 000000f03c
@@ -7514,7 +7478,6 @@ jet_ltr4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[    44                  ] 00000c0000
 ;[    4444      4444      ] 00000f03c0
@@ -7575,7 +7538,6 @@ jet_rtl0:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[              44        ] 0000000300
 ;[  4444      4444        ] 00003c0f00
@@ -7624,7 +7586,6 @@ jet_rtl4:
 	lxi d, $4000
 	dad d
 	sphl
-	lxi b, 0
 ;; white
 ;[                  44    ] 0000000030
 ;[      4444      4444    ] 000003c0f0

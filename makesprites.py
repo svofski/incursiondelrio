@@ -94,7 +94,7 @@ class Sprite:
             print '\tlxi d, $4000'
             print '\tdad d'
             print '\tsphl'
-            print '\tlxi b, 0'
+            #print '\tlxi b, 0'
             print ';; white'
             print self.makeLayer('4', shift, orientation)    
 
