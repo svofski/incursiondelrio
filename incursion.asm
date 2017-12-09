@@ -1375,10 +1375,13 @@ debfr_loadfb
         ori $80                 ; set blow up flag again: see [foe_infield]
         mov m, a
         ret
+
+
+SCORE_BASELINE  equ 20
         
 PaintScore:
         lda frame_scroll
-        adi 24 ; SCORE_Y, PLAYER_Y = 64 + 20
+        adi SCORE_BASELINE+7
         mov e, a
         mvi d, $88
         ;;call char_3_ltr0
@@ -1421,13 +1424,13 @@ PaintScore:
         call char_9_ltr0
 
         lda frame_scroll
-        adi 24
+        adi SCORE_BASELINE+10
         mov e, a
         mvi d, $95
         call bridgeword_ltr0
 
         lda frame_scroll
-        adi 17
+        adi SCORE_BASELINE
         mov e, a
         mvi d, $96
         push d
@@ -1436,6 +1439,11 @@ PaintScore:
         pop d
         call char_9_ltr0
 
+        lda frame_scroll
+        adi SCORE_BASELINE+20
+        mov e, a
+        mvi d, $96
+        call playericon_ltr0
 
         ret
 

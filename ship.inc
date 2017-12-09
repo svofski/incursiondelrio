@@ -10836,4 +10836,69 @@ bridgeword_ltr6:
 bridgeword_ltr7:
   ; (shift 7 skipped)
 ;; end of sprite group bridgeword
+playericon_ltr_spritegroup:
+playericon_ltr_inf:
+  ; (shift -1 skipped)
+playericon_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $ef
+	dcr l
+	mvi m, $ef
+	dcr l
+	mvi m, $c7
+	dcr l
+	mvi m, $83
+	dcr l
+	mvi m, $ef
+	dcr l
+	mvi m, $d7
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+playericon_ltr1:
+  ; (shift 1 skipped)
+playericon_ltr2:
+  ; (shift 2 skipped)
+playericon_ltr3:
+  ; (shift 3 skipped)
+playericon_ltr4:
+  ; (shift 4 skipped)
+playericon_ltr5:
+  ; (shift 5 skipped)
+playericon_ltr6:
+  ; (shift 6 skipped)
+playericon_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group playericon
 .list

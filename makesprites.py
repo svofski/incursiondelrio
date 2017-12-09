@@ -714,14 +714,7 @@ class _56789(Character):
            '  4444    44444     44    44444    4    ',
            ];
 
-class _BRIDGE(Sprite): 
-            #       #       #       #       #
-    pic = [' 4444   4444   4  4444    444    44444  ',
-           ' 4   4  4   4  4  4   4  4       4      ',
-           ' 4444   4444   4  4   4  4   44  444    ',
-           ' 4   4  4   4  4  4   4  4    4  4      ',
-           ' 4444   4   4  4  4444    44444  44444  ',
-           '                                        '];
+class SingleBlindSprite(Sprite):
     def getDirections(self): return ['ltr']
 
     def isDoubleWidth(false):
@@ -731,7 +724,7 @@ class _BRIDGE(Sprite):
         return shift in [0]
 
     def getName(self): 
-        return "bridgeword"
+        return type(self).__name__.lower()
     
     def isOverBlinds(self):
         return True
@@ -745,6 +738,22 @@ class _BRIDGE(Sprite):
     def makeAll(self):
         self.makeGroup('ltr')
 
+
+class BridgeWord(SingleBlindSprite): 
+            #       #       #       #       #
+    pic = [' 4444   4444   4  4444    444    44444  ',
+           ' 4   4  4   4  4  4   4  4       4      ',
+           ' 4444   4444   4  4   4  4   44  444    ',
+           ' 4   4  4   4  4  4   4  4    4  4      ',
+           ' 4444   4   4  4  4444    44444  44444  ',
+           '                                        '];
+class PlayerIcon(SingleBlindSprite):
+    pic = ['   4    ',
+           '   4    ',
+           '  444   ',
+           ' 44444  ',
+           '   4    ',
+           '  4 4   '];
           
 print ';; Automatically generated file'
 print ';; see makesprites.py'
@@ -777,7 +786,8 @@ Debris4().makeAll()
 _01234().makeAll()
 _56789().makeAll()
 
-_BRIDGE().makeAll()
+BridgeWord().makeAll()
+PlayerIcon().makeAll()
 
 print '.list'
 
