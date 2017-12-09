@@ -161,9 +161,14 @@ jamas_1:
     lda  frame_scroll
     sta frame_scroll_prev
 
+    mvi a, 4
+    out 2
+    call PaintScore
+
     ; poop border
     mvi a, 6
     out 2
+
 
     call PlayFieldRoll
 
@@ -172,6 +177,7 @@ jamas_1:
     out 2
     call ClearBlinds            ; uncover 2 lines of PF at the top
     call SoundNoise
+
 
     mvi a, 8
     out 2
@@ -1370,7 +1376,68 @@ debfr_loadfb
         mov m, a
         ret
         
+PaintScore:
+        lda frame_scroll
+        adi 24 ; SCORE_Y, PLAYER_Y = 64 + 20
+        mov e, a
+        mvi d, $88
+        ;;call char_3_ltr0
+        push d
+        inr d
+        push d
+        inr d
+        push d
+        inr d 
+        push d
+        inr d
+        push d
+        inr d
+        push d
+        inr d
+        push d
+        inr d
+        push d
+        inr d
+        push d
+        inr d
+        call char_0_ltr0
+        pop d
+        call char_1_ltr0
+        pop d
+        call char_2_ltr0
+        pop d
+        call char_3_ltr0
+        pop d
+        call char_4_ltr0
+        pop d
+        call char_5_ltr0
+        pop d
+        call char_6_ltr0
+        pop d
+        call char_7_ltr0
+        pop d
+        call char_8_ltr0
+        pop d
+        call char_9_ltr0
 
+        lda frame_scroll
+        adi 24
+        mov e, a
+        mvi d, $95
+        call bridgeword_ltr0
+
+        lda frame_scroll
+        adi 17
+        mov e, a
+        mvi d, $96
+        push d
+        inr d
+        call char_9_ltr0
+        pop d
+        call char_9_ltr0
+
+
+        ret
 
     .include random.inc
     .include palette.inc

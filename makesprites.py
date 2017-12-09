@@ -3,7 +3,7 @@
 import math
 
 
-class Sprite:
+class Sprite(object):
     def getPicRaw(self):
         return self.pic
 
@@ -16,6 +16,9 @@ class Sprite:
             self.makeGroup(dir)
 
     def isWhite(self):
+        return False
+
+    def isOverBlinds(self):
         return False
 
     def getSpriteName(self, orientation, shift):
@@ -39,17 +42,39 @@ class Sprite:
         for shift in self.spriteRange(orientation):
             print '%s:' % self.getSpriteName(orientation, shift)
             if (self.includeShift(shift)):
+                #print "#####" + self.getSpriteName(orientation, shift)
                 self.makeAsm(shift, orientation, self.getSpriteName(orientation, shift) + '_ret')
             else:
                 print '  ; (shift %d skipped)' % shift
         print ';; end of sprite group %s' % self.getName()
 
     def makeAsm(self, shift, orientation, returnLabel):
+        if self.isOverBlinds():
+            # white layer
+            print '\tlxi b, $ff'
+            print '\tmov l, e'
+            print '\tmvi a, $40'
+            print '\tadd d'
+            print '\tmov h, a'
+            #print '\tlxi b, 0'
+            print ';; white text'
+            #print self.makeLayer('4', shift, orientation, rollover=True)    
+            print self.makeLayer(0, shift, orientation, rollover=True)
+
+            print ';; Mask layer 3 (e000)'
+            print '\tmvi a, $60'
+            print '\tadd d'
+            print '\tmov h, a'
+            print '\tmov l, e'
+            print self.makeLayer('4', shift, orientation, negative=True, rollover=True)
+
+            print '\tret'
+            return
+
         print '\tlxi h, 0'
         print '\tdad sp'
         print '\tshld %s+1' % returnLabel   
         print '\t.nolist' 
-
         if not self.isWhite():
             #layer = self.makeLayer('13578', shift, orientation)     # layer 0
             # not sure about inclusion of 8 in this, 8 is useful as non-colliding black
@@ -103,7 +128,10 @@ class Sprite:
         print '\tlxi sp, 0'
         print '\tret'
 
-    def makeLayer(self, layerchar, shift, orientation):
+    def makeLayer(self, layerchar, shift, orientation, negative=False, rollover=False):
+        if rollover:
+            return self.makeLayerRollover(layerchar, shift, orientation, negative)
+
         result = ''
         comment = ''
 
@@ -145,6 +173,8 @@ class Sprite:
             for y in xrange(leading * 2, height - trailing * 2, 2):   
                 popor = pic[y][column*8:column*8+8] + pic[y+1][column*8:column*8+8]
                 b = self.filter(popor, layerchar)
+                if negative:
+                    b = (~b) & 0xffff;
                 if b == 0:
                     result = result + '\tpush b\n'
                 else:
@@ -155,6 +185,45 @@ class Sprite:
             if column != columns - 1:
                 result = result + ('\tlxi h, 256+%d\n\tdad sp\n\tsphl\n' % (height - leading*2 - trailing * 2))
                 lastb = -1
+
+        return comment + result
+
+    def makeLayerRollover(self, layerchar, shift, orientation, negative=False):
+        result = ''
+        comment = ''
+
+        pic = self.getPic(shift, 
+                mirror = orientation == 'rtl', 
+                prepend = shift == -1, 
+                append = (shift == 0) and (orientation == 'rtl'))
+
+        height = len(pic) + 2
+        width = len(pic[0])
+        columns = width / 8
+
+        for column in xrange(columns):
+            for y in xrange(height):
+                try:
+                    popor = pic[y][column*8:column*8+8]
+                except:
+                    popor =  ' '
+                if layerchar == 0:
+                    if y < height - 2: 
+                        result += '\tdcr l\n\tmov m, c\n' # fill 
+                    else:
+                        result += '\tdcr l\n\tmov m, b\n' # zero
+                else:
+                    b = self.filter(popor, layerchar)
+                    if negative:
+                        b = (~b) & 0xff
+                    if b == 0:
+                        result += '\tdcr l\n\tmov m, b\n'
+                    elif b == 255:
+                        result += '\tdcr l\n\tmov m, c\n'
+                    else:
+                        result += '\tdcr l\n\tmvi m, $%02x\n' % (b & 0xff)
+            if column != columns - 1:
+                result += '\tinr h\n\tmov a, l\n\tadi %d\n\tmov l, a\n' % height
 
         return comment + result
 
@@ -587,8 +656,96 @@ class Debris4(Debris):
     def getName(self):
         return "debris4"
 
+class Character(Sprite):
+    charname = "~"
 
-        
+    def getDirections(self): return ['ltr']
+
+    def isDoubleWidth(false):
+        return False
+
+    def includeShift(self, shift):
+        return shift in [0]
+
+    def getName(self): 
+        #return "char_" + type(self).__name__[-1]
+        return "char_" + self.charname
+    
+    def isOverBlinds(self):
+        return True
+
+    def countLeading(self, lst, match):
+        return 0
+    
+    def countTrailing(self, lst, match):
+        return 0
+ 
+    def makeAll(self):
+        chars = type(self).__name__[1:]
+        for col, ch in enumerate(chars):
+            self.charname = ch
+            self.pic = []
+            for row in self.p4:
+                self.pic.append(row[col * 8 : col * 8 + 8]);
+
+            #super(Character, self).makeAll()
+            self.makeGroup('ltr')
+
+class _01234(Character):
+            #       #       #       #       #
+    p4  = ['   444      44     4444   444444     44 ',
+           '  4  44    444    4   44  4    4    444 ',
+           ' 4    44    44        44      4    4 44 ',
+           ' 4    44    44       444    4444  4  44 ',
+           ' 4    44    44     444        44 4444444',
+           '  4  44     44    44      4   44     44 ',
+           '   444     4444   444444   4444      44 ',
+           ];
+
+
+class _56789(Character): 
+            #       #       #       #       #
+    p4  = [' 444444      4   4444444   444     4444 ',
+           ' 4         44          4  4  44   4   44',
+           ' 444444   44           4  4  44   4   44',
+           '      44 44 44       44   44444    44 44',
+           '      44 4    44    44   4    44     44 ',
+           ' 4    44 44   44    44   4    44    44  ',
+           '  4444    44444     44    44444    4    ',
+           ];
+
+class _BRIDGE(Sprite): 
+            #       #       #       #       #
+    pic = [' 4444   4444   4  4444    444    44444  ',
+           ' 4   4  4   4  4  4   4  4       4      ',
+           ' 4444   4444   4  4   4  4   44  444    ',
+           ' 4   4  4   4  4  4   4  4    4  4      ',
+           ' 4444   4   4  4  4444    44444  44444  ',
+           '                                        '];
+    def getDirections(self): return ['ltr']
+
+    def isDoubleWidth(false):
+        return False
+
+    def includeShift(self, shift):
+        return shift in [0]
+
+    def getName(self): 
+        return "bridgeword"
+    
+    def isOverBlinds(self):
+        return True
+
+    def countLeading(self, lst, match):
+        return 0
+    
+    def countTrailing(self, lst, match):
+        return 0
+ 
+    def makeAll(self):
+        self.makeGroup('ltr')
+
+          
 print ';; Automatically generated file'
 print ';; see makesprites.py'
 #print '.nolist'
@@ -616,6 +773,12 @@ Debris1().makeAll()
 Debris2().makeAll()
 Debris3().makeAll()
 Debris4().makeAll()
+
+_01234().makeAll()
+_56789().makeAll()
+
+_BRIDGE().makeAll()
+
 print '.list'
 
 

@@ -9921,4 +9921,919 @@ debris4_ltr7_ret:
 	lxi sp, 0
 	ret
 ;; end of sprite group debris4
+char_0_ltr_spritegroup:
+char_0_ltr_inf:
+  ; (shift -1 skipped)
+char_0_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $e3
+	dcr l
+	mvi m, $d9
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $d9
+	dcr l
+	mvi m, $e3
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_0_ltr1:
+  ; (shift 1 skipped)
+char_0_ltr2:
+  ; (shift 2 skipped)
+char_0_ltr3:
+  ; (shift 3 skipped)
+char_0_ltr4:
+  ; (shift 4 skipped)
+char_0_ltr5:
+  ; (shift 5 skipped)
+char_0_ltr6:
+  ; (shift 6 skipped)
+char_0_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_0
+char_1_ltr_spritegroup:
+char_1_ltr_inf:
+  ; (shift -1 skipped)
+char_1_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $e3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $e1
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_1_ltr1:
+  ; (shift 1 skipped)
+char_1_ltr2:
+  ; (shift 2 skipped)
+char_1_ltr3:
+  ; (shift 3 skipped)
+char_1_ltr4:
+  ; (shift 4 skipped)
+char_1_ltr5:
+  ; (shift 5 skipped)
+char_1_ltr6:
+  ; (shift 6 skipped)
+char_1_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_1
+char_2_ltr_spritegroup:
+char_2_ltr_inf:
+  ; (shift -1 skipped)
+char_2_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $e1
+	dcr l
+	mvi m, $dc
+	dcr l
+	mvi m, $fc
+	dcr l
+	mvi m, $f8
+	dcr l
+	mvi m, $e3
+	dcr l
+	mvi m, $cf
+	dcr l
+	mvi m, $c0
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_2_ltr1:
+  ; (shift 1 skipped)
+char_2_ltr2:
+  ; (shift 2 skipped)
+char_2_ltr3:
+  ; (shift 3 skipped)
+char_2_ltr4:
+  ; (shift 4 skipped)
+char_2_ltr5:
+  ; (shift 5 skipped)
+char_2_ltr6:
+  ; (shift 6 skipped)
+char_2_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_2
+char_3_ltr_spritegroup:
+char_3_ltr_inf:
+  ; (shift -1 skipped)
+char_3_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $c0
+	dcr l
+	mvi m, $de
+	dcr l
+	mvi m, $fd
+	dcr l
+	mvi m, $f0
+	dcr l
+	mvi m, $fc
+	dcr l
+	mvi m, $dc
+	dcr l
+	mvi m, $e1
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_3_ltr1:
+  ; (shift 1 skipped)
+char_3_ltr2:
+  ; (shift 2 skipped)
+char_3_ltr3:
+  ; (shift 3 skipped)
+char_3_ltr4:
+  ; (shift 4 skipped)
+char_3_ltr5:
+  ; (shift 5 skipped)
+char_3_ltr6:
+  ; (shift 6 skipped)
+char_3_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_3
+char_4_ltr_spritegroup:
+char_4_ltr_inf:
+  ; (shift -1 skipped)
+char_4_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $f9
+	dcr l
+	mvi m, $f1
+	dcr l
+	mvi m, $e9
+	dcr l
+	mvi m, $d9
+	dcr l
+	mvi m, $80
+	dcr l
+	mvi m, $f9
+	dcr l
+	mvi m, $f9
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_4_ltr1:
+  ; (shift 1 skipped)
+char_4_ltr2:
+  ; (shift 2 skipped)
+char_4_ltr3:
+  ; (shift 3 skipped)
+char_4_ltr4:
+  ; (shift 4 skipped)
+char_4_ltr5:
+  ; (shift 5 skipped)
+char_4_ltr6:
+  ; (shift 6 skipped)
+char_4_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_4
+char_5_ltr_spritegroup:
+char_5_ltr_inf:
+  ; (shift -1 skipped)
+char_5_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $81
+	dcr l
+	mvi m, $bf
+	dcr l
+	mvi m, $81
+	dcr l
+	mvi m, $fc
+	dcr l
+	mvi m, $fc
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $c3
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_5_ltr1:
+  ; (shift 1 skipped)
+char_5_ltr2:
+  ; (shift 2 skipped)
+char_5_ltr3:
+  ; (shift 3 skipped)
+char_5_ltr4:
+  ; (shift 4 skipped)
+char_5_ltr5:
+  ; (shift 5 skipped)
+char_5_ltr6:
+  ; (shift 6 skipped)
+char_5_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_5
+char_6_ltr_spritegroup:
+char_6_ltr_inf:
+  ; (shift -1 skipped)
+char_6_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $fb
+	dcr l
+	mvi m, $e7
+	dcr l
+	mvi m, $cf
+	dcr l
+	mvi m, $93
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $9c
+	dcr l
+	mvi m, $c1
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_6_ltr1:
+  ; (shift 1 skipped)
+char_6_ltr2:
+  ; (shift 2 skipped)
+char_6_ltr3:
+  ; (shift 3 skipped)
+char_6_ltr4:
+  ; (shift 4 skipped)
+char_6_ltr5:
+  ; (shift 5 skipped)
+char_6_ltr6:
+  ; (shift 6 skipped)
+char_6_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_6
+char_7_ltr_spritegroup:
+char_7_ltr_inf:
+  ; (shift -1 skipped)
+char_7_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $80
+	dcr l
+	mvi m, $fe
+	dcr l
+	mvi m, $fe
+	dcr l
+	mvi m, $f9
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $f3
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_7_ltr1:
+  ; (shift 1 skipped)
+char_7_ltr2:
+  ; (shift 2 skipped)
+char_7_ltr3:
+  ; (shift 3 skipped)
+char_7_ltr4:
+  ; (shift 4 skipped)
+char_7_ltr5:
+  ; (shift 5 skipped)
+char_7_ltr6:
+  ; (shift 6 skipped)
+char_7_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_7
+char_8_ltr_spritegroup:
+char_8_ltr_inf:
+  ; (shift -1 skipped)
+char_8_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $e3
+	dcr l
+	mvi m, $d9
+	dcr l
+	mvi m, $d9
+	dcr l
+	mvi m, $c1
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $bc
+	dcr l
+	mvi m, $c1
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_8_ltr1:
+  ; (shift 1 skipped)
+char_8_ltr2:
+  ; (shift 2 skipped)
+char_8_ltr3:
+  ; (shift 3 skipped)
+char_8_ltr4:
+  ; (shift 4 skipped)
+char_8_ltr5:
+  ; (shift 5 skipped)
+char_8_ltr6:
+  ; (shift 6 skipped)
+char_8_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_8
+char_9_ltr_spritegroup:
+char_9_ltr_inf:
+  ; (shift -1 skipped)
+char_9_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $e1
+	dcr l
+	mvi m, $dc
+	dcr l
+	mvi m, $dc
+	dcr l
+	mvi m, $e4
+	dcr l
+	mvi m, $f9
+	dcr l
+	mvi m, $f3
+	dcr l
+	mvi m, $ef
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_9_ltr1:
+  ; (shift 1 skipped)
+char_9_ltr2:
+  ; (shift 2 skipped)
+char_9_ltr3:
+  ; (shift 3 skipped)
+char_9_ltr4:
+  ; (shift 4 skipped)
+char_9_ltr5:
+  ; (shift 5 skipped)
+char_9_ltr6:
+  ; (shift 6 skipped)
+char_9_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_9
+bridgeword_ltr_spritegroup:
+bridgeword_ltr_inf:
+  ; (shift -1 skipped)
+bridgeword_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $87
+	dcr l
+	mvi m, $bb
+	dcr l
+	mvi m, $87
+	dcr l
+	mvi m, $bb
+	dcr l
+	mvi m, $87
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mvi m, $0e
+	dcr l
+	mvi m, $76
+	dcr l
+	mvi m, $0e
+	dcr l
+	mvi m, $76
+	dcr l
+	mvi m, $76
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mvi m, $c3
+	dcr l
+	mvi m, $dd
+	dcr l
+	mvi m, $dd
+	dcr l
+	mvi m, $dd
+	dcr l
+	mvi m, $c3
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mvi m, $c7
+	dcr l
+	mvi m, $bf
+	dcr l
+	mvi m, $b9
+	dcr l
+	mvi m, $bd
+	dcr l
+	mvi m, $c1
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	inr h
+	mov a, l
+	adi 8
+	mov l, a
+	dcr l
+	mvi m, $83
+	dcr l
+	mvi m, $bf
+	dcr l
+	mvi m, $8f
+	dcr l
+	mvi m, $bf
+	dcr l
+	mvi m, $83
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+bridgeword_ltr1:
+  ; (shift 1 skipped)
+bridgeword_ltr2:
+  ; (shift 2 skipped)
+bridgeword_ltr3:
+  ; (shift 3 skipped)
+bridgeword_ltr4:
+  ; (shift 4 skipped)
+bridgeword_ltr5:
+  ; (shift 5 skipped)
+bridgeword_ltr6:
+  ; (shift 6 skipped)
+bridgeword_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group bridgeword
 .list
