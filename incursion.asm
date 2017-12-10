@@ -82,8 +82,17 @@ jamas:
     mvi a, 10
     out 2
 
+    ; write ret to rst 7 vector 
+    mvi a, $c9
+    sta $38
+
     ei
     hlt
+
+    ; fuckup interceptor
+    lxi h, $76f3
+    shld $38
+
     xra a
     out 2
 
@@ -117,6 +126,8 @@ jamas_1:
     call MissileMotion
     call MissileSprite
 
+    mvi a, $e
+    out 2
     ; if missile collided, is it with a foe or terrain and if a foe, which one?
     call CollisionMissileFoe
     ; --
@@ -178,9 +189,9 @@ jamas_1:
     call ClearBlinds            ; uncover 2 lines of PF at the top
     call SoundNoise
 
-
     mvi a, 8
     out 2
+
     lxi h, frame_number
     inr m
     jmp jamas
@@ -1376,6 +1387,30 @@ debfr_loadfb
         mov m, a
         ret
 
+dispatch_digit_tbl
+        dw char_0_ltr0
+        dw char_1_ltr0
+        dw char_2_ltr0
+        dw char_3_ltr0
+        dw char_4_ltr0
+        dw char_5_ltr0
+        dw char_6_ltr0
+        dw char_7_ltr0
+        dw char_8_ltr0
+        dw char_9_ltr0
+dispatch_digit
+        ora a
+        ral 
+        mov c, a
+        mvi b, 0
+        lxi h, dispatch_digit_tbl
+        dad b           
+
+        mov a, m
+        inx h
+        mov h, m
+        mov l, a
+        pchl
 
 SCORE_BASELINE  equ 20
         
@@ -1384,13 +1419,6 @@ PaintScore:
         adi SCORE_BASELINE+7
         mov e, a
         mvi d, $88
-        ;;call char_3_ltr0
-        push d
-        inr d
-        push d
-        inr d
-        push d
-        inr d 
         push d
         inr d
         push d
@@ -1401,27 +1429,23 @@ PaintScore:
         inr d
         push d
         inr d
-        push d
-        inr d
-        call char_0_ltr0
+        lda game_score + 5
+        call dispatch_digit
         pop d
-        call char_1_ltr0
+        lda game_score + 4
+        call dispatch_digit
         pop d
-        call char_2_ltr0
+        lda game_score + 3
+        call dispatch_digit
         pop d
-        call char_3_ltr0
+        lda game_score + 2
+        call dispatch_digit
         pop d
-        call char_4_ltr0
+        lda game_score + 1
+        call dispatch_digit
         pop d
-        call char_5_ltr0
-        pop d
-        call char_6_ltr0
-        pop d
-        call char_7_ltr0
-        pop d
-        call char_8_ltr0
-        pop d
-        call char_9_ltr0
+        lda game_score + 0
+        call dispatch_digit
 
         lda frame_scroll
         adi SCORE_BASELINE+10
@@ -1445,6 +1469,82 @@ PaintScore:
         mvi d, $96
         call playericon_ltr0
 
+        ret
+
+score_tbl
+        ;       NONE    SHIP    COPTER  COPTER  JET
+        db      0,      3,      6,      6,     $10,    0,      0,      0,
+        db      0,      0,      0,      0,      0,    0,      0,      0,
+        ;       BRIDGE  FUEL
+        db      $50,     8 
+
+        ; update score for foe id in A
+        ; be gentle on PSW, HL
+UpdateScore_KillA
+        cpi 17   
+        rp
+        lxi h, score_tbl
+        mov c, a
+        mvi b, 0
+        dad b
+        mov a, m                ; 2 digits 
+        ani $f
+        mov c, a                ; lowest digit in c
+        mov a, m
+        rrc
+        rrc
+        rrc
+        rrc
+        ani $f
+        mov b, a                ; second digit in b
+
+        mvi d, 10
+        
+        lxi h, game_score+4     ; the last digit is always 0, inflation
+        mov a, m
+        add c
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        ; next 
+        mov m, a
+        dcx h                   ; m = &game_score[3]
+        mov a, m
+        adc b                   ; second digit in b
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        ; next
+        mov m, a
+        dcx h                   ; m = &game_score[2]
+        mov a, m
+        aci 0
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        ; next
+        mov m, a
+        dcx h                   ; m = &game_score[1]
+        mov a, m
+        aci 0
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        ; next
+        mov m, a
+        dcx h                   ; m = &game_score[0]
+        mov a, m
+        aci 0
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        ; 
+        mov m, a
         ret
 
     .include random.inc

@@ -45,6 +45,10 @@ cmf_yscan
 
 cmf_victim_found
         mov a, m
+        push h
+        call UpdateScore_KillA
+        pop h
+        mov a, m
         ori FOEID_WIPE_FLAG
         mov m, a
         ret
@@ -164,7 +168,7 @@ foe_height_tbl
         db      28,     24
 
 foe_width_tbl
-        ;       NONE    SHIP    COPTER  COPTER  COPTER 
+        ;       NONE    SHIP    COPTER  COPTER  JET
         db      0,      32,     24,     24,     24,     0,      0,      0,
         db      0,      0,      0,      0,      0,      0,      0,      0,
         ;       BRIDGE  FUEL

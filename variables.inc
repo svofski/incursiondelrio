@@ -103,6 +103,11 @@ input_left:             db 0
 input_fire:             db 0
 input_dummy:            db 0
 
+; game status
+game_bridge:            db 0
+game_lives:             db 3
+game_score:             db 0,0,0,0,0,0    ; bcd
+
 ; vi:syntax=m80
 ; vi:ts=8
 ; vi:sts=8
