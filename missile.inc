@@ -1,4 +1,4 @@
-MISSILE_START_ROW       equ 90
+MISSILE_START_ROW       equ 88
 
 missile_tab:
 	db 1, 10000000b

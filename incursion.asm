@@ -1478,10 +1478,11 @@ score_tbl
         ;       BRIDGE  FUEL
         db      $50,     8 
 
-        ; update score for foe id in A
-        ; be gentle on PSW, HL
+        ;
+        ; Update score for a kill of a foe with id in A
+        ;
 UpdateScore_KillA
-        cpi 17   
+        cpi 18
         rp
         lxi h, score_tbl
         mov c, a
@@ -1498,7 +1499,8 @@ UpdateScore_KillA
         ani $f
         mov b, a                ; second digit in b
 
-        mvi d, 10
+        ;mvi d, 10
+        lxi d, 0xa00            ; d = 10, e = 0
         
         lxi h, game_score+4     ; the last digit is always 0, inflation
         mov a, m
@@ -1520,7 +1522,7 @@ UpdateScore_KillA
         mov m, a
         dcx h                   ; m = &game_score[2]
         mov a, m
-        aci 0
+        adc e                   ; aci 0
         cmp d
         jc $+4
         sub d
@@ -1529,7 +1531,7 @@ UpdateScore_KillA
         mov m, a
         dcx h                   ; m = &game_score[1]
         mov a, m
-        aci 0
+        adc e                   ; aci 0
         cmp d
         jc $+4
         sub d
@@ -1538,7 +1540,7 @@ UpdateScore_KillA
         mov m, a
         dcx h                   ; m = &game_score[0]
         mov a, m
-        aci 0
+        adc e                   ; aci 0
         cmp d
         jc $+4
         sub d
