@@ -24,12 +24,8 @@ wipe_ship:
     dad sp
     sphl
     db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
 
-    lxi h, $1b08
+    lxi h, $1c08
     dad sp
     sphl        ; advance to layer $a000
 
@@ -50,12 +46,8 @@ wipe_ship:
     dad sp
     sphl
     db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
 
-    lxi h, $1b08
+    lxi h, $1c08
     dad sp
     sphl        ; advance to layer $c000
 
@@ -76,10 +68,6 @@ wipe_ship:
     dad sp
     sphl
     db $c5, $c5, $c5, $c5      ; (push b x 4) column 5
-    lxi h, 256+8
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5      ; (push b x 4) column 6
 
 
 wipe_ship_ret:
