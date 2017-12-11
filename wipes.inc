@@ -272,6 +272,131 @@ wipe_debris_ret:
     lxi sp, 0
     ret
 
+        ; de = starting position
+wipe_fuel_gauge
+        lxi h, 0
+        dad sp
+        shld wipe_fuel_gauge_ret+1
+
+        ;; layer 3 (e000)
+        lxi b, $ff00
+        xchg
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+
+        dcr l
+
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+
+        dcr l
+
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+        inr h
+        mov m, c
+
+        dcr l
+
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+        dcr h
+        mov m, c
+
+        dcr l
+
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+        inr h
+        mov m, b
+
+        dcr l
+
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        dcr h
+        mov m, b
+        
+;        ;; layer 3 (e000)
+;        lxi h, $1b08
+;        dad sp
+;        sphl
+
+
+wipe_fuel_gauge_ret
+        lxi sp, 0
+        ret 
+
 
 ; vi:syntax=m80
 ; vi:ts=8

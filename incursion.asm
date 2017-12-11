@@ -216,6 +216,7 @@ PlayFieldRoll:
     lxi h, frame_scroll
     inr m
     call check_bridge_passing
+    call fuel_burn
     pop d
     dcr d
     rm 
@@ -227,6 +228,7 @@ PlayFieldRoll:
     lxi h, frame_scroll
     inr m
     call check_bridge_passing
+    call fuel_burn
     ;;;;;
     ret
 
@@ -239,7 +241,12 @@ check_bridge_passing
         rnz
         jmp UpdateScore_BridgePass
         
-
+fuel_burn
+        lhld game_fuel_lo 
+        lxi d, $ffec
+        dad d
+        shld game_fuel_lo
+        ret
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;                   V A R I A B L E S
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1523,6 +1530,60 @@ ps_findlead_loop
         mvi d, $96
         call playericon_ltr0
 
+        ;ret
+
+PaintFuel
+        ; 8 columns wide = 64 positions, thick bar
+        ; clear all 8 columns in the layer $e000
+        ; clear all 8 columns in the layer $c000
+        ; draw a white bar at game_fuel_hi >> 2:
+        ;       column = game_fuel_hi >> 5
+        ;       index  = (game_fuel_hi >> 2) & 7
+
+        lda frame_scroll
+        adi SCORE_BASELINE+18
+        mov e, a
+        mvi d, 0x8c + 0x60
+        push d
+
+        call wipe_fuel_gauge
+
+        pop h
+
+        lda game_fuel_hi
+        rlc
+        rlc
+        rlc
+        ani $7
+        adi 0x8c + 0x40     ; white layer $80 + $40 = $c
+        mov h, a
+
+        lda game_fuel_hi
+        rrc
+        rrc
+        ani $7
+        
+        mov c, a
+        inr c
+        xra a
+        stc
+paintfuel_l1
+        rar
+        dcr c
+        jnz paintfuel_l1
+
+        mov m, a
+        dcr l
+        mov m, a 
+        dcr l
+        mov m, a
+        dcr l
+        mov m, a
+        dcr l
+        mvi m, 0
+        dcr l
+        mvi m, 0
+        
         ret
 
 score_tbl

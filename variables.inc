@@ -107,7 +107,8 @@ input_dummy:            db 0
 game_bridge:            db 0, 0, 0              ; unpacked bcd
 game_lives:             db 3
 game_score:             db 0,0,0,0,0,0          ; unpacked bcd
-game_fuel:              db 255
+game_fuel_lo:           db 255
+game_fuel_hi:           db 255                  ; warning at $40
 
 ; vi:syntax=m80
 ; vi:ts=8
