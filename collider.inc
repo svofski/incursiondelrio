@@ -169,7 +169,7 @@ foe_height_tbl
 
 foe_width_tbl
         ;       NONE    SHIP    COPTER  COPTER  JET
-        db      0,      32,     24,     24,     24,     0,      0,      0,
+        db      0,      40,     24,     24,     24,     0,      0,      0,
         db      0,      0,      0,      0,      0,      0,      0,      0,
         ;       BRIDGE  FUEL
         db      64,     16

@@ -215,7 +215,7 @@ PlayFieldRoll:
 
     lxi h, frame_scroll
     inr m
-
+    call check_bridge_passing
     pop d
     dcr d
     rm 
@@ -226,9 +226,19 @@ PlayFieldRoll:
     call ProduceLineMain
     lxi h, frame_scroll
     inr m
+    call check_bridge_passing
     ;;;;;
     ret
 
+check_bridge_passing
+        lda player_until_bridge
+        ora a
+        rz
+        dcr a
+        sta player_until_bridge
+        rnz
+        jmp UpdateScore_BridgePass
+        
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;                   V A R I A B L E S
@@ -509,6 +519,10 @@ cnf_L1:
     inx h
     lda frame_scroll
     mov m, a ; y
+    
+    ; set bridge crossing count
+    mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
+    sta player_until_bridge
 
     mvi a, CLEARANCE_BRIDGE
     sta foe_clearance
@@ -1399,6 +1413,8 @@ dispatch_digit_tbl
         dw char_8_ltr0
         dw char_9_ltr0
 dispatch_digit
+        cpi $f
+        rz
         ora a
         ral 
         mov c, a
@@ -1413,55 +1429,93 @@ dispatch_digit
         pchl
 
 SCORE_BASELINE  equ 20
+
         
 PaintScore:
         lda frame_scroll
         adi SCORE_BASELINE+7
         mov e, a
         mvi d, $88
+ 
+        ; find first nonzero
+        lxi h, game_score       ; h = &score[msb]
+        mvi c, 5
+        mvi b, $f
+ps_findlead_loop
+        mov a, m                ; b = score[msb]
+        ora a
+        jz $+5
+        mvi b, 0
+        ora b
         push d
-        inr d
-        push d
-        inr d
-        push d
-        inr d
-        push d
-        inr d
-        push d
-        inr d
-        lda game_score + 5
+        push psw
+        inx h
+        inr d                   ; next column
+        dcr c
+        jnz ps_findlead_loop
+        mov a, m
         call dispatch_digit
+        pop psw
         pop d
-        lda game_score + 4
         call dispatch_digit
+        pop psw
         pop d
-        lda game_score + 3
         call dispatch_digit
+        pop psw
         pop d
-        lda game_score + 2
         call dispatch_digit
+        pop psw
         pop d
-        lda game_score + 1
         call dispatch_digit
+        pop psw
         pop d
-        lda game_score + 0
         call dispatch_digit
 
+        ; display "BRIDGE"
         lda frame_scroll
         adi SCORE_BASELINE+10
         mov e, a
         mvi d, $95
         call bridgeword_ltr0
 
+        ; display bridge count
         lda frame_scroll
         adi SCORE_BASELINE
         mov e, a
         mvi d, $96
-        push d
+
+        ; find first nonzero
+        lxi h, game_bridge
+        mvi b, $f
+        mvi c, 0
+
+        mov a, m
+        ora a
+        jz $+4
+        mov b, c
+        ora b
+        push d 
+        push psw
+        inx h
         inr d
-        call char_9_ltr0
+
+        mov a, m
+        ora a
+        jz $+4
+        mov b, c
+        ora b
+        push d
+        push psw
+        inx h
+        inr d
+        mov a, m
+        call dispatch_digit
+        pop psw
         pop d
-        call char_9_ltr0
+        call dispatch_digit
+        pop psw
+        pop d
+        call dispatch_digit
 
         lda frame_scroll
         adi SCORE_BASELINE+20
@@ -1478,6 +1532,37 @@ score_tbl
         ;       BRIDGE  FUEL
         db      $50,     8 
 
+UpdateScore_BridgePass
+        lxi h, game_bridge + 2
+        lxi d, 0xa00            ; d = 10, e = 0
+        
+        mov a, m
+        inr a
+        cmp d
+        jc $+4                  ; store as is
+        sub d
+        cmc
+        mov m, a
+        ; next digit
+        dcx h
+        mov a, m
+        adc e
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        mov m, a
+        ; next digit
+        dcx h
+        mov a, m
+        adc e
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        mov m, a
+
+        ret
         ;
         ; Update score for a kill of a foe with id in A
         ;
