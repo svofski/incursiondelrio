@@ -1566,24 +1566,81 @@ PaintFuel
         mov c, a
         inr c
         xra a
-        stc
+        stc                     ; start with a thin bar
 paintfuel_l1
         rar
         dcr c
         jnz paintfuel_l1
 
+        ; enthicken!
+
+        mov d, a
+        mov c, a
+        mvi b, 0
+
+        ora a
+        mov a, c
+        ral 
+        mov c, a
+        mov a, b
+        ral
+        mov b, a                ; [b,c] = [0,a] << 1
+
+        mov a, c
+        ora d
+        mov c, a                ; [b,c] = [0,a] << 1 | [0,a]
+
+        xra a
+
+        ; prev column
+        dcr h
+        mov m, b
+        dcr l
+        mov m, b
+        dcr l
+        mov m, b
+        dcr l
+        mov m, b
+
+        ; current column
+        inr h
+        mov m, c
+        inr l
+        mov m, c 
+        inr l
+        mov m, c
+        inr l
+        mov m, c
+
+        ; next column
+        inr h
         mov m, a
         dcr l
-        mov m, a 
+        mov m, a
+        dcr l
+        mov m, a
         dcr l
         mov m, a
         dcr l
         mov m, a
         dcr l
-        mvi m, 0
+        mov m, a
+
+        ; lower two lines of first two columns
+        dcr h
+        mov m, a
+        inr l
+        mov m, a
+        dcr h
+        mov m, a
         dcr l
-        mvi m, 0
-        
+        mov m, a
+        dcr h
+        mov m, a
+        inr l
+        mov m, a
+
+
         ret
 
 score_tbl
