@@ -130,6 +130,8 @@ jamas_1:
     out 2
     ; if missile collided, is it with a foe or terrain and if a foe, which one?
     call CollisionMissileFoe
+    ; could be just fuel, but usually ded
+    call CollisionPlaneFoe
     ; --
 
     ; black border

@@ -1,3 +1,6 @@
+collision_x     db 0
+collision_y     db 0
+
         ; Handle collision of missile with a foe
 CollisionMissileFoe:
         lda missile_hit
@@ -12,56 +15,74 @@ CollisionMissileFoe:
 
         ; precalculate missile X
         lxi h, missile_hit_column
-        mov a, m
-        rlc
-        rlc
-        rlc 
-        ani $f8
-        inx h
-        add m
-        sta missile_hit_x
+        call x_from_column_index
+        ;mov a, m
+        ;rlc
+        ;rlc
+        ;rlc 
+        ;ani $f8
+        ;inx h           ; missile_hit_index
+        ;add m   
 
-        ; every foe has a fixed Y position, just find which one is this
-        mvi a, 8
-        sta cmf_yscan_ctr
-        lxi h, foe_1
-cmf_yscan
-        push h
-        call cmf_check_foe_y
-        pop h
-        push h
-        cc cmf_check_foe_x      ; x-coordinate must also match
-        pop h
-        jc cmf_victim_found     ; if cmf_verify_x returns C, definitely ded
-        lxi b, 8                ; he's fine, next foe[]
-        dad b
-        lda cmf_yscan_ctr
-        dcr a
-        sta cmf_yscan_ctr
-        jnz cmf_yscan
+        ; store input parameters for collision checker
+        sta collision_x
+        lda missile_hit_y
+        sta collision_y
 
-        ; must be just terrain
-        ret
+        call find_foe_at_xy
+        rnc                     ; if not found it's probably terrain
 
-cmf_victim_found
         mov a, m
         push h
-        call UpdateScore_KillA
+        call UpdateScore_KillA  ; update the score according to kill id
         pop h
         mov a, m
         ori FOEID_WIPE_FLAG
         mov m, a
         ret
 
+        ;
+        ; Find a foe at collision_x, collision_y
+        ;
+        ; Return: if found, CY and HL points to the found foe 
+        ;         otherwise NC
+find_foe_at_xy        
+        ; find foe by Y position
+        mvi a, 8
+        sta ffxy_yscan_ctr
+        lxi h, foe_1
+ffxy_yscan
+        push h
+        call ffxy_check_foe_y
+        pop h
+        push h
+        cc ffxy_check_foe_x     ; x-coordinate must also match
+        pop h
+        jc ffxy_found           ; if cmf_verify_x returns C, definitely ded
+        lxi b, 8                ; he's fine, next foe[]
+        dad b
+        lda ffxy_yscan_ctr
+        dcr a
+        sta ffxy_yscan_ctr
+        jnz ffxy_yscan
+        ora a
+        ; must be just terrain
+        ret
+ffxy_found
+        stc
+        ret
+ffxy_yscan_ctr  db 0
+        
+
         ; input h = & struct foe
         ; return CY if Y coordinates intersect
-cmf_check_foe_y
+ffxy_check_foe_y
         mov c, m        ; foeid to infer foe height
         xra a
         ora c 
         rz              ; foe.id == 0, nothing in this slot
 
-cmf_getheight        
+        ; get foe height
         xchg
         lxi h, foe_height_tbl
         mvi b, 0
@@ -78,18 +99,18 @@ cmf_getheight
         ; glory! de = [y1, y2]
 
 
-        lda missile_hit_y
+        lda collision_y
         mov h, a
         adi 8
         mov l, a
         xchg
         jmp intersects_test
-        ; end of cmf_check_foe_y
+        ; end of ffxy_check_foe_y
 
         ; check x coordinate intersection
         ; input h = & struct foe
         ; return CY if X coordinates intersect
-cmf_check_foe_x
+ffxy_check_foe_x
         ; get foe width
         mov c, m
         mvi b, 0
@@ -111,7 +132,7 @@ cmf_check_foe_x
         mov h, a        ; h = foe.x1
         add c           ; foe width
         mov l, a        ; l = foe.x2
-        lda missile_hit_x
+        lda collision_x
 
         ; this is weird but missile x seems to be offset relative to foes?
         adi 16
@@ -155,10 +176,7 @@ xt_true
         stc
         ret
 
-        ret
 
-
-cmf_yscan_ctr   db 0
 foe_height_tbl
         ;       0       1       2       3       4       5       6       7
         db      0,      8,      12,     12,     8,      0,      0,      0,
@@ -173,6 +191,50 @@ foe_width_tbl
         db      0,      0,      0,      0,      0,      0,      0,      0,
         ;       BRIDGE  FUEL
         db      64,     16
+
+        ; Input: hl points to column, index in memory
+        ; Output: a = X coordinate
+x_from_column_index
+        mov a, m
+        rlc
+        rlc
+        rlc 
+        ani $f8
+        inx h
+        add m   
+        ret
+
+CollisionPlaneFoe
+        lda player_collision
+        ora a
+        rz
+
+        ; okay what now
+        ; precalculate player X
+        lxi h, player_column
+        call x_from_column_index
+        sta collision_x
+
+        lda frame_scroll
+        adi PLAYER_Y
+        sta collision_y
+        call find_foe_at_xy
+
+        
+        ; for now be a missile
+        rnc                     ; if not found it's probably terrain
+
+        mov a, m
+        push h
+        call UpdateScore_KillA  ; update the score according to kill id
+        pop h
+        mov a, m
+        ori FOEID_WIPE_FLAG
+        mov m, a
+        ret
+
+
+        ;
 
 
 
