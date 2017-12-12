@@ -21,7 +21,7 @@ YSPEED_MIN	        equ 48
 playerYspeed:		db YSPEED_DEFAULT
 playerYaccu:		db 0
 
-player_until_bridge     db 0
+player_until_bridge     db 0    ; lines until the bridge crossing is registered
 
 ScrollAccu:
 	mvi d, 0

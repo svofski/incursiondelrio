@@ -546,7 +546,7 @@ cnf_regular_or_fuel:
     mov b, a
 
     ; fuel maybe?
-    cpi $a0
+    cpi $d0
     mov a, b
     jc cnf_notfuel
 

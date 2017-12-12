@@ -225,12 +225,31 @@ CollisionPlaneFoe
         rnc                     ; if not found it's probably terrain
 
         mov a, m
+        cpi FOEID_FUEL
+        jnz player_ded
+
+        ; charge +1 of fuel_hi
+        lhld game_fuel_lo
+        mvi l, 255              ; round up the fracional part
+        inr h
+        jnz $+10
+        dcr h                   ; saturate
+        shld game_fuel_lo
+        jmp snd_full
+        shld game_fuel_lo
+        jmp snd_fuel
+
+player_ded
+        ; for the time being it's something else that's ded
         push h
         call UpdateScore_KillA  ; update the score according to kill id
         pop h
         mov a, m
         ori FOEID_WIPE_FLAG
         mov m, a
+
+        call snd_player_ded
+
         ret
 
 
