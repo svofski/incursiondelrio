@@ -85,9 +85,9 @@ pf_roadflag:            db 0
 pf_blockline:           db 0
 
 
-foe_left:               db 0
-foe_water:              db 0
-foe_right:              db 0
+foe_left:               db 0    ; leftmost position for a foe
+foe_water:              db 0    ; how much water to travel right
+foe_right:              db 0    ; unused?
 
 ; vertical clearance before next foe can be injected 
 foe_clearance:          db 1

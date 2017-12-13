@@ -7466,7 +7466,48 @@ jet_ltr0_ret:
 jet_ltr1:
   ; (shift 1 skipped)
 jet_ltr2:
-  ; (shift 2 skipped)
+	lxi h, 0
+	dad sp
+	shld jet_ltr2_ret+1
+	.nolist
+	xchg
+	lxi d, $4000
+	dad d
+	sphl
+;; white
+;[  44                    ] 0000300000
+;[  4444      4444        ] 00003c0f00
+;[  4444444444444444      ] 00003fffc0
+;[    4444   4444444      ] 00000f1fc0
+;[        44444           ] 000000f800
+;[      4444              ] 000003c000
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $303c
+	push h
+	lxi h, $3f0f
+	push h
+	lxi h, $0003
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $000f
+	push h
+	lxi h, $ff1f
+	push h
+	lxi h, $f8c0
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	push b
+	lxi h, $c0c0
+	push h
+	push b
+
+jet_ltr2_ret:
+	lxi sp, 0
+	ret
 jet_ltr3:
   ; (shift 3 skipped)
 jet_ltr4:
@@ -7515,7 +7556,49 @@ jet_ltr4_ret:
 jet_ltr5:
   ; (shift 5 skipped)
 jet_ltr6:
-  ; (shift 6 skipped)
+	lxi h, 0
+	dad sp
+	shld jet_ltr6_ret+1
+	.nolist
+	xchg
+	lxi d, $4000
+	dad d
+	sphl
+;; white
+;[      44                ] 0000030000
+;[      4444      4444    ] 000003c0f0
+;[      4444444444444444  ] 000003fffc
+;[        4444   4444444  ] 000000f1fc
+;[            44444       ] 0000000f80
+;[          4444          ] 0000003c00
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $0303
+	push h
+	lxi h, $0300
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $00c0
+	push h
+	lxi h, $fff1
+	push h
+	lxi h, $0f3c
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $00f0
+	push h
+	lxi h, $fcfc
+	push h
+	lxi h, $8000
+	push h
+
+jet_ltr6_ret:
+	lxi sp, 0
+	ret
 jet_ltr7:
   ; (shift 7 skipped)
 ;; end of sprite group jet
@@ -7574,7 +7657,49 @@ jet_rtl0_ret:
 jet_rtl1:
   ; (shift 1 skipped)
 jet_rtl2:
-  ; (shift 2 skipped)
+	lxi h, 0
+	dad sp
+	shld jet_rtl2_ret+1
+	.nolist
+	xchg
+	lxi d, $4000
+	dad d
+	sphl
+;; white
+;[                44      ] 00000000c0
+;[    4444      4444      ] 00000f03c0
+;[  4444444444444444      ] 00003fffc0
+;[  4444444   4444        ] 00003f8f00
+;[       44444            ] 000001f000
+;[          4444          ] 0000003c00
+; stripped pairs: leading: 0 trailing: 0
+	lxi h, $000f
+	push h
+	lxi h, $3f3f
+	push h
+	lxi h, $0100
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0003
+	push h
+	lxi h, $ff8f
+	push h
+	lxi h, $f03c
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $c0c0
+	push h
+	lxi h, $c000
+	push h
+	push b
+
+jet_rtl2_ret:
+	lxi sp, 0
+	ret
 jet_rtl3:
   ; (shift 3 skipped)
 jet_rtl4:
@@ -7623,7 +7748,48 @@ jet_rtl4_ret:
 jet_rtl5:
   ; (shift 5 skipped)
 jet_rtl6:
-  ; (shift 6 skipped)
+	lxi h, 0
+	dad sp
+	shld jet_rtl6_ret+1
+	.nolist
+	xchg
+	lxi d, $4000
+	dad d
+	sphl
+;; white
+;[                    44  ] 000000000c
+;[        4444      4444  ] 000000f03c
+;[      4444444444444444  ] 000003fffc
+;[      4444444   4444    ] 000003f8f0
+;[           44444        ] 0000001f00
+;[              4444      ] 00000003c0
+; stripped pairs: leading: 0 trailing: 0
+	push b
+	lxi h, $0303
+	push h
+	push b
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $00f0
+	push h
+	lxi h, $fff8
+	push h
+	lxi h, $1f03
+	push h
+	lxi h, 256+6
+	dad sp
+	sphl
+	lxi h, $0c3c
+	push h
+	lxi h, $fcf0
+	push h
+	lxi h, $00c0
+	push h
+
+jet_rtl6_ret:
+	lxi sp, 0
+	ret
 jet_rtl7:
   ; (shift 7 skipped)
 ;; end of sprite group jet

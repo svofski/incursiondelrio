@@ -208,12 +208,13 @@ PlayFieldRoll:
 
     ; update random
     ; create new pf block when needed
-    ; create new foe
     call UpdateLine
     ; update one line of terrain
     call UpdateOneStep
-    ; draw one line of terrain
+    ; draw one line of terrain and update pf_tableft, pf_water tables
     call ProduceLineMain
+    ; create new foe
+    call CreateNewFoe
 
     lxi h, frame_scroll
     inr m
@@ -227,6 +228,7 @@ PlayFieldRoll:
     call UpdateLine
     call UpdateOneStep
     call ProduceLineMain
+    call CreateNewFoe
     lxi h, frame_scroll
     inr m
     call check_bridge_passing
@@ -418,8 +420,37 @@ drawblinds_fill:
     ;       foe_water
     ;       foeTableIndex
     ;       foeTableIndex->contents
+cnf_prev        db 0
 CreateNewFoe:
-    push psw
+    ; ---- formerly end of UpdateLine
+    ; avoid creating sprites on roll overlap
+    lda frame_scroll
+    cpi $10
+    rc
+    cpi $f0
+    rnc
+
+    ; avoid getting called twice on the same line
+    lda cnf_prev
+    mov a, b
+    lda pf_blockline
+    cmp b
+    rz
+    sta cnf_prev
+    
+
+    ; crossing a road/bridge? 
+    lda pf_bridgeflag ;pf_roadflag
+    ora a
+    jnz cnf_begin       ; always create bridge when it's time
+
+    lda foe_clearance
+    dcr a
+    sta foe_clearance
+    rnz
+
+cnf_begin
+    ;push psw
 
     ; bridge?
     lda pf_roadflag
@@ -428,7 +459,7 @@ CreateNewFoe:
 
     ; check that we're on the right line for bridge
     lda pf_blockline
-    ani $f
+    cpi BLOCK_HEIGHT/2
     jz cnf_preparetableoffset
     ; do nothing if not
     jmp CreatenewFoe_Exit
@@ -450,15 +481,28 @@ cnf_notabridge:
     lxi h, pf_tableft
     lda frame_scroll
     add l
-    sui 8 ; offset to where the terrain is already generated
+    sui 0 ; offset to where the terrain is already generated
     mov l, a
-    mov a, m
-    mov d, a
-    sta foe_left
-    inr h ; --> pf_tabwater
-    mov a, m
+    mov d, m            ; d = pf_tableft[frame_scroll - 8]
+;---
+    sui 8                ; frame_scroll - 4
+    mov l, a
+    mov a, m            ; a = pf_tableft[frame_scroll - 4]
+
+    ; max(a, d)
+    cmp d
+    jc $+4              ; if d > a, skip next instruction
+    mov d, a            ; 
+;---
+    mov a, d
+    sta foe_left        ; d = a = pf_tableft[frame_scroll - 8]
+
+    inr h ; --> pf_tabwater (pf_tableft and pf_tabwater are aligned to 256)
+    mov a, m            ; e = a = pf_tabwater[frame_scroll - 8]
     mov e, a
-    sta foe_water
+    sta foe_water       ; foe_water = pf_tabwater[frame_scroll - 8]
+
+    ; d = left, e = water
 
     ; island?
     add d
@@ -612,9 +656,9 @@ cnf_dir1:
     mov m, a
     inx h
 
-    ; Y = current
+    
     lda frame_scroll
-    mov m, a
+    mov m, a                    ; foe.foeY = frame_scroll
     inx h
     ; Left
     lda foe_left
@@ -628,7 +672,7 @@ cnf_dir1:
     add c
     mov m, a
 CreateNewFoe_Exit:
-    pop psw
+    ;pop psw
     ret
 
 CreateNewFoe_AbortFuel:
@@ -682,7 +726,6 @@ cff_pop:
     ;       foe_clearance
     ;  Branches:
     ;       UpdateNewBlock
-    ;       CreateNewFoe
 UpdateLine:
     ; random(), result in randomHi/randomLo and HL
     call nextRandom16 
@@ -694,7 +737,7 @@ UpdateLine:
 ul_1:
     sta pf_blockline
     ora a   
-    jnz ul_1_1
+    rnz
 
     lhld terrain_next
     shld terrain_act
@@ -709,25 +752,7 @@ ul_1:
     call UpdateNewBlock       ; this block has ran to its end
                               ; update terrain variables
                               ; for the next block 
-ul_1_1:
-    ; avoid creating sprites on roll overlap
-    lda frame_scroll
-    cpi $10
-    jc UpdateLine_Exit
-
-    ; crossing a road/bridge? 
-    lda pf_bridgeflag ;pf_roadflag
-    ora a
-    jz  ul_2
-    call CreateNewFoe   ; create bridge when it's time
-    jmp UpdateLine_Exit
-ul_2:
-    lda foe_clearance
-    dcr a
-    sta foe_clearance
-    cz CreateNewFoe     ; create a regular foe
-UpdateLine_Exit:
-    ret 
+    ret
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; UpdateNewBlock
@@ -743,6 +768,9 @@ UpdateLine_Exit:
     ;       terrain_left
     ;       terrain_water
     ;       terrain_islandwidth
+    ;
+    ; terrain_current points to (terrain_left, terrain_water, terrain_islandwidth)
+    ;
 UpdateOneStep:
     lda frame_scroll
     ani $1
@@ -801,12 +829,13 @@ ProduceLineMain:
     lxi h, pf_tableft
     lda frame_scroll
     add l
-    mov l, a
-    lda terrain_left
+    mov l, a                    ; hl = &pf_tableft[frame_scroll]
+
+    lda terrain_left            ; pf_tableft[frame_scroll] = terrain_left
     mov m, a
-    inr h
+    inr h                       ; hl = &pf_water[frame_scroll]
     lda terrain_water
-    mov m, a
+    mov m, a                    ; pf_water[frame_scoll] = terrain_water
 
     ; if no road, just produce regular line
     lda pf_roadflag
@@ -869,7 +898,7 @@ produce_line_e2:
     lxi b, $ff00
     lda terrain_left
     sui 2
-produce_loop_leftbank:
+produce_loop_leftbank:                  ; draw left bank of the river
     mov m, b
     inr h
     dcr a
@@ -976,6 +1005,10 @@ foe_byId:
     cpi FOEID_SHIP
     jnz $+9
     lxi h, wipe_ship
+    jmp foe_wipe_disp
+    cpi FOEID_JET
+    jnz $+9
+    lxi h, wipe_jet
     jmp foe_wipe_disp
     cpi FOEID_FUEL
     jnz $+9
@@ -1165,33 +1198,30 @@ jet_frame:
     lda foeBlock + foeDirection
     mov c, a   ; keep direction in c
     ral
-    mvi a, 4
+    mvi a, 2
     jnc jet_move_diradd
-    mvi a, $fc ; -4
+    mvi a, $fe ; -2
 jet_move_diradd:
-    add b
-    mov b, c   ; restore direction in b
+    add b       ; a = foeIndex + add
+    mov b, c    ; b = foe.foeDirection
     ; if (Index < 0  
     ora a
     jm jet_move_indexoverrun
     ;     || Index == 8)
     cpi $8
     jz jet_move_indexoverrun
+    mov c, a    ; save a in c
 
     ; for right screen limit 
-    ; a here can be only 0 or 4 (we're looking for 4)
-    ; so check if a + 30 == 34
-    mov c, a
-    add e
-    cpi 34
+    mov a, e    ; if column == 30, reset jet position to 0
+    cpi 30
     jnz jet_move_normal
     xra a
     jmp jet_move_reset_to_a
-
 jet_move_normal:
     ; index within column boundary
     ; save Index, update c
-    mov a, c
+    mov a, c    ; a was saved in c above
     sta foeBlock + foeIndex
     ; all done, paint
     jmp foe_paint
@@ -1207,6 +1237,9 @@ jet_move_indexoverrun:
     ; column in e
     mov a, b
     add e
+    ;cpi 30
+    ;jnz $+4
+    ;xra a
     sta foeBlock + foeColumn
     mov e, a
     ; }
@@ -1829,7 +1862,9 @@ showlayers:
     shld $e0fe
     ret
 
+                ; table of earth left boundaries
 pf_tableft      equ $7800
+                ; table of water widths
 pf_tabwater     equ $7900
 ;pf_tableft:                    
 ;                           .org .+$100

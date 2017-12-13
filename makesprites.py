@@ -399,7 +399,9 @@ class Jet(Sprite):
         return "jet"
 
     def includeShift(self, shift):
-        return shift in [-1, 0, 4]
+        #return shift in [-1, 0, 4]
+        return shift in [-1, 0, 2, 4, 6]
+
 
 class Bridge(Sprite):
     def isDoubleWidth(false):

@@ -38,7 +38,7 @@ mm_fire:                        ; new missile
 mm_move:                        ; propel the missile forward
         lxi h, missile_y
         mov a, m
-        adi 4
+        adi 6
         mov m, a
         cpi 250
         rc

@@ -16,13 +16,6 @@ CollisionMissileFoe:
         ; precalculate missile X
         lxi h, missile_hit_column
         call x_from_column_index
-        ;mov a, m
-        ;rlc
-        ;rlc
-        ;rlc 
-        ;ani $f8
-        ;inx h           ; missile_hit_index
-        ;add m   
 
         ; store input parameters for collision checker
         sta collision_x
@@ -37,8 +30,13 @@ CollisionMissileFoe:
         call UpdateScore_KillA  ; update the score according to kill id
         pop h
         mov a, m
+        mov b, a
         ori FOEID_WIPE_FLAG
         mov m, a
+        mov a, b
+        cpi FOEID_BRIDGE
+        cz snd_bridge_ded
+        cnz snd_foe_ded
         ret
 
         ;

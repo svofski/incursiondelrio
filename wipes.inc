@@ -128,6 +128,35 @@ wipe_copter_ret:
     lxi sp, 0
     ret
 
+wipe_jet
+    mov a, e
+    adi 4
+    mov e, a
+    lxi h, 0
+    dad sp
+    shld wipe_jet_ret+1
+
+;; layer 2 (c000)
+    lxi h, $4000
+    dad d
+    sphl
+    lxi b, 0
+
+    db $c5, $c5, $c5, $c5, $c5 ; (push b x 5) column 1
+    lxi h, 256+10
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5 ; (push b x 5) column 2
+    lxi h, 256+10
+    dad sp
+    sphl
+    db $c5, $c5, $c5, $c5, $c5 ; (push b x 5) column 3
+
+wipe_jet_ret:
+    lxi sp, 0
+    ret
+
+
     ; 8 columns, 14 rows, one layer only (c000)
 wipe_bridge
     lxi h, 0

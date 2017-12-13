@@ -46,6 +46,16 @@ snd_player_ded
         shld snd_ch0_next
         ret
 
+snd_foe_ded
+        lxi h, snd_foe_ded_data
+        shld snd_ch0_next
+        ret
+
+snd_bridge_ded
+        lxi h, snd_bridge_ded_data
+        shld snd_ch0_next
+        ret
+
 snd_ch0_state   db 0
 snd_ch0_next    dw 0
 snd_ch0_cur     dw 0
@@ -66,7 +76,36 @@ snd_full_data:
         db 0, 0
 
 snd_ded_data:
-        db 30, 10
+        db 30, 1
+        db 60, 1
+        db 130, 2
+        db 70, 1
+        db 120, 1
+        db 230, 2
+        db 130, 1
+        db 0, 0
+
+snd_bridge_ded_data:
+        db 20, 10
+        db 0, 0
+
+        db 20, 1
+        db 30, 1
+        db 40, 1
+        db 70, 1
+        db 120, 1
+        db 230, 1
+        db 130, 2
+        db 0, 0
+
+snd_foe_ded_data:
+        db 30, 1
+        db 60, 1
+        db 130, 2
+        db 70, 1
+        db 120, 1
+        db 230, 2
+        db 130, 2
         db 0, 0
 
 SoundInit:
