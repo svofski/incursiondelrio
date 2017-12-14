@@ -1,10 +1,22 @@
 I8253_CONTROL		equ $8
 I8253_CH0		equ $b
 I8253_CH1		equ $a
+I8253_CH2               equ $9
+                        ;   00                  counter 0
+                        ;     11                LSB then MSB
+                        ;       011             mode 3
+                        ;          0            not BCD
 CH0_CTR_BEEP		equ 00110110b
 CH0_CTR_SILENCE		equ 00110000b
 
-CH1_CTR_BEEP 		equ 01100110b
+                        ;   01                  counter 1
+                        ;     11                LSB then MSB
+                        ;       011             mode 3
+                        ;          0            not BCD
+CH1_CTR_BEEP 		equ 01110110b
+CH1_CTR_SILENCE		equ 01110000b
+
+CH2_CTR_BEEP 		equ 10110110b
 
 
 snd_on:			db 0
@@ -118,6 +130,33 @@ SoundInit:
 
 	mvi a, CH1_CTR_BEEP
 	out I8253_CONTROL
+
+        mvi a, 0
+        out I8253_CH1
+        mvi a, 255
+        out I8253_CH1
+
+;        di
+;        mvi a, 1
+;silup
+;        xthl            ; (24*6 + 8 + 12) = 44
+;        xthl
+;        xthl
+;        xthl
+;        xthl
+;        xthl
+;        dcr a
+;        jnz silup
+;        ei
+;
+;	mvi a, CH2_CTR_BEEP
+;	out I8253_CONTROL
+;
+;        mvi a, 0
+;        out I8253_CH2
+;        mvi a, 255
+;        out I8253_CH2
+
 	ret
 
 SoundSound:
@@ -226,15 +265,33 @@ SoundNoise:
 	sui YSPEED_DEFAULT
 	cma
 	adi $80
-        ; this randomizer makes sound less boring, but it sucks
+        mov b, a
+
+        lxi h, sn_counter
+        lda playerYspeed
+        ora a
+        rar
         ;mov b, a
-        ;lda random_sndLo
-        ;cmp b
-        ;jm $+4
-        ;mov a, b
+        ora a
+        rar
+        ;add b
+        add m
+        mov m, a
+        jc sn_silence
+sn_noise:
+	mvi a, CH1_CTR_BEEP
+	out I8253_CONTROL
+        xra a
+        out I8253_CH1
+        mov a, b
 	out I8253_CH1
+        ret
+sn_silence:
+        mvi a, CH1_CTR_SILENCE
+        out I8253_CONTROL
 	ret
 
+sn_counter:     db 0
 
 SoundFadeOut:
 	push d 
