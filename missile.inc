@@ -35,6 +35,7 @@ mm_fire:                        ; new missile
         inx h                   ; h = &missile_y
         mvi m, MISSILE_START_ROW; missile_y = MISSILE_START_ROW
 
+        call snd_missile_on
 mm_move:                        ; propel the missile forward
         lxi h, missile_y
         mov a, m
@@ -45,6 +46,8 @@ mm_move:                        ; propel the missile forward
         ;rnz                     ; this check should be fine
         dcx h                   ; h = &missile_onscreen
         dcr m                   ; missile_onscreen = 0
+
+        call snd_missile_off
 
 mm_return:
         ret
@@ -266,6 +269,7 @@ missl_collision_test:
         ; enable next missile 
         xra a
         sta missile_onscreen
+        call snd_missile_off
 
 	ret
 

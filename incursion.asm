@@ -111,7 +111,7 @@ jamas:
     call SoundInit
 jamas_1:
     call SoundSound
-    call SoundNoise
+    ;call SoundNoise
 
     ; keep interrupts enabled to make errors obvious
     ei
@@ -158,7 +158,7 @@ jamas_1:
     ; dkblue border
     mvi a, $e
     out 2
-    call SoundNoise
+    ;call SoundNoise
     call PlayerSpeed
 
     ; pink border
@@ -189,7 +189,7 @@ jamas_1:
     mvi a, 5
     out 2
     call ClearBlinds            ; uncover 2 lines of PF at the top
-    call SoundNoise
+    ;call SoundNoise
 
     mvi a, 8
     out 2
@@ -485,7 +485,7 @@ cnf_notabridge:
     mov l, a
     mov d, m            ; d = pf_tableft[frame_scroll - 8]
 ;---
-    sui 8                ; frame_scroll - 4
+    sui 8               ; frame_scroll - 8, trying to check if fits at top and bottom
     mov l, a
     mov a, m            ; a = pf_tableft[frame_scroll - 4]
 

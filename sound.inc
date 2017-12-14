@@ -7,16 +7,17 @@ I8253_CH2               equ $9
                         ;       011             mode 3
                         ;          0            not BCD
 CH0_CTR_BEEP		equ 00110110b
-CH0_CTR_SILENCE		equ 00110000b
+CH0_CTR_STFU		equ 00110000b
 
                         ;   01                  counter 1
                         ;     11                LSB then MSB
                         ;       011             mode 3
                         ;          0            not BCD
-CH1_CTR_BEEP 		equ 01110110b
-CH1_CTR_SILENCE		equ 01110000b
+CH1_CTR_BEEP 		equ 01110010b
+CH1_CTR_STFU		equ 01110000b
 
 CH2_CTR_BEEP 		equ 10110110b
+CH2_CTR_STFU		equ 10110000b
 
 
 snd_on:			db 0
@@ -43,14 +44,30 @@ SNDFX_LOWFUEL   equ 3
 
 SNDFX_MISSILE   equ 16
 
+snd_missile_on
+        mvi a, 10
+        sta snd_missile
+        ret
+
+snd_missile_off
+        mvi a, 1
+        sta snd_missile
+        ret
+
+snd_missile     db 0
+
 snd_fuel
         lxi h, snd_fuel_data
         shld snd_ch0_next
+        lxi h, snd_fuel2_data
+        shld snd_ch2_next
         ret
 
 snd_full
         lxi h, snd_full_data
         shld snd_ch0_next
+        lxi h, snd_full2_data
+        shld snd_ch2_next
         ret
 
 snd_player_ded
@@ -66,25 +83,37 @@ snd_foe_ded
 snd_bridge_ded
         lxi h, snd_bridge_ded_data
         shld snd_ch0_next
+        lxi h, snd_bridge_ded2_data
+        shld snd_ch2_next
         ret
 
 snd_ch0_state   db 0
 snd_ch0_next    dw 0
 snd_ch0_cur     dw 0
-snd_ch1_next    dw 0
-snd_ch1_cur     dw 0
+
+snd_ch2_state   db 0
 snd_ch2_next    dw 0
 snd_ch2_cur     dw 0
 
                 ; pitch, time, pitch, time, 0, 0
 snd_fuel_data:  
         db 14, 2
-        db 0,  10
+        db 0, 10
+        db 0,  0
+
+snd_fuel2_data:  
+        db 14, 1
+        db 0, 11
         db 0,  0
 
 snd_full_data:
         db 7, 7
         db 0, 1
+        db 0, 0
+
+snd_full2_data
+        db 7, 4
+        db 0, 4
         db 0, 0
 
 snd_ded_data:
@@ -98,16 +127,24 @@ snd_ded_data:
         db 0, 0
 
 snd_bridge_ded_data:
-        db 20, 10
+        db 5, 5
+        db 200, 20
+        db 30, 1
+        db 60, 1
+        db 130, 2
+        db 70, 1
+        db 120, 1
+        db 230, 2
+        db 130, 1
         db 0, 0
 
+snd_bridge_ded2_data:
         db 20, 1
         db 30, 1
         db 40, 1
         db 70, 1
         db 120, 1
-        db 230, 1
-        db 130, 2
+        db 208, 20
         db 0, 0
 
 snd_foe_ded_data:
@@ -127,59 +164,37 @@ SoundInit:
 	sta snd_bell_count
 	mvi a, 0
 	sta snd_on
-
-	mvi a, CH1_CTR_BEEP
-	out I8253_CONTROL
-
-        mvi a, 0
-        out I8253_CH1
-        mvi a, 255
-        out I8253_CH1
-
-;        di
-;        mvi a, 1
-;silup
-;        xthl            ; (24*6 + 8 + 12) = 44
-;        xthl
-;        xthl
-;        xthl
-;        xthl
-;        xthl
-;        dcr a
-;        jnz silup
-;        ei
-;
-;	mvi a, CH2_CTR_BEEP
-;	out I8253_CONTROL
-;
-;        mvi a, 0
-;        out I8253_CH2
-;        mvi a, 255
-;        out I8253_CH2
-
 	ret
 
 SoundSound:
-        call snd_ch0_frame
+        call snd_ch0_frame      ; kaboom
+        call snd_ch1_frame      ; engine noise
+        call snd_ch2_frame      ; piu piu
         ret
 
-;	lda player_collision
-;	ora a
-;	jz ss_silence
-;	mvi a, CH0_CTR_BEEP
-;	out I8253_CONTROL
-;	mvi a, $0
-;	out I8253_CH0
-;	mvi a, $10
-;	out I8253_CH0
-;	ret
-;ss_silence:
-;	mvi a, CH0_CTR_SILENCE
-;	out I8253_CONTROL
-;	mvi a, $ff
-;	out I8253_CH0
-;	out I8253_CH0
-;	ret
+snd_ch2_missile
+        lda snd_missile
+        cpi 1
+        jz smiss_silent
+        ora a
+        rz
+        mov b, a
+        mvi a, CH2_CTR_BEEP
+        out I8253_CONTROL
+        xra a
+        out I8253_CH2
+        mov a, b
+        out I8253_CH2
+        inr a
+        sta snd_missile
+        ret
+smiss_silent
+        dcr a
+        sta snd_missile
+	mvi a, CH2_CTR_STFU
+	out I8253_CONTROL
+        ret
+
 
 snd_ch0_frame
         ; check if a beep is in progress, decrement and return if so
@@ -198,7 +213,7 @@ sch0_next_beep
         ora c
         jnz sch0_beep_load
         ; zero pitch and length, end of sound string
-        ; take the next string, load it into cur, clear next and return
+        ; take the next string, load it into cur, clear next and reenter
         lhld snd_ch0_next
         shld snd_ch0_cur
         xchg
@@ -210,7 +225,7 @@ sch0_next_beep
         jnz sch0_next_beep
 
         ; stfu
-	mvi a, CH0_CTR_SILENCE
+	mvi a, CH0_CTR_STFU
 	out I8253_CONTROL
 	mvi a, $ff
 	out I8253_CH0
@@ -226,6 +241,11 @@ sch0_beep_load
         shld snd_ch0_cur
         ; c = pitch, a = duration
         sta snd_ch0_state
+
+        mov a, c
+        ora a
+        jz sch0_beep_silent
+        ; proper sound
 	mvi a, CH0_CTR_BEEP
 	out I8253_CONTROL
         mvi a, $0
@@ -234,7 +254,74 @@ sch0_beep_load
         out I8253_CH0
         ret
 
+sch0_beep_silent
+        mvi a, CH0_CTR_STFU
+        out I8253_CONTROL
+        ret
 
+; ---------
+; CH2 string player
+; ----------
+snd_ch2_frame
+        ; check if a beep is in progress, decrement and return if so
+        lda snd_ch2_state
+        ora a
+        jz sch2_next_beep
+        dcr a
+        sta snd_ch2_state
+        jmp snd_ch2_missile
+sch2_next_beep
+        ; load next beep from the current sound string
+        lhld snd_ch2_cur
+        mov c, m
+        inx h
+        mov a, m
+        ora c
+        jnz sch2_beep_load
+        ; zero pitch and length, end of sound string
+        ; take the next string, load it into cur, clear next and return
+        lhld snd_ch2_next
+        shld snd_ch2_cur
+        xchg
+        lxi h, 0
+        shld snd_ch2_next
+        
+        mov a, d
+        ora e
+        jnz sch2_next_beep
+
+	mvi a, CH2_CTR_STFU
+	out I8253_CONTROL
+	mvi a, $ff
+	out I8253_CH2
+	out I8253_CH2
+
+        jmp snd_ch2_missile
+
+        ; continue playing current string
+sch2_beep_load
+        mov a, m                ; load duration again
+        ; update the pointer
+        inx h
+        shld snd_ch2_cur
+        ; c = pitch, a = duration
+        sta snd_ch2_state
+        mov a, c
+        ora a
+        jz sch2_beep_silent
+        ; normal beep
+	mvi a, CH2_CTR_BEEP
+	out I8253_CONTROL
+        mvi a, $0
+        out I8253_CH2
+        mov a, c
+        out I8253_CH2
+        ret
+
+sch2_beep_silent
+        mvi a, CH2_CTR_STFU
+        out I8253_CONTROL
+        ret
 
 ;        ; this version sounds FANTASTIC on high speed, for a toy robot
 ;SoundNoise:
@@ -254,7 +341,7 @@ sch0_beep_load
 ;	ret
 
 
-SoundNoise:
+snd_ch1_frame:
         call nextRandomSnd
 
 	lda playerYspeed
@@ -271,10 +358,10 @@ SoundNoise:
         lda playerYspeed
         ora a
         rar
-        ;mov b, a
+         ; mov b, a
         ora a
         rar
-        ;add b
+         ; add b
         add m
         mov m, a
         jc sn_silence
@@ -284,10 +371,11 @@ sn_noise:
         xra a
         out I8253_CH1
         mov a, b
+        ;mvi a, $b0
 	out I8253_CH1
         ret
 sn_silence:
-        mvi a, CH1_CTR_SILENCE
+        mvi a, CH1_CTR_STFU
         out I8253_CONTROL
 	ret
 
@@ -315,7 +403,7 @@ sfo_silence:
 	ora a
 	jz sfo_done
 
-	mvi a, CH0_CTR_SILENCE
+	mvi a, CH0_CTR_STFU
 	out I8253_CONTROL
 	mvi a, $ff
 	out I8253_CH0
@@ -346,7 +434,7 @@ sfo_done:
 	pop d
 	ret
 sfo_shutup:
-	mvi a, CH0_CTR_SILENCE
+	mvi a, CH0_CTR_STFU
 	out I8253_CONTROL
 	mvi a, $ff
 	out I8253_CH0
