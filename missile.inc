@@ -19,14 +19,21 @@ missile_hit_index       db 0    ; where a hit was detected: index
 missile_hit_y:          db 0    ; where a hit was detected: row
 missile_hit_x:          db 0
 
+mm_prev_input   db 0
+
 MissileMotion:
         lxi h, missile_onscreen ; missile flying already?
         mov a, m
         ora a
         jnz mm_move
 
+        lda mm_prev_input
+        mov b, a
         lda input_fire          ; fire button down? 
         ora a
+        sta mm_prev_input
+        jz mm_return
+        xra b
         jz mm_return
 
 mm_fire:                        ; new missile
