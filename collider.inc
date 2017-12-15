@@ -230,12 +230,15 @@ CollisionPlaneFoe
         lhld game_fuel_lo
         mvi l, 255              ; round up the fracional part
         inr h
-        jnz $+10
-        dcr h                   ; saturate
-        shld game_fuel_lo
-        jmp snd_full
+        jz fuel_charge_saturate
+        inr h
+        jz fuel_charge_saturate
         shld game_fuel_lo
         jmp snd_fuel
+fuel_charge_saturate
+        dcr h
+        shld game_fuel_lo
+        jmp snd_full
 
 player_ded
         ; for the time being it's something else that's ded

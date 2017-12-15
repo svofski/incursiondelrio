@@ -8,6 +8,11 @@ BOTTOM_HEIGHT           equ 60
 TOP_HEIGHT              equ 16
 SCREEN_WIDTH_BYTES      equ 32
 
+; randomLo is compared against this value and if less than, a new foe is
+; generated. Make it lower for fewer foes. 
+; 16 makes an almost empty field, 120 seems to be a reasonable maximum.
+FOE_PROBABILITY_THRESH  equ 120
+
 FOE_MAX                 equ 8  
 BLOCKS_IN_LEVEL         equ 16
 BLOCK_HEIGHT            equ 64
@@ -474,33 +479,64 @@ cnf_notabridge:
     lda randomHi
     mov b, a
     lda randomLo
-    cpi $a0
+    cpi FOE_PROBABILITY_THRESH   ; higher value = probability higher
     jnc CreateNewFoe_Exit
 
-    ; update bounce boundaries
-    lxi h, pf_tableft
-    lda frame_scroll
-    add l
-    sui 0 ; offset to where the terrain is already generated
-    mov l, a
-    mov d, m            ; d = pf_tableft[frame_scroll - 8]
-;---
-    sui 8               ; frame_scroll - 8, trying to check if fits at top and bottom
-    mov l, a
-    mov a, m            ; a = pf_tableft[frame_scroll - 4]
 
-    ; max(a, d)
-    cmp d
-    jc $+4              ; if d > a, skip next instruction
-    mov d, a            ; 
-;---
-    mov a, d
-    sta foe_left        ; d = a = pf_tableft[frame_scroll - 8]
+        ; find travel boundaries
+        lxi h, pf_tableft
+        lda frame_scroll
+        add l
+        mov l, a                ; h = &left[scroll]
 
-    inr h ; --> pf_tabwater (pf_tableft and pf_tabwater are aligned to 256)
-    mov a, m            ; e = a = pf_tabwater[frame_scroll - 8]
-    mov e, a
-    sta foe_water       ; foe_water = pf_tabwater[frame_scroll - 8]
+        mov d, m                ; d = left[scroll]
+        inr h
+        mov e, m                ; e = water[scroll]
+        mov a, d
+        add e
+        mov e, a                ; e = right[scroll], de = [x1,x2]_1
+
+        xchg
+        shld tmp16
+        xchg
+        dcr h                   ; &left[scroll]
+        mov a, l
+        sui 8                   ; &left[scroll-8], 8 lines earlier/lower
+        mov l, a
+        
+        mov d, m
+        inr h
+        mov e, m
+        mov a, d
+        add e
+        mov e, a                ; de = [x1,x2]_2
+
+        lhld tmp16              ; pick max(d, h)
+
+        ; max(h, d)
+        mov a, h
+        cmp d
+        jm $+4
+        mov d, h                ; d = max(h, d)
+
+        ; min(l, e)
+        mov a, l
+        cmp e                   ; a = l - e
+        jp $+4
+        mov e, l                ; e = min(l, e)
+        
+        ; d = most right left position
+        ; e = most left right position
+        ; so we have found the narrowest boundary for our foe
+        ; find back foe_water from this and save
+
+        mov a, d
+        sta foe_left
+        
+        mov a, e
+        sub d
+        sta foe_water
+        mov e, a
 
     ; d = left, e = water
 
@@ -511,16 +547,19 @@ cnf_notabridge:
     ; foe_left = width - (left+water)
     mov d, a
     mov a, b
-    lda randomLo
+    lda randomLo        ; pick which side of the island for this foe
     ani $2
     jz cnf_preparetableoffset
 
+    ; mirror foe bounds
     mov a, d
     cma
     inr a
     adi SCREEN_WIDTH_BYTES
     sta foe_left
     jmp cnf_preparetableoffset
+
+    ; double the space where the foe can travel: use both left and right water
 cnf_doublewater:
     mov a, e
     ora a
@@ -552,6 +591,17 @@ cnf_L1:
     dad b       
     ; hl = foe[foeTableIndex]: 
     ;   Id, Column, Index, Direction, Y, Left, Right
+
+    ; This guarrantees that no foe would become "stale" while still on screen,
+    ; but it has two downsides:
+    ;   1) it makes generation dependent on gameplay, which is non-canon
+    ;   2) special cases, e.g. bridge must always appear
+    ; It's a better idea to keep new foe probability in check so that
+    ; too many foes are just unlikely to appear at once.
+    ; if(foe.id != 0) return;
+    ;mov a, m
+    ;ora a
+    ;jnz CreateNewFoe_exit
 
     lda pf_roadflag
     ora a
@@ -1024,8 +1074,7 @@ foe_byId:
 foe_wipe_disp
     shld foe_frame_wipe_dispatch+1
 
-    ; Clear foe ID (probably advance it to a kaboom sprite later)
-    ;xra a
+    ; make this foe a debris
     mvi a, FOEID_DEBRIS_1
     sta foeBlock + foeId
 
@@ -1056,6 +1105,7 @@ foe_notblownup:
     sub l
     cpi BOTTOM_HEIGHT-8
     jnc foe_infield
+    ; recycle this foe
     xra a
     sta foeBlock + foeId
     ret

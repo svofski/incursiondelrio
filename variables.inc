@@ -110,6 +110,8 @@ game_score:             db 0,0,0,0,0,0          ; unpacked bcd
 game_fuel_lo:           db 255
 game_fuel_hi:           db 255                  ; warning at $40
 
+tmp16                   dw 0
+
 ; vi:syntax=m80
 ; vi:ts=8
 ; vi:sts=8
