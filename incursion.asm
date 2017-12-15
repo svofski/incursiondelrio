@@ -483,6 +483,31 @@ cnf_notabridge:
     jnc CreateNewFoe_Exit
 
 
+        ; The foe box must fit between "left" and "left + water", i.e. "right".
+        ; When right == 16, there is no island.
+        ; A typical foe height is 8, copter is 8.
+        ; The top of the foe sprite is placed on the current line, frame_scroll.
+        ; 
+        ; Example:
+        ;  
+        ; left               water
+        ;    4|     #######    12       frame_scroll
+        ;    4|     #######  11         ...
+        ;    4|     #######10           frame_scroll-8
+        ; 
+        ; The algorithm is simple: 
+        ;       find available bounds at the top line (x1,x2):
+        ;               x1 = pf_left[frame_scroll]
+        ;               x2 = x1 + pf_water[frame_scroll]
+        ;       find available bounds at the bottom line (x1',x2'):
+        ;               x1' = pf_left[frame_scroll-8]
+        ;               x2' = x1' + pf_water[frame_scroll-8]
+        ;       result bounds are:
+        ;               rx1, rx2 = max(x1, x1'), min(x2, x2')  
+        ;       foe_left = rx1
+        ;       foe_water = rx2 - foe_left
+        ;       
+
         ; find travel boundaries
         lxi h, pf_tableft
         lda frame_scroll
