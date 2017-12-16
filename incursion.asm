@@ -76,12 +76,20 @@ clearscreen:
     mvi a, $c9
     sta $38
 
+    ; write restart to rst 0 vector
+    mvi a, $c3
+    sta 0
+    lxi h, $100
+    shld 1
+
     ; initial stuff
     ei
     hlt
     call setpalette
     call showlayers
     call SoundInit
+
+    call GameReset
 
 jamas:
     mvi a, 10
@@ -95,8 +103,8 @@ jamas:
     hlt
 
     ; fuckup interceptor
-    lxi h, $76f3
-    shld $38
+;    lxi h, $76f3
+;    shld $38
 
     xra a
     out 2

@@ -19,6 +19,23 @@ nextRandom16:
 		shld random
 		ret
 
+randomInitialState
+                lxi h, $a814
+                shld random
+                ret
+
+randomSaveState
+                lhld random
+                shld random_memento
+                ret
+
+randomRestoreState
+                lhld random_memento
+                shld random
+                ret
+
+                ; c = randomLo, c < a
+                ; does not modify LFSR, uses the current state
 randomNormA:
 		mov c, a
 		lda randomLo
@@ -31,11 +48,8 @@ randomNormA_return:
 		mov c, a
 		ret
 
-random:
-;randomLo:	db $3
-;randomHi:	db $2
-randomLo:	db $14
-randomHi:	db $a8
+random_memento: dw 0
+; random state is a part of game state, see [game_state] in variables.inc
 
 ;; rar == through carry ; rrc = just puts in carry		 
 ; (JTZ: randomHi is very random, randomLo is NOT when more than one bit is used,

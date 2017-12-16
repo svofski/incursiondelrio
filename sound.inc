@@ -19,25 +19,6 @@ CH1_CTR_STFU		equ 01110000b
 CH2_CTR_BEEP 		equ 10110110b
 CH2_CTR_STFU		equ 10110000b
 
-
-snd_on:			db 0
-snd_bell_count:		db 0
-snd_bell_ptr:		dw snd_bell
-snd_bell:			
-					db $10, $10, $10, $10
-					db $10, $9, $10, $9
-					db $10, $10, $10, $10
-					db $10, $9, $10, $9
-					db $10, $10, $10, $10
-					db $10, $9, $10, $9
-
-					db $10, $10, $10, $10
-					db $10, $10, $10, $10
-					db $10, $10, $10, $0
-					db $11, $0, $10, $0
-snd_bell_end		equ .
-
-
 SNDFX_REFUEL    equ 1
 SNDFX_REFULL    equ 2
 SNDFX_LOWFUEL   equ 3
@@ -157,13 +138,18 @@ snd_foe_ded_data:
         db 130, 2
         db 0, 0
 
+snd_empty_data:
+        db 0, 0
+
 SoundInit:
-	lxi h, snd_bell
-	shld snd_bell_ptr
-	mvi a, snd_bell_end - snd_bell-1
-	sta snd_bell_count
-	mvi a, 0
-	sta snd_on
+        lxi h,0
+        shld snd_ch0_cur
+        shld snd_ch2_cur
+        shld snd_ch0_next
+        shld snd_ch2_next
+        mvi a, 0
+        sta snd_ch0_state
+        sta snd_ch2_state
 	ret
 
 SoundSound:
@@ -195,7 +181,6 @@ smiss_silent
 	out I8253_CONTROL
         ret
 
-
 snd_ch0_frame
         ; check if a beep is in progress, decrement and return if so
         lda snd_ch0_state
@@ -207,11 +192,15 @@ snd_ch0_frame
 sch0_next_beep
         ; load next beep from the current sound string
         lhld snd_ch0_cur
+        mov a, h
+        ora l
+        jz sch0_load_next
         mov c, m
         inx h
         mov a, m
         ora c
         jnz sch0_beep_load
+sch0_load_next
         ; zero pitch and length, end of sound string
         ; take the next string, load it into cur, clear next and reenter
         lhld snd_ch0_next
@@ -273,11 +262,15 @@ snd_ch2_frame
 sch2_next_beep
         ; load next beep from the current sound string
         lhld snd_ch2_cur
+        mov a, h
+        ora l
+        jz sch2_load_next
         mov c, m
         inx h
         mov a, m
         ora c
         jnz sch2_beep_load
+sch2_load_next
         ; zero pitch and length, end of sound string
         ; take the next string, load it into cur, clear next and return
         lhld snd_ch2_next
@@ -342,8 +335,6 @@ sch2_beep_silent
 
 
 snd_ch1_frame:
-        call nextRandomSnd
-
 	lda playerYspeed
         ora a
         rrc
@@ -380,90 +371,6 @@ sn_silence:
 	ret
 
 sn_counter:     db 0
-
-SoundFadeOut:
-	push d 
-
-	lda snd_bell_count
-	ora a
-	jm sfo_shutup
-
-
-	lda snd_on
-	mov b, a
-
-	lhld snd_bell_ptr
-	mov a, m
-	mov d, a
-	ora a
-	jnz sfo_snd
-
-sfo_silence:
-	mov a, b
-	ora a
-	jz sfo_done
-
-	mvi a, CH0_CTR_STFU
-	out I8253_CONTROL
-	mvi a, $ff
-	out I8253_CH0
-	out I8253_CH0
-	xra a
-	sta snd_on
-	jmp sfo_done
-
-sfo_snd:
-	mov a, b
-	cmp d
-	jz sfo_done 
-
-	mvi a, CH0_CTR_BEEP
-	out I8253_CONTROL
-	mvi a, $0
-	out I8253_CH0
-	mov a, d
-	;mvi a, $10
-	out I8253_CH0
-	mov a, d
-	sta snd_on 
-sfo_done:
-	inx h
-	shld snd_bell_ptr
-	lxi h, snd_bell_count
-	dcr m
-	pop d
-	ret
-sfo_shutup:
-	mvi a, CH0_CTR_STFU
-	out I8253_CONTROL
-	mvi a, $ff
-	out I8253_CH0
-	out I8253_CH0
-	pop d
-	ret
-
-nextRandomSnd:
-
-	lhld random_snd
-	mov a, h 		; randomHi
-   	rlc            
-   	rlc            
-   	rlc    
-   	xra h
-   	rlc
-   	mov h, a
-   	mov a, l
-   	ral 
-   	mov l, a
-   	mov a, h
-   	ral
-	mov h, a
-	shld random_snd
-	ret
-
-random_snd:
-random_sndLo:	db $14
-random_sndHi:	db $a8
 
 
 ; vi:syntax=m80

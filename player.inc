@@ -1,27 +1,11 @@
 ;; Player Y position (fixed)
 PLAYER_Y	        equ 64+20
 
-player_collision:	db 0
-
-;; Player X position as column + index offset within the column
-player_column:		db 15
-player_index:   	db 4
-
-player_dir:	        db 0
-
 player_ptr:	        dw player_bank_ltr_dispatch + 2; player_up_ltr_dispatch+2
-
-playerXspeed:		db 0
-playerXaccu:		db 255	
 
 YSPEED_DEFAULT		equ 76
 YSPEED_MAX	        equ 128
 YSPEED_MIN	        equ 48
-
-playerYspeed:		db YSPEED_DEFAULT
-playerYaccu:		db 0
-
-player_until_bridge     db 0    ; lines until the bridge crossing is registered
 
 ScrollAccu:
 	mvi d, 0
