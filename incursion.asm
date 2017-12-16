@@ -1488,9 +1488,18 @@ sprite_ltr_rtl_dispatchjump:
         ; After the animation cycle ends, sets $80 bit to signal the main
         ; loop that the debris should also be wiped and the block freed.
 debris_frame:
-        lda frame_scroll                ; slow down the animation, skip frames
+        lda frame_number                ; slow down the animation, skip frames
         rrc
         rc
+
+        ; verify that we are not going to paint over the black border
+        lda frame_scroll
+        mov b, a
+        lda foeBlock+foeY
+        sub b
+        cpi BOTTOM_HEIGHT+10
+        jc debfr_nopaint
+
         lxi h, foeBlock+foeDirection    
         mvi m, 0
         lxi h, foeBlock
@@ -1509,6 +1518,7 @@ debfr_loadfb
         shld foeBlock_LTR
         shld foeBlock_RTL
         call foe_frame
+debfr_nopaint
         lxi h, foeBlock
         mov a, m
         inr a

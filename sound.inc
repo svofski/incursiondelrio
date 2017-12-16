@@ -98,12 +98,12 @@ snd_ch2_cur     dw 0
                 ; pitch, time, pitch, time, 0, 0
 snd_fuel_data:  
         db 14, 2
-        db 0, 10
+        db 0,  5
         db 0,  0
 
 snd_fuel2_data:  
         db 14, 1
-        db 0, 11
+        db 0,  6
         db 0,  0
 
 snd_full_data:

@@ -44,11 +44,14 @@ mm_fire:                        ; new missile
 
         call snd_missile_on
 mm_move:                        ; propel the missile forward
+        lda frame_number
+        rar
         lxi h, missile_y
         mov a, m
+        aci 0                   ; add +1 every other frame
         adi 6
         mov m, a
-        cpi 250
+        cpi 248
         rc
         ;rnz                     ; this check should be fine
         dcx h                   ; h = &missile_onscreen

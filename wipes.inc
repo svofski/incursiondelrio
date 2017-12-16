@@ -225,7 +225,7 @@ wipe_fuel
         lxi h, 0
         dad sp
         shld wipe_fuel_ret+1
-;; begin with layer 2 (c000)
+        ; begin with layer 2 (c000)
         lxi h, $2000
         dad d
         dcr h
@@ -273,33 +273,44 @@ wipe_fuel_ret:
         lxi sp, 0
         ret
 
+        ; de = column/row 
 wipe_debris:
-    mov a, e
-    adi 4
-    mov e, a
-    lxi h, 0
-    dad sp
-    shld wipe_debris_ret+1
-;; layer 3 (e000)
-    lxi h, $6000
-    dad d
-    ;xchg
-    sphl
-    lxi b, 0
+        mov a, e
+        adi 4
+        mov e, a
 
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
-    lxi h, 256+12
-    dad sp
-    sphl
-    db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
+        ; check that the row is sufficiently above BOTTOM_HEIGHT
+        ; to avoid spoiling the black blinds
+        lda frame_scroll
+        cma
+        inr a
+        add e
+        cpi BOTTOM_HEIGHT+20    ; if below this line, don't wipe at all
+        rc                     
+
+        lxi h, 0
+        dad sp
+        shld wipe_debris_ret+1
+;; layer 3 (e000)
+        lxi h, $6000
+        dad d
+        ;xchg
+        sphl
+        lxi b, 0
+
+        db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 1
+        lxi h, 256+12
+        dad sp
+        sphl
+        db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 2
+        lxi h, 256+12
+        dad sp
+        sphl
+        db $c5, $c5, $c5, $c5, $c5, $c5 ; (push b x 6) column 3
 
 wipe_debris_ret:
-    lxi sp, 0
-    ret
+        lxi sp, 0
+        ret
 
         ; de = starting position
 wipe_fuel_gauge
