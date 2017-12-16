@@ -10,8 +10,11 @@ SCREEN_WIDTH_BYTES      equ 32
 
 ; randomLo is compared against this value and if less than, a new foe is
 ; generated. Make it lower for fewer foes. 
-; 16 makes an almost empty field, 120 seems to be a reasonable maximum.
-FOE_PROBABILITY_THRESH  equ 120
+; 16 makes an almost empty field, 110 seems to be a reasonable maximum.
+; Higher values may generate more foes than the list accomodates.
+; This is very bad because a "recycled" fuel may become ground and a plane
+; would explode without reason.
+FOE_PROBABILITY_THRESH  equ 110
 
 FOE_MAX                 equ 8  
 BLOCKS_IN_LEVEL         equ 16
@@ -54,6 +57,7 @@ KEY_LEFT            equ $10
 
         .org $100
 
+        jmp _start
 clrscr:
     di
     lxi h, $8000
@@ -66,7 +70,8 @@ clearscreen:
     inx h
     ora h
     jnz clearscreen
-
+    ret
+_start
     ; init stack pointer
     lxi sp, $100
 
@@ -89,7 +94,22 @@ clearscreen:
     call showlayers
     call SoundInit
 
+NewGame
+    call clrscr
     call GameReset
+    call GameSaveAtBridge       ; will save bridge 1
+    jmp jamas        
+
+MinusLife
+        call clrscr
+        lda game_lives
+        dcr a
+        jz $                    ; game over, BLK+SBR to restart
+        push psw
+        call GameResetToBridge
+        pop psw
+        sta game_lives
+
 
 jamas:
     mvi a, 10
@@ -103,11 +123,20 @@ jamas:
     hlt
 
     ; fuckup interceptor
-;    lxi h, $76f3
-;    shld $38
+    lxi h, $76f3
+    shld $38
 
     xra a
     out 2
+
+    lda deathroll
+    ora a
+    jz normal_roll
+    dcr a
+    sta deathroll
+    jz MinusLife
+    ;jz NewGame
+normal_roll
 
     call KeyboardScan
     call PlayerWipe
@@ -124,7 +153,6 @@ jamas:
     call SoundInit
 jamas_1:
     call SoundSound
-    ;call SoundNoise
 
     ; keep interrupts enabled to make errors obvious
     ei
@@ -143,10 +171,6 @@ jamas_1:
     out 2
     ; if missile collided, is it with a foe or terrain and if a foe, which one?
     call CollisionMissileFoe
-    ; could be just fuel, but usually ded
-    call CollisionPlaneFoe
-    ; --
-
     ; black border
     mvi a, 5
     out 2
@@ -171,7 +195,6 @@ jamas_1:
     ; dkblue border
     mvi a, $e
     out 2
-    ;call SoundNoise
     call PlayerSpeed
 
     ; pink border
@@ -184,6 +207,18 @@ jamas_1:
     out 2
 
     call PlayerSprite
+    ; could be just fuel, but usually ded
+    call CollisionPlaneFoe
+    ;jc MinusLife
+    jnc collision_survived
+        mvi a, 0
+        sta playerYspeed
+        mvi a, 50
+        sta deathroll
+
+collision_survived
+    ; --
+
     lda  frame_scroll
     sta frame_scroll_prev
 
@@ -662,6 +697,9 @@ cnf_L1:
 
     mvi a, CLEARANCE_BRIDGE
     sta foe_clearance
+
+    call GameSaveAtBridge
+
     jmp CreateNewFoe_Exit
 
     ; create fuel or regular foe
@@ -1565,7 +1603,9 @@ dispatch_digit
 
 SCORE_BASELINE  equ 20
 
-        
+        ; -----
+        ; PAINT SCORE AND EVERYTHING IN THE BOTTOM PART
+        ; ----- - 
 PaintScore:
         lda frame_scroll
         adi SCORE_BASELINE+7
@@ -1656,9 +1696,19 @@ ps_findlead_loop
         adi SCORE_BASELINE+20
         mov e, a
         mvi d, $96
-        call playericon_ltr0
 
-        ;ret
+        lda game_lives
+        mov b, a
+paint_lives_loop
+        push b
+        push d
+        call playericon_ltr0
+        pop d
+        pop b
+        inr d
+        dcr b
+        jnz paint_lives_loop
+
 
 PaintFuel
         ; 8 columns wide = 64 positions, thick bar
@@ -1959,6 +2009,9 @@ showlayers:
 pf_tableft      equ $7800
                 ; table of water widths
 pf_tabwater     equ $7900
+                ; saved game state at the last bridge
+state_memento_a equ $7a00
+state_memento_b equ $7a80
 ;pf_tableft:                    
 ;                           .org .+$100
 ;pf_tabwater:

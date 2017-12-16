@@ -67,11 +67,14 @@ input_left:             db 0
 input_fire:             db 0
 input_dummy:            db 0
 
+
 tmp16                   dw 0
 
 ; Initial game state
+game_initial_state_aligned      equ (.+8) and 0xfff8
+                        .org game_initial_state_aligned
 game_initial_state
-initial_bridge          db 0, 0, 1
+initial_bridge          db 0, 0, 0
 initial_lives           db 3
 initial_score           db 0, 0, 0, 0, 0, 0
 initial_fuel            dw 65535
@@ -113,10 +116,13 @@ initial_playerXspeed:   db 0
 initial_playerXaccu:    db 255	
 initial_playerYspeed:   db YSPEED_DEFAULT
 initial_playerYaccu:    db 0
-initial_until_bridge:   db 0    ; lines until the bridge crossing is registered
+initial_until_bridge:   db 1    ; lines until the bridge crossing is registered
 initial_foe_clearance:  db 0
+initial_deathroll:      db 0
 
 ; Complete game state
+game_state_aligned      equ (.+8) and 0xfff8
+                        .org game_state_aligned
 game_state
 game_bridge:            db 0, 0, 0              ; unpacked bcd
 game_lives:             db 3
@@ -170,7 +176,10 @@ player_until_bridge     db 0    ; lines until the bridge crossing is registered
 
 ; vertical clearance before next foe can be injected 
 foe_clearance:          db 1
+deathroll:              db 0
 
+game_state_end_aligned  equ (.+8) and 0xfff8
+                        .org game_state_end_aligned 
 game_state_end
 
                         ; Reset the game to its initial state
@@ -186,6 +195,10 @@ gamereset_memcpy
                         dcr c
                         jnz gamereset_memcpy
 
+                        call ClearFoeTable
+                        ret
+
+ClearFoeTable
                         ; Clear foe table
                         lxi h, 0
                         shld foeTableIndex
@@ -197,9 +210,87 @@ gamereset_foe_zero
                         inx h
                         dcr c
                         jnz gamereset_foe_zero
+                        ret
 
+                        ; save game state in case a plane is lost
+                        ; pick memento_a or memento_b depending on bridge number
+                        ; bridge&1 == 0: save to memento b
+                        ;                restore from memento a
+                        ; bridge&1 == 1: save to memento a
+                        ;                restore from memento b
+                        ; scenario A:
+                        ;  1. bridge&1 == 0 appears, game state gets saved to b
+                        ;  2. plane dies, memento a (previous) restored
+                        ; scenario B:
+                        ;  1. bridge&1 == 0 appears, game state saved to b
+                        ;  2. plane crosses the bridge, bridge&1 == 1
+                        ;  3. plane dies, memento b restored
+GameSaveAtBridge
+                        lxi h, 0
+                        dad sp
+                        shld gsab_return+1
+
+                        lxi sp, game_state
+                        lxi h, state_memento_a
+                        lda game_bridge+2 ; it's bcd, but lsb 0 is good for odd/even
+                        rar
+                        jc $+6                  ; bridge&1 == 1 -> save to a
+                        lxi h, state_memento_b  ; bridge&1 == 0 -> save to b
+gsab_loop_begin
+                        mvi a, (game_state_end-game_state)>>3
+gsab_loop
+                        pop b
+                        mov m, c
+                        inx h
+                        mov m, b
+                        inx h
+
+                        pop b
+                        mov m, c
+                        inx h
+                        mov m, b
+                        inx h
+
+                        pop b
+                        mov m, c
+                        inx h
+                        mov m, b
+                        inx h
+
+                        pop b
+                        mov m, c
+                        inx h
+                        mov m, b
+                        inx h
+
+                        dcr a
+                        jnz gsab_loop
+
+gsab_return             lxi sp, 0
+                        ret
+GameResetToBridge
+                        call ClearFoeTable
+                        call grtb_copy_state
+
+                        ; reset player position
+                        lhld initial_player_col
+                        shld player_column ; column and index
 
                         ret
+
+grtb_copy_state
+                        lxi h, 0
+                        dad sp
+                        shld gsab_return+1
+
+                        ; bridge&1 == 0: restore from a
+                        lxi h, game_state
+                        lxi sp, state_memento_b
+                        lda game_bridge+2 ; it's bcd, but lsb 0 is good for odd/even
+                        rar
+                        jc $+6                   ; bridge&1 == 1 -> restore from b
+                        lxi sp, state_memento_a  ; bridge&1 == 0 -> restore from a
+                        jmp gsab_loop_begin
 
 
 ; vi:syntax=m80

@@ -36,6 +36,10 @@ MissileMotion:
         xra b
         jz mm_return
 
+        lda deathroll
+        ora a
+        rnz
+
 mm_fire:                        ; new missile
         inr m                   ; missile_onscreen = 1
 

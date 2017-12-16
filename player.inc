@@ -33,6 +33,11 @@ saccu_4:
 
 
 PlayerSpeed:
+        ; can't move when ded
+        lda deathroll
+        ora a
+        rnz
+
 	lda input_up
 	ora a
 	jnz ps_throttle
@@ -75,6 +80,11 @@ ps_exit:
 	ret
 
 PlayerMotion:
+        ; can't move when ded
+        lda deathroll
+        ora a
+        rnz
+
 	mvi d, $ff
 	lda input_left
 	ora a

@@ -335,39 +335,19 @@ sch2_beep_silent
 
 
 snd_ch1_frame:
-	lda playerYspeed
-        ora a
-        rrc
-        rrc
-        ani $3f
-	sui YSPEED_DEFAULT
-	cma
-	adi $80
-        mov b, a
-
         lxi h, sn_counter
         lda playerYspeed
-        ora a
-        rar
+        ;ora a
+        ;rar
          ; mov b, a
         ora a
         rar
          ; add b
         add m
         mov m, a
-        jc sn_silence
-sn_noise:
-	mvi a, CH1_CTR_BEEP
-	out I8253_CONTROL
-        xra a
-        out I8253_CH1
-        mov a, b
-        ;mvi a, $b0
-	out I8253_CH1
-        ret
-sn_silence:
-        mvi a, CH1_CTR_STFU
-        out I8253_CONTROL
+        mvi a, 0
+        ral
+        out 1
 	ret
 
 sn_counter:     db 0

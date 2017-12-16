@@ -1,11 +1,15 @@
 collision_x     db 0
 collision_y     db 0
+collision_width db 2
 
         ; Handle collision of missile with a foe
 CollisionMissileFoe:
         lda missile_hit
         ora a
         rz                      ; no hit in sight
+
+        mvi a, 1
+        sta collision_width
 
         ; the flag will be cleared by MissileWipe
         ;xra a                   ; clear the flag 
@@ -136,7 +140,10 @@ ffxy_check_foe_x
         adi 16
 
         mov d, a
-        inr a
+        ;inr a
+        ;adi 16          ; ###
+        lda collision_width
+        add d
         mov e, a        ; de = missile.x1, missile.x2
         jmp intersects_test
 
@@ -181,14 +188,14 @@ foe_height_tbl
         ;       8       9       10      11      12      13      14      15
         db      0,      0,      0,      0,      0,      0,      0,      0,
         ;       16      17
-        db      28,     24
+        db      28,     30
 
 foe_width_tbl
         ;       NONE    SHIP    COPTER  COPTER  JET
         db      0,      40,     24,     24,     24,     0,      0,      0,
         db      0,      0,      0,      0,      0,      0,      0,      0,
         ;       BRIDGE  FUEL
-        db      64,     16
+        db      64,     20
 
         ; Input: hl points to column, index in memory
         ; Output: a = X coordinate
@@ -207,6 +214,8 @@ CollisionPlaneFoe
         ora a
         rz
 
+        mvi a, 16
+        sta collision_width
         ; okay what now
         ; precalculate player X
         lxi h, player_column
@@ -218,9 +227,7 @@ CollisionPlaneFoe
         sta collision_y
         call find_foe_at_xy
 
-        
-        ; for now be a missile
-        rnc                     ; if not found it's probably terrain
+        jnc player_ded          ; if not found it's probably terrain
 
         mov a, m
         cpi FOEID_FUEL
@@ -250,7 +257,7 @@ player_ded
         mov m, a
 
         call snd_player_ded
-
+        stc
         ret
 
 
