@@ -338,6 +338,7 @@ foe_in_de:
         ; copy foe block back
         ; only the first 4 bytes of foeBlock need to be copied back
         ; it's faster to do it by byte
+        ; update: byte[7] (freeze flag) also is copied
 
         lhld foeBlock                   ; 20
         xchg                            ; 4
@@ -352,6 +353,12 @@ foe_in_de:
         mov m, e                        ; 8
         inx h                           ; 8
         mov m, d                        ; 8   =120
+
+        lxi b, 4                        ; 12
+        dad b                           ; 12
+        lda foeBlock+7                  ; 12
+        mov m, a                        ; 8   = 164 :(
+        
         ret
 
 
@@ -777,24 +784,7 @@ cnf_width_2:
     mvi m, 0
     inx h
 
-    ; [game_progression] >>>>>>>>
-    ; make the foes appear still on early levels, then gradually more and more
-    ; starting with level 5 it's full on
-    lda game_bridge_bin
-    cpi 2                       ; begin with enemies standing still
-    jm cnf_dir_still
-    cpi 6                       ; when > 6, let them all move
-    jp cnf_dir_leftorright
-
     ; Direction                 ; otherwise chose 50/50
-    lda randomHi
-    ani $18
-    cpi $18
-    jz cnf_dir_leftorright
-cnf_dir_still
-    xra a
-    jmp cnf_dir1
-cnf_dir_leftorright
     lda randomHi
     ani $8
     mvi a, $ff
@@ -802,26 +792,53 @@ cnf_dir_leftorright
     mvi a, 1
 cnf_dir1:
     mov m, a
-    inx h
 
-    
+    inx h                       ; h = &foe.foeY
     lda frame_scroll
     mov m, a                    ; foe.foeY = frame_scroll
-    inx h
+
+    inx h                       ; h = &foe.leftStop
     ; Left
     lda foe_left
     dcr a
     mov m, a
     mov c, a
-    inx h
 
+    inx h                       ; h = &foe.rightStop
     ; Right
     mov a, e
     add c
     mov m, a
+
+    inx h                       ; h = &foe.bounce (use as freeze flag)
+
+    ; [game_progression] >>>>>>>>
+    ; make the foes appear still on early levels, then gradually more and more
+    ; starting with level 5 it's full on
+    lda game_bridge_bin
+    cpi 2                       ; begin with enemies standing still
+    jm cnf_freeze
+    cpi 6                       ; when > 6, mostly move
+    jp cnf_80_20
+                                ; otherwise chose 50/50
+    lda randomHi
+    ani $18
+    cpi $18
+    jz cnf_thaw
+
+cnf_freeze
+    mvi m, 1                    ;
 CreateNewFoe_Exit:
-    ;pop psw
     ret
+cnf_thaw
+    mvi m, 0
+    ret
+
+cnf_80_20
+        lda randomLo
+        rar
+        jc cnf_freeze
+        jmp cnf_thaw
 
 CreateNewFoe_AbortFuel:
     lda CLEARANCE_DEFAULT
@@ -1416,38 +1433,75 @@ foe_Move:
     ; index = index + direction
     lda foeBlock + foeDirection
     mov b, a
-    ; if the foe stands still, make it start up sometimes
-    ora a
-    jnz foe_move_move
-    lda game_bridge_bin
-    cpi 2       ; before 2 don't start them up
-    mvi a, 0
-    jm foe_move_move
-    lda randomHi
-    mov c, a
-    lda foeBlock + foeY
-    add c
-    ani $fe
-    cpi $fe
-    mvi a, 0
-    jnz foe_move_move
-    ;jmp foe_move_move
-    lda randomHi
-    ani $8
-    mvi b, $ff 
-    jz foe_move_move
-    mvi b, 1
-    ;
-    ;
-foe_move_move
-    mov a, b
-    sta foeBlock + foeDirection
 
+;;    mvi b, 0
+;;    rrc
+;;    jc foe_move_move ; frozen
+;;    mvi b, 1
+;;    ora a
+;;    jp foe_move_move
+;;    mvi b, $ff
+;;    jmp foe_move_move
+
+;;;
+;;;
+;;;    mov b, a
+;;;    ; if the foe stands still, make it start up sometimes
+;;;    ora a
+;;;    jnz foe_move_move
+;;;    lda game_bridge_bin
+;;;    cpi 2       ; before 2 don't start them up
+;;;    mvi a, 0
+;;;    jm foe_move_move
+;;;    lda randomHi
+;;;    mov c, a
+;;;    lda foeBlock + foeY
+;;;    add c
+;;;    ani $fe
+;;;    cpi $fe
+;;;    mvi a, 0
+;;;    jnz foe_move_move
+;;;    ;jmp foe_move_move
+;;;    lda randomHi
+;;;    ani $8
+;;;    mvi b, $ff 
+;;;    jz foe_move_move
+;;;    mvi b, 1
+;;;    ;
+;;;    ;
+;;foe_move_move
+;;    mov a, b
+;;    ;sta foeBlock + foeDirection
+
+
+        lda foeBlock + foeBounce
+        cpi 1
+        jnz foe_move_move
+        ; thaw a frozen foe, maybe
+        lda game_bridge_bin
+        cpi 2       ; first bridge stands still
+        jm foe_move_frozen
+
+        ; random mixed with Y-position 
+        ; so that not everything is unfrozen at once
+        lda randomLo
+        mov c, a
+        lda foeBlock + foeY
+        add c
+        ani $fe
+        cpi $ae
+        jnz foe_move_frozen
+        ; thaw your chicken
+        xra a
+        sta foeBlock + foeBounce
+        jmp foe_move_move
+foe_move_frozen
+        mvi b, 0
+foe_move_move
 
     lda foeBlock + foeIndex
     add b
     ; if (Index == -1  
-    ;ora a
     jm foe_move_indexoverrun
     ;     || Index == 8)
     cpi $8
@@ -1522,6 +1576,8 @@ foe_paint_preload:
     ;; actual paint
     ;; Input e = column
 foe_paint:
+    lda foeBlock + foeDirection ; reload direction again for static foes
+    mov b, a
     ;; paint foe
     ; e contains column
     mov a, e
