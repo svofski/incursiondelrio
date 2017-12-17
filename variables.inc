@@ -75,6 +75,7 @@ game_initial_state_aligned      equ (.+8) and 0xfff8
                         .org game_initial_state_aligned
 game_initial_state
 initial_bridge          db 0, 0, 0
+initial_bridge_bin      db 0
 initial_lives           db 3
 initial_score           db 0, 0, 0, 0, 0, 0
 initial_fuel            dw 65535
@@ -125,6 +126,7 @@ game_state_aligned      equ (.+8) and 0xfff8
                         .org game_state_aligned
 game_state
 game_bridge:            db 0, 0, 0              ; unpacked bcd
+game_bridge_bin:        db 0                    ; binary bridge # for logic
 game_lives:             db 3
 game_score:             db 0,0,0,0,0,0          ; unpacked bcd
 game_fuel_lo:           db 255

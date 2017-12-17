@@ -85,11 +85,29 @@ unb_A:
 
     ; we have enough room for island
 unb_makeisland:
+    ; [game_progression] >>>>>>>>
+    ;
+    ; no islands before bridge 3
+    lda game_bridge_bin
+    cpi 3
+    jm unb_noisland
+    
+    ; make island a somewhat rare event before bridge 9
+    cpi 9
+    jp unb_regular_probability
+
     mov a, l
+    ani $44
+    cpi $44
+    jnz unb_noisland
+    ; [game_progression] <<<<<<<<
+
+unb_regular_probability
+    mov a, l            ; a = randomLo
     rar
     rar
     ani $7
-    adi $2
+    adi $2              ; a = ((randomLo >> 2) & 7) + 2
     ; make sure that water - island > NARROWEST
     mov b, a
     lda terrain_act_water 

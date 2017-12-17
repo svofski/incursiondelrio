@@ -660,6 +660,7 @@ cnf_L1:
     ; hl = foe[foeTableIndex]: 
     ;   Id, Column, Index, Direction, Y, Left, Right
 
+    ;--- bad idea begin ---
     ; This guarrantees that no foe would become "stale" while still on screen,
     ; but it has two downsides:
     ;   1) it makes generation dependent on gameplay, which is non-canon
@@ -670,6 +671,7 @@ cnf_L1:
     ;mov a, m
     ;ora a
     ;jnz CreateNewFoe_exit
+    ;--- bad idea end ---
 
     lda pf_roadflag
     ora a
@@ -728,6 +730,14 @@ cnf_notfuel:
     inr a
     mov d, a    ; d = foe id
 
+    ; [game_progression] >>>>>>>
+    ; cut out jets before level 6
+    cpi FOEID_JET
+    jnz cnf_3
+    lda game_bridge_bin
+    cpi 6
+    jm CreateNewFoe_Exit
+
 cnf_3:
     ; width
     lda foe_water
@@ -767,7 +777,24 @@ cnf_width_2:
     mvi m, 0
     inx h
 
-    ; Direction
+    ; [game_progression] >>>>>>>>
+    ; make the foes appear still on early levels, then gradually more and more
+    ; starting with level 5 it's full on
+    lda game_bridge_bin
+    cpi 2                       ; begin with enemies standing still
+    jm cnf_dir_still
+    cpi 6                       ; when > 6, let them all move
+    jp cnf_dir_leftorright
+
+    ; Direction                 ; otherwise chose 50/50
+    lda randomHi
+    ani $18
+    cpi $18
+    jz cnf_dir_leftorright
+cnf_dir_still
+    xra a
+    jmp cnf_dir1
+cnf_dir_leftorright
     lda randomHi
     ani $8
     mvi a, $ff
@@ -1389,6 +1416,34 @@ foe_Move:
     ; index = index + direction
     lda foeBlock + foeDirection
     mov b, a
+    ; if the foe stands still, make it start up sometimes
+    ora a
+    jnz foe_move_move
+    lda game_bridge_bin
+    cpi 2       ; before 2 don't start them up
+    mvi a, 0
+    jm foe_move_move
+    lda randomHi
+    mov c, a
+    lda foeBlock + foeY
+    add c
+    ani $fe
+    cpi $fe
+    mvi a, 0
+    jnz foe_move_move
+    ;jmp foe_move_move
+    lda randomHi
+    ani $8
+    mvi b, $ff 
+    jz foe_move_move
+    mvi b, 1
+    ;
+    ;
+foe_move_move
+    mov a, b
+    sta foeBlock + foeDirection
+
+
     lda foeBlock + foeIndex
     add b
     ; if (Index == -1  
@@ -1857,6 +1912,10 @@ UpdateScore_BridgePass
         sub d
         cmc
         mov m, a
+
+        ; also update binary bridge counter
+        lxi h, game_bridge_bin
+        inr m
 
         ret
         ;
