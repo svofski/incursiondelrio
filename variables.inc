@@ -87,23 +87,23 @@ initial_scroll_prev     db $ff
     ; terrain data
     ; terrain_left, terrain_water must be one word
 initial_terrain_current:            
-initial_terrain_left:           db 4
-initial_terrain_water:          db 12 ; 24
+initial_terrain_left:           db SCREEN_WIDTH_BYTES/2 - HALFBRIDGE_WIDTH
+initial_terrain_water:          db HALFBRIDGE_WIDTH
 initial_terrain_islandwidth:    db 0
 
 initial_terrain_next:
-initial_terrain_next_left:          db 4
-initial_terrain_next_water:         db 24
+initial_terrain_next_left:          db SCREEN_WIDTH_BYTES/2 - HALFBRIDGE_WIDTH
+initial_terrain_next_water:         db HALFBRIDGE_WIDTH
 initial_terrain_next_islandwidth:   db 0
 
 initial_terrain_act:
-initial_terrain_act_left:       db 4
-initial_terrain_act_water:      db 24
+initial_terrain_act_left:       db SCREEN_WIDTH_BYTES/2 - HALFBRIDGE_WIDTH
+initial_terrain_act_water:      db HALFBRIDGE_WIDTH
 initial_terrain_act_islandwidth:db 0
 
 initial_next_bridge:    db 0
 initial_next1_bridge:   db 0
-initial_blockcount:     db 1
+initial_blockcount:     db 2    ; prepare for the entrance at bridge 1
 initial_bridgeflag:     db 0
 initial_roadflag:       db 0
 initial_blockline:      db 0
@@ -117,9 +117,10 @@ initial_playerXspeed:   db 0
 initial_playerXaccu:    db 255	
 initial_playerYspeed:   db YSPEED_DEFAULT
 initial_playerYaccu:    db 0
-initial_until_bridge:   db 1    ; lines until the bridge crossing is registered
+initial_until_bridge:   db 0    ; lines until the bridge crossing is registered
 initial_foe_clearance:  db 0
 initial_deathroll:      db 0
+initial_preroll:        db 1
 
 ; Complete game state
 game_state_aligned      equ (.+8) and 0xfff8
@@ -179,6 +180,7 @@ player_until_bridge     db 0    ; lines until the bridge crossing is registered
 ; vertical clearance before next foe can be injected 
 foe_clearance:          db 1
 deathroll:              db 0
+preroll:                db 0
 
 game_state_end_aligned  equ (.+8) and 0xfff8
                         .org game_state_end_aligned 

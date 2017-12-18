@@ -38,6 +38,17 @@ unb_setbridge:
     jmp UpdateNewBlock_Exit
 
 unb_nosetbridge:
+        lda preroll      ; initial preroll before entering game
+        ora a
+        jz unb_nosetbridge_regular
+unb_nosetbridge_intro
+        mvi a, HALFBRIDGE_WIDTH
+        sta terrain_next_water
+        mvi a, SCREEN_WIDTH_BYTES/2 - HALFBRIDGE_WIDTH
+        sta terrain_next_left
+        jmp UpdateNewBlock_Exit
+
+unb_nosetbridge_regular
     lhld random
     mov a, h
     ani $7

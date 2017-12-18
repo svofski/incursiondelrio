@@ -112,9 +112,15 @@ MinusLife
 
 
 jamas:
-    mvi a, 10
-    out 2
+;    mvi a, 10
+;    out 2
 
+    lda preroll
+    ora a
+    jz game_roll
+    jmp preroll_loop
+
+game_roll
     ; write ret to rst 7 vector 
     mvi a, $c9
     sta $38
@@ -155,25 +161,27 @@ jamas_1:
     call SoundSound
 
     ; keep interrupts enabled to make errors obvious
-    ei
+    ;ei
 
     call AnimateSprites
     call PlayerMotion
 
-    ; poop border  
-    mvi a, 6    
-    out 2
+;    ; poop border  
+;    mvi a, 6    
+;    out 2
 
     call MissileMotion
     call MissileSprite
 
-    mvi a, $e
-    out 2
+;    mvi a, $e
+;    out 2
+
     ; if missile collided, is it with a foe or terrain and if a foe, which one?
     call CollisionMissileFoe
-    ; black border
-    mvi a, 5
-    out 2
+
+;    ; black border
+;    mvi a, 5
+;    out 2
 
     lxi d, foe_1
     call foe_in_de
@@ -192,19 +200,21 @@ jamas_1:
     lxi d, foe_8
     call foe_in_de
 
-    ; dkblue border
-    mvi a, $e
-    out 2
+;    ; dkblue border
+;    mvi a, $e
+;    out 2
+
     call PlayerSpeed
 
-    ; pink border
-    mvi a, 4
-    out 2
+;    ; pink border
+;    mvi a, 4
+;    out 2
+
     call DrawBlinds             ; cover 2 lines of PF at the bottom
 
-    ; white border
-    mvi a, 2
-    out 2
+;    ; white border
+;    mvi a, 2
+;    out 2
 
     call PlayerSprite
     ; could be just fuel, but usually ded
@@ -222,28 +232,65 @@ collision_survived
     lda  frame_scroll
     sta frame_scroll_prev
 
-    mvi a, 4
-    out 2
+;    mvi a, 4
+;    out 2
+
     call PaintScore
 
-    ; poop border
-    mvi a, 6
-    out 2
+;    ; poop border
+;    mvi a, 6
+;    out 2
 
 
     call PlayFieldRoll
 
-    ; black border
-    mvi a, 5
-    out 2
-    call ClearBlinds            ; uncover 2 lines of PF at the top
-    ;call SoundNoise
+;    ; black border
+;    mvi a, 5
+;    out 2
 
-    mvi a, 8
-    out 2
+    call ClearBlinds            ; uncover 2 lines of PF at the top
+
+;    mvi a, 8
+;    out 2
 
     lxi h, frame_number
     inr m
+    jmp jamas
+
+
+preroll_loop
+    ei
+    hlt
+    mvi a, YSPEED_MAX
+    sta playerYspeed
+    ; scroll
+    mvi a, 88h
+    out 0
+    lda frame_scroll
+    out 3
+
+    call DrawBlinds             
+    ;call PaintScore
+    call PlayFieldRoll
+    call ClearBlinds
+
+    call DrawBlinds             
+    ;call PaintScore
+    call PlayFieldRoll
+    call ClearBlinds
+
+    call DrawBlinds             
+    ;call PaintScore
+    call PlayFieldRoll
+    call ClearBlinds
+
+    call DrawBlinds             
+    ;call PaintScore
+    call PlayFieldRoll
+    call ClearBlinds
+
+;    lxi h, frame_number
+;    inr m
     jmp jamas
 
 PlayFieldRoll:
@@ -484,7 +531,19 @@ CreateNewFoe:
     rc
     cpi $f0
     rnc
+    ; check bridge 0, start of the game
+    ;lda game_bridge_bin ; use game_bridge_gen
+    ;ora a
+    lda preroll
+    ora a
+    jz cnf_pre_regular
+    ; make sure that the bridge is created, but no other foe
+    lda pf_roadflag
+    ora a
+    rz
+    jmp cnf_onlybridge
 
+cnf_pre_regular
     ; avoid getting called twice on the same line
     lda cnf_prev
     mov a, b
@@ -492,7 +551,6 @@ CreateNewFoe:
     cmp b
     rz
     sta cnf_prev
-    
 
     ; crossing a road/bridge? 
     lda pf_bridgeflag ;pf_roadflag
@@ -511,7 +569,7 @@ cnf_begin
     lda pf_roadflag
     ora a
     jz cnf_notabridge
-
+cnf_onlybridge
     ; check that we're on the right line for bridge
     lda pf_blockline
     cpi BLOCK_HEIGHT/2
@@ -688,6 +746,10 @@ cnf_L1:
     lda pf_blockline
     cpi BLOCK_HEIGHT/2
     jnz CreateNewFoe_Exit
+
+    ; creating a bridge marks the end of preroll sequence
+    xra a
+    sta preroll
 
     mvi m, FOEID_BRIDGE
     inx h
