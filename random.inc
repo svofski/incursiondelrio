@@ -24,31 +24,24 @@ randomInitialState
                 shld random
                 ret
 
-randomSaveState
-                lhld random
-                shld random_memento
-                ret
-
-randomRestoreState
-                lhld random_memento
-                shld random
-                ret
-
                 ; c = randomLo, c < a
                 ; does not modify LFSR, uses the current state
 randomNormA:
 		mov c, a
 		lda randomLo
+                ani 1
+                mov b, a
+                lda randomHi
 randomNormA_retry:
 		cmp c
 		jc randomNormA_return
-		rar
+		;rar
+                sub c
 		jmp randomNormA_retry
 randomNormA_return:
 		mov c, a
 		ret
 
-random_memento: dw 0
 ; random state is a part of game state, see [game_state] in variables.inc
 
 ;; rar == through carry ; rrc = just puts in carry		 

@@ -120,7 +120,7 @@ initial_playerYaccu:    db 0
 initial_until_bridge:   db 0    ; lines until the bridge crossing is registered
 initial_foe_clearance:  db 0
 initial_deathroll:      db 0
-initial_preroll:        db 1
+initial_preroll:        db 32
 
 ; Complete game state
 game_state_aligned      equ (.+8) and 0xfff8
@@ -280,6 +280,8 @@ GameResetToBridge
                         lhld initial_player_col
                         shld player_column ; column and index
 
+                        lxi h, 0xffff
+                        shld game_fuel_lo
                         ret
 
 grtb_copy_state

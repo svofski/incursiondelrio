@@ -71,35 +71,41 @@ clearscreen:
     ora h
     jnz clearscreen
     ret
+
 _start
-    ; init stack pointer
-    lxi sp, $100
+        ; init stack pointer
+        lxi sp, $100
 
-    ; enable interrupts
+        ; enable interrupts
 
-    ; write ret to rst 7 vector 
-    mvi a, $c9
-    sta $38
+        ; write ret to rst 7 vector 
+        mvi a, $c9
+        sta $38
 
-    ; write restart to rst 0 vector
-    mvi a, $c3
-    sta 0
-    lxi h, $100
-    shld 1
+        ; write restart to rst 0 vector
+        mvi a, $c3
+        sta 0
+        lxi h, $100
+        shld 1
 
-    ; initial stuff
-    ei
-    hlt
-    call setpalette
-    call showlayers
-    call SoundInit
+        ; initial stuff
+        ei
+        hlt
+        call setpalette
+        call showlayers
+        call SoundInit
 
+        ; NewGame -> preroll -> deathroll -> MinusLife -> preroll ->...
 NewGame
-    call clrscr
-    call GameReset
-    call GameSaveAtBridge       ; will save bridge 1
-    jmp jamas        
+        call SoundInit
+        call clrscr
+        call GameReset
+        call GameSaveAtBridge   ; will save bridge 1
+        jmp jamas
 
+pause_flag      db 0
+
+        ; after deathroll
 MinusLife
         call clrscr
         lda game_lives
@@ -107,229 +113,206 @@ MinusLife
         jz $                    ; game over, BLK+SBR to restart
         push psw
         call GameResetToBridge
+        mvi a, 25
+        sta preroll
         pop psw
         sta game_lives
-
-
 jamas:
-;    mvi a, 10
-;    out 2
-
-    lda preroll
-    ora a
-    jz game_roll
-    jmp preroll_loop
-
+        lda preroll
+        ora a
+        jz game_roll
+        dcr a
+        sta preroll
+        ora a
+        jnz preroll_loop
+        mvi a, 1                ; nice try but do it at the bridge 1 crossing
+        sta pause_flag
+        jmp preroll_loop
+        
 game_roll
-    ; write ret to rst 7 vector 
-    mvi a, $c9
-    sta $38
+        ; write ret to rst 7 vector 
+        mvi a, $c9
+        sta $38
 
-    ei
-    hlt
+        ei
+        hlt
 
-    ; fuckup interceptor
-    lxi h, $76f3
-    shld $38
+        ; fuckup interceptor
+        lxi h, $76f3
+        shld $38
 
-    xra a
-    out 2
+        xra a
+        out 2
 
-    lda deathroll
-    ora a
-    jz normal_roll
-    dcr a
-    sta deathroll
-    jz MinusLife
-    ;jz NewGame
+        lda deathroll
+        ora a
+        jz normal_roll
+        dcr a
+        sta deathroll
+        jz MinusLife
 normal_roll
 
-    call KeyboardScan
-    call PlayerWipe
-    call MissileWipe
+        call KeyboardScan
 
-    ; scroll
-    mvi a, 88h
-    out 0
-    lda frame_scroll
-    out 3
+        call PlayerWipe
+        call MissileWipe
 
-    cpi $80
-    jnz jamas_1
-    call SoundInit
-jamas_1:
-    call SoundSound
+        ; scroll
+        mvi a, 88h
+        out 0
+        lda frame_scroll
+        out 3
 
-    ; keep interrupts enabled to make errors obvious
-    ;ei
+        lda pause_flag
+        ora a
+        cz SoundSound
 
-    call AnimateSprites
-    call PlayerMotion
+        ; keep interrupts enabled to make errors obvious
+        ;ei
 
-;    ; poop border  
-;    mvi a, 6    
-;    out 2
+        call AnimateSprites
+        call PlayerMotion
 
-    call MissileMotion
-    call MissileSprite
+        call MissileMotion
+        call MissileSprite
 
-;    mvi a, $e
-;    out 2
+        ; if missile collided, is it with a foe or terrain and if a foe, which one?
+        call CollisionMissileFoe
 
-    ; if missile collided, is it with a foe or terrain and if a foe, which one?
-    call CollisionMissileFoe
+        lxi d, foe_1
+        call foe_in_de
+        lxi d, foe_2
+        call foe_in_de
+        lxi d, foe_3
+        call foe_in_de
+        lxi d, foe_4
+        call foe_in_de
+        lxi d, foe_5
+        call foe_in_de
+        lxi d, foe_6
+        call foe_in_de
+        lxi d, foe_7
+        call foe_in_de
+        lxi d, foe_8
+        call foe_in_de
 
-;    ; black border
-;    mvi a, 5
-;    out 2
+        call PlayerSpeed
 
-    lxi d, foe_1
-    call foe_in_de
-    lxi d, foe_2
-    call foe_in_de
-    lxi d, foe_3
-    call foe_in_de
-    lxi d, foe_4
-    call foe_in_de
-    lxi d, foe_5
-    call foe_in_de
-    lxi d, foe_6
-    call foe_in_de
-    lxi d, foe_7
-    call foe_in_de
-    lxi d, foe_8
-    call foe_in_de
+        call DrawBlinds             ; cover 2 lines of PF at the bottom
 
-;    ; dkblue border
-;    mvi a, $e
-;    out 2
+        call PlayerSprite
 
-    call PlayerSpeed
-
-;    ; pink border
-;    mvi a, 4
-;    out 2
-
-    call DrawBlinds             ; cover 2 lines of PF at the bottom
-
-;    ; white border
-;    mvi a, 2
-;    out 2
-
-    call PlayerSprite
-    ; could be just fuel, but usually ded
-    call CollisionPlaneFoe
-    ;jc MinusLife
-    jnc collision_survived
+        ; could be just fuel, but usually ded
+        call CollisionPlaneFoe
+        jnc collision_survived
         mvi a, 0
         sta playerYspeed
         mvi a, 50
         sta deathroll
 
 collision_survived
-    ; --
+        lda  frame_scroll
+        sta frame_scroll_prev
 
-    lda  frame_scroll
-    sta frame_scroll_prev
-
-;    mvi a, 4
-;    out 2
-
-    call PaintScore
-
-;    ; poop border
-;    mvi a, 6
-;    out 2
+        call PaintScore
 
 
-    call PlayFieldRoll
+        ; PAUSE
+        lda pause_flag
+        ora a
+        jz not_paused
 
-;    ; black border
-;    mvi a, 5
-;    out 2
+        lhld input_down
+        mov a, h
+        ora l
+        lhld input_up
+        ora h
+        ora l
+        lhld input_fire
+        ora l
+        jz jamas
+        xra a
+        sta pause_flag
+not_paused
+        ; PAUSE
 
-    call ClearBlinds            ; uncover 2 lines of PF at the top
+        call PlayFieldRoll
 
-;    mvi a, 8
-;    out 2
+        call ClearBlinds            ; uncover 2 lines of PF at the top
 
-    lxi h, frame_number
-    inr m
-    jmp jamas
+        lxi h, frame_number
+        inr m
+        jmp jamas
 
 
 preroll_loop
-    ei
-    hlt
-    mvi a, YSPEED_MAX
-    sta playerYspeed
-    ; scroll
-    mvi a, 88h
-    out 0
-    lda frame_scroll
-    out 3
+        ; clear fuckup interceptor
+        mvi a, $c9
+        sta $38
+        ei
+        hlt
+        mvi a, YSPEED_MAX
+        sta playerYspeed
+        ; scroll
+        mvi a, 88h
+        out 0
+        lda frame_scroll
+        out 3
 
-    call DrawBlinds             
-    ;call PaintScore
-    call PlayFieldRoll
-    call ClearBlinds
+        call DrawBlinds             
+        call PlayFieldRoll
+        call ClearBlinds
 
-    call DrawBlinds             
-    ;call PaintScore
-    call PlayFieldRoll
-    call ClearBlinds
+        call DrawBlinds             
+        call PlayFieldRoll
+        call ClearBlinds
 
-    call DrawBlinds             
-    ;call PaintScore
-    call PlayFieldRoll
-    call ClearBlinds
+        call DrawBlinds             
+        call PlayFieldRoll
+        call ClearBlinds
 
-    call DrawBlinds             
-    ;call PaintScore
-    call PlayFieldRoll
-    call ClearBlinds
-
-;    lxi h, frame_number
-;    inr m
-    jmp jamas
+        call DrawBlinds             
+        call PlayFieldRoll
+        call ClearBlinds
+        jmp jamas
 
 PlayFieldRoll:
-    call ScrollAccu         ; d = number of lines to advance
-    mov a, d
-    ora a
-    rz 
-    dcr d
-    push d
+        call ScrollAccu         ; d = number of lines to advance
+        mov a, d
+        ora a
+        rz 
+        dcr d
+        push d
 
-    ; update random
-    ; create new pf block when needed
-    call UpdateLine
-    ; update one line of terrain
-    call UpdateOneStep
-    ; draw one line of terrain and update pf_tableft, pf_water tables
-    call ProduceLineMain
-    ; create new foe
-    call CreateNewFoe
+        ; update random
+        ; create new pf block when needed
+        call UpdateLine
+        ; update one line of terrain
+        call UpdateOneStep
+        ; draw one line of terrain and update pf_tableft, pf_water tables
+        call ProduceLineMain
+        ; create new foe
+        call CreateNewFoe
 
-    lxi h, frame_scroll
-    inr m
-    call check_bridge_passing
-    call fuel_burn
-    pop d
-    dcr d
-    rm 
+        lxi h, frame_scroll
+        inr m
+        call check_bridge_passing
+        call fuel_burn
+        pop d
+        dcr d
+        rm 
 
-    ;;;; full speed: scroll more 
-    call UpdateLine
-    call UpdateOneStep
-    call ProduceLineMain
-    call CreateNewFoe
-    lxi h, frame_scroll
-    inr m
-    call check_bridge_passing
-    call fuel_burn
-    ;;;;;
-    ret
+        ;;;; full speed: scroll more 
+        call UpdateLine
+        call UpdateOneStep
+        call ProduceLineMain
+        call CreateNewFoe
+        lxi h, frame_scroll
+        inr m
+        call check_bridge_passing
+        call fuel_burn
+        ;;;;;
+        ret
 
 check_bridge_passing
         lda player_until_bridge
@@ -341,6 +324,9 @@ check_bridge_passing
         jmp UpdateScore_BridgePass
         
 fuel_burn
+        lda preroll
+        ora a
+        rnz
         lhld game_fuel_lo 
         lxi d, $ffec
         dad d
@@ -531,17 +517,31 @@ CreateNewFoe:
     rc
     cpi $f0
     rnc
-    ; check bridge 0, start of the game
-    ;lda game_bridge_bin ; use game_bridge_gen
-    ;ora a
+    ; preroll and bridge 0 means only bridge can be generated
     lda preroll
     ora a
     jz cnf_pre_regular
+    ; bridge 0 is a special entry pathway with no foes
+    lda game_bridge_bin
+    ora a
+    jnz cnf_pre_regular
     ; make sure that the bridge is created, but no other foe
     lda pf_roadflag
     ora a
     rz
-    jmp cnf_onlybridge
+    ;jmp cnf_onlybridge
+
+    ; don't really create a bridge but set the until bridge count so that
+    ; it counts as a bridge
+    lda pf_blockline
+    cpi BLOCK_HEIGHT/2
+    rnz
+    mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
+    sta player_until_bridge
+    ;xra a
+    ;sta preroll
+    ret
+
 
 cnf_pre_regular
     ; avoid getting called twice on the same line
@@ -671,230 +671,226 @@ cnf_notabridge:
         sta foe_water
         mov e, a
 
-    ; d = left, e = water
+        ; d = left, e = water
 
-    ; island?
-    add d
-    cpi SCREEN_WIDTH_BYTES/2
-    jz cnf_doublewater
-    ; foe_left = width - (left+water)
-    mov d, a
-    mov a, b
-    lda randomLo        ; pick which side of the island for this foe
-    ani $2
-    jz cnf_preparetableoffset
+        ; island?
+        add d
+        cpi SCREEN_WIDTH_BYTES/2
+        jz cnf_doublewater
+        ; foe_left = width - (left+water)
+        mov d, a
+        mov a, b
+        lda randomLo        ; pick which side of the island for this foe
+        ani $2
+        jz cnf_preparetableoffset
 
-    ; mirror foe bounds
-    mov a, d
-    cma
-    inr a
-    adi SCREEN_WIDTH_BYTES
-    sta foe_left
-    jmp cnf_preparetableoffset
+        ; mirror foe bounds
+        mov a, d
+        cma
+        inr a
+        adi SCREEN_WIDTH_BYTES
+        sta foe_left
+        jmp cnf_preparetableoffset
 
-    ; double the space where the foe can travel: use both left and right water
+        ; double the space where the foe can travel: use both left and right water
 cnf_doublewater:
-    mov a, e
-    ora a
-    ral
-    sta foe_water
-    jmp cnf_preparetableoffset
+        mov a, e
+        ora a
+        ral
+        sta foe_water
+        jmp cnf_preparetableoffset
 
 cnf_preparetableoffset:
-    ; get current foe index
-    lxi h, foeTableIndex
-    mov a, m
-    mov b, a
-    inr a           ; advance the index
-    cpi FOE_MAX
-    jnz cnf_L1
-    xra a
+        ; get current foe index
+        lxi h, foeTableIndex
+        mov a, m
+        mov b, a
+        inr a           ; advance the index
+        cpi FOE_MAX
+        jnz cnf_L1
+        xra a
 cnf_L1:
-    mov m, a
-    ; use the original foeTableIndex
-    mov a, b
-    ; get offset foe_1 + foeTableIndex*8
-    lxi h, foe_1
-    ora a
-    ral
-    ral
-    ral 
-    mvi b, 0
-    mov c, a
-    dad b       
-    ; hl = foe[foeTableIndex]: 
-    ;   Id, Column, Index, Direction, Y, Left, Right
+        mov m, a
+        ; use the original foeTableIndex
+        mov a, b
+        ; get offset foe_1 + foeTableIndex*8
+        lxi h, foe_1
+        ora a
+        ral
+        ral
+        ral 
+        mvi b, 0
+        mov c, a
+        dad b       
+        ; hl = foe[foeTableIndex]: 
+        ;   Id, Column, Index, Direction, Y, Left, Right
 
-    ;--- bad idea begin ---
-    ; This guarrantees that no foe would become "stale" while still on screen,
-    ; but it has two downsides:
-    ;   1) it makes generation dependent on gameplay, which is non-canon
-    ;   2) special cases, e.g. bridge must always appear
-    ; It's a better idea to keep new foe probability in check so that
-    ; too many foes are just unlikely to appear at once.
-    ; if(foe.id != 0) return;
-    ;mov a, m
-    ;ora a
-    ;jnz CreateNewFoe_exit
-    ;--- bad idea end ---
+        ;--- bad idea begin ---
+        ; This guarrantees that no foe would become "stale" while still on screen,
+        ; but it has two downsides:
+        ;   1) it makes generation dependent on gameplay, which is non-canon
+        ;   2) special cases, e.g. bridge must always appear
+        ; It's a better idea to keep new foe probability in check so that
+        ; too many foes are just unlikely to appear at once.
+        ; if(foe.id != 0) return;
+        ;mov a, m
+        ;ora a
+        ;jnz CreateNewFoe_exit
+        ;--- bad idea end ---
 
-    lda pf_roadflag
-    ora a
-    jz cnf_regular_or_fuel
+        lda pf_roadflag
+        ora a
+        jz cnf_regular_or_fuel
 
-    ; create bridge
-    lda pf_blockline
-    cpi BLOCK_HEIGHT/2
-    jnz CreateNewFoe_Exit
+        ; create bridge
+        lda pf_blockline
+        cpi BLOCK_HEIGHT/2
+        jnz CreateNewFoe_Exit
 
-    ; creating a bridge marks the end of preroll sequence
-    xra a
-    sta preroll
+        mvi m, FOEID_BRIDGE
+        inx h
+        mvi m, BRIDGE_COLUMN ; = 13
+        inx h
+        mvi m, 0 ; index
+        inx h
+        mvi m, 0 ; direction
+        inx h
+        lda frame_scroll
+        mov m, a ; y
+        
+        ; set bridge crossing count
+        mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
+        sta player_until_bridge
 
-    mvi m, FOEID_BRIDGE
-    inx h
-    mvi m, BRIDGE_COLUMN ; = 13
-    inx h
-    mvi m, 0 ; index
-    inx h
-    mvi m, 0 ; direction
-    inx h
-    lda frame_scroll
-    mov m, a ; y
-    
-    ; set bridge crossing count
-    mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
-    sta player_until_bridge
+        mvi a, CLEARANCE_BRIDGE
+        sta foe_clearance
 
-    mvi a, CLEARANCE_BRIDGE
-    sta foe_clearance
+        call GameSaveAtBridge
 
-    call GameSaveAtBridge
+        jmp CreateNewFoe_Exit
 
-    jmp CreateNewFoe_Exit
-
-    ; create fuel or regular foe
+        ; create fuel or regular foe
 cnf_regular_or_fuel:
-    ;mvi a, CLEARANCE_DEFAULT
-    ;sta foe_clearance
+        ;mvi a, CLEARANCE_DEFAULT
+        ;sta foe_clearance
 
-    lda randomHi
-    mov b, a
+        lda randomHi
+        mov b, a
 
-    ; fuel maybe?
-    cpi $d0
-    mov a, b
-    jc cnf_notfuel
+        ; fuel maybe?
+        cpi $d0
+        mov a, b
+        jc cnf_notfuel
 
-    ; yes, fuel
-    mvi a, CLEARANCE_FUEL
-    sta foe_clearance
+        ; yes, fuel
+        mvi a, CLEARANCE_FUEL
+        sta foe_clearance
 
-    mvi d, FOEID_FUEL
-    jmp cnf_3
+        mvi d, FOEID_FUEL
+        jmp cnf_3
 
 cnf_notfuel:
-    ; a regular foe
-    ani $3
-    inr a
-    mov d, a    ; d = foe id
+        ; a regular foe
+        ani $3
+        inr a
+        mov d, a    ; d = foe id
 
-    ; [game_progression] >>>>>>>
-    ; cut out jets before level 6
-    cpi FOEID_JET
-    jnz cnf_3
-    lda game_bridge_bin
-    cpi 6
-    jm CreateNewFoe_Exit
+        ; [game_progression] >>>>>>>
+        ; cut out jets before level 6
+        cpi FOEID_JET
+        jnz cnf_3
+        lda game_bridge_bin
+        cpi 6
+        jm CreateNewFoe_Exit
 
 cnf_3:
-    ; width
-    lda foe_water
-    mov c, a
-    mov a, d
-    cpi FOEID_SHIP
-    mov a, c
-    jnz cnf_width_2
-    sui 2
+        ; width
+        lda foe_water
+        mov c, a
+        mov a, d
+        cpi FOEID_SHIP
+        mov a, c
+        jnz cnf_width_2
+        sui 2
 cnf_width_2:
-    sui 1
-    mov e, a
-    ; now a = available width
-    sui 2
-    jz CreateNewFoe_Exit    ; bad luck: 
-    jm CreateNewFoe_Exit    ;   passage too narrow for this foe
+        sui 1
+        mov e, a
+        ; now a = available width
+        sui 2
+        jz CreateNewFoe_Exit    ; bad luck: 
+        jm CreateNewFoe_Exit    ;   passage too narrow for this foe
 
-    call randomNormA        ; c = random less than a
-    ; Column
-    lda foe_left
-    add c                   ; offset the foe right
-    mov c, a
+        call randomNormA        ; c = random less than a
+        ; Column
+        lda foe_left
+        add c                   ; offset the foe right
+        mov c, a
 
-    ; check that if it's a fuel, it fits
-    call check_fuel_fit
-    ora a
-    jz CreateNewFoe_AbortFuel
+        ; check that if it's a fuel, it fits
+        call check_fuel_fit
+        ora a
+        jz CreateNewFoe_AbortFuel
 
-    mov m, d 
-    inx h                   ; foe.Id = d
+        mov m, d 
+        inx h                   ; foe.Id = d
 
-    inr c
-    mov m, c                ; foe.Column = a
-    inx h
+        inr c
+        mov m, c                ; foe.Column = a
+        inx h
 
-    ; Index = 0
-    mvi m, 0
-    inx h
+        ; Index = 0
+        mvi m, 0
+        inx h
 
-    ; Direction                 ; otherwise chose 50/50
-    lda randomHi
-    ani $8
-    mvi a, $ff
-    jz cnf_dir1
-    mvi a, 1
+        ; Direction                 ; otherwise chose 50/50
+        lda randomHi
+        ani $8
+        mvi a, $ff
+        jz cnf_dir1
+        mvi a, 1
 cnf_dir1:
-    mov m, a
+        mov m, a
 
-    inx h                       ; h = &foe.foeY
-    lda frame_scroll
-    mov m, a                    ; foe.foeY = frame_scroll
+        inx h                       ; h = &foe.foeY
+        lda frame_scroll
+        mov m, a                    ; foe.foeY = frame_scroll
 
-    inx h                       ; h = &foe.leftStop
-    ; Left
-    lda foe_left
-    dcr a
-    mov m, a
-    mov c, a
+        inx h                       ; h = &foe.leftStop
+        ; Left
+        lda foe_left
+        dcr a
+        mov m, a
+        mov c, a
 
-    inx h                       ; h = &foe.rightStop
-    ; Right
-    mov a, e
-    add c
-    mov m, a
+        inx h                       ; h = &foe.rightStop
+        ; Right
+        mov a, e
+        add c
+        mov m, a
 
-    inx h                       ; h = &foe.bounce (use as freeze flag)
+        inx h                       ; h = &foe.bounce (use as freeze flag)
 
-    ; [game_progression] >>>>>>>> frozen or moving foes
-    ; make the foes appear still on early levels, then gradually more and more
-    ; starting with level 5 it's full on
-    lda game_bridge_bin
-    cpi 2                       ; begin with enemies standing still
-    jm cnf_freeze
-    cpi 6                       ; when > 6, mostly move
-    jp cnf_80_20
-                                ; otherwise chose 50/50
-    lda randomHi
-    ani $18
-    cpi $18
-    jz cnf_thaw
+        ; [game_progression] >>>>>>>> frozen or moving foes
+        ; make the foes appear still on early levels, then gradually more and more
+        ; starting with level 5 it's full on
+        lda game_bridge_bin
+        cpi 2                       ; begin with enemies standing still
+        jm cnf_freeze
+        cpi 6                       ; when > 6, mostly move
+        jp cnf_80_20
+                                    ; otherwise chose 50/50
+        lda randomHi
+        ani $18
+        cpi $18
+        jz cnf_thaw
 
 cnf_freeze
-    mvi m, 1                    ;
+        mvi m, 1                    ;
 CreateNewFoe_Exit:
-    ret
+        ret
 cnf_thaw
-    mvi m, 0
-    ret
+        mvi m, 0
+        ret
 
 cnf_80_20
         lda randomLo
@@ -903,46 +899,46 @@ cnf_80_20
         jmp cnf_thaw
 
 CreateNewFoe_AbortFuel:
-    lda CLEARANCE_DEFAULT
-    sta foe_clearance
-    jmp CreateNewFoe_Exit
+        lda CLEARANCE_DEFAULT
+        sta foe_clearance
+        jmp CreateNewFoe_Exit
 
-    ; d = foe id
-    ; c = column
+        ; d = foe id
+        ; c = column
 check_fuel_fit:
-    mov a, d
-    cpi FOEID_FUEL
-    rnz
+        mov a, d
+        cpi FOEID_FUEL
+        rnz
 
-    lda pf_blockline
-    cpi BLOCK_HEIGHT-CLEARANCE_FUEL
-    rnc
+        lda pf_blockline
+        cpi BLOCK_HEIGHT-CLEARANCE_FUEL
+        rnc
 
-    push b
-    push d
+        push b
+        push d
 
-    ; left edge
-    ; terrain_next_left > c: overlap
-    lda terrain_next_left
-    mov b, a
-    cmp c
-    mvi a, 0
-    jp cff_pop
-    mvi a, 1
+        ; left edge
+        ; terrain_next_left > c: overlap
+        lda terrain_next_left
+        mov b, a
+        cmp c
+        mvi a, 0
+        jp cff_pop
+        mvi a, 1
 
-    ; right edge
-    ; terrain_next_left + terrain_next_water < c: overlap
-    lda terrain_next_water
-    add b
-    cmp c
-    mvi a, 1
-    jp cff_pop
-    mvi a, 0
+        ; right edge
+        ; terrain_next_left + terrain_next_water < c: overlap
+        lda terrain_next_water
+        add b
+        cmp c
+        mvi a, 1
+        jp cff_pop
+        mvi a, 0
 
 cff_pop:
-    pop d
-    pop b
-    ret
+        pop d
+        pop b
+        ret
 
     ;; ---------------------------------------------- -   - 
     ;; Update line: terrain formation

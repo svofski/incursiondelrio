@@ -38,6 +38,9 @@ unb_setbridge:
     jmp UpdateNewBlock_Exit
 
 unb_nosetbridge:
+        lda game_bridge_bin ; only if bridge 0
+        ora a
+        jnz unb_nosetbridge_regular
         lda preroll      ; initial preroll before entering game
         ora a
         jz unb_nosetbridge_regular
