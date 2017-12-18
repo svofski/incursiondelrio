@@ -812,7 +812,7 @@ cnf_dir1:
 
     inx h                       ; h = &foe.bounce (use as freeze flag)
 
-    ; [game_progression] >>>>>>>>
+    ; [game_progression] >>>>>>>> frozen or moving foes
     ; make the foes appear still on early levels, then gradually more and more
     ; starting with level 5 it's full on
     lda game_bridge_bin
@@ -1402,9 +1402,6 @@ jet_move_indexoverrun:
     ; column in e
     mov a, b
     add e
-    ;cpi 30
-    ;jnz $+4
-    ;xra a
     sta foeBlock + foeColumn
     mov e, a
     ; }
@@ -1425,54 +1422,14 @@ jet_move_continue:
     ;; Frame routine for a regular foe: ship, copters
     ;; ----------------------------------------------------------
 foe_frame:
-    mvi h, 0 ; bounce flag in h
+        mvi h, 0 ; bounce flag in h
 foe_Move:
-    ; load Column to e
-    lda foeBlock + foeColumn
-    mov e, a    
-    ; index = index + direction
-    lda foeBlock + foeDirection
-    mov b, a
-
-;;    mvi b, 0
-;;    rrc
-;;    jc foe_move_move ; frozen
-;;    mvi b, 1
-;;    ora a
-;;    jp foe_move_move
-;;    mvi b, $ff
-;;    jmp foe_move_move
-
-;;;
-;;;
-;;;    mov b, a
-;;;    ; if the foe stands still, make it start up sometimes
-;;;    ora a
-;;;    jnz foe_move_move
-;;;    lda game_bridge_bin
-;;;    cpi 2       ; before 2 don't start them up
-;;;    mvi a, 0
-;;;    jm foe_move_move
-;;;    lda randomHi
-;;;    mov c, a
-;;;    lda foeBlock + foeY
-;;;    add c
-;;;    ani $fe
-;;;    cpi $fe
-;;;    mvi a, 0
-;;;    jnz foe_move_move
-;;;    ;jmp foe_move_move
-;;;    lda randomHi
-;;;    ani $8
-;;;    mvi b, $ff 
-;;;    jz foe_move_move
-;;;    mvi b, 1
-;;;    ;
-;;;    ;
-;;foe_move_move
-;;    mov a, b
-;;    ;sta foeBlock + foeDirection
-
+        ; load Column to e
+        lda foeBlock + foeColumn
+        mov e, a    
+        ; index = index + direction
+        lda foeBlock + foeDirection
+        mov b, a
 
         lda foeBlock + foeBounce
         cpi 1
@@ -1498,147 +1455,146 @@ foe_Move:
 foe_move_frozen
         mvi b, 0
 foe_move_move
+        lda foeBlock + foeIndex
+        add b
+        ; if (Index == -1  
+        jm foe_move_indexoverrun
+        ;     || Index == 8)
+        cpi $8
+        jz foe_move_indexoverrun
 
-    lda foeBlock + foeIndex
-    add b
-    ; if (Index == -1  
-    jm foe_move_indexoverrun
-    ;     || Index == 8)
-    cpi $8
-    jz foe_move_indexoverrun
-
-    ; index within column boundary
-    ; save Index, update c
-    sta foeBlock + foeIndex
-    mov c, a
-    ; not at column boundary -> skip bounce check
-    jmp foe_paint
+        ; index within column boundary
+        ; save Index, update c
+        sta foeBlock + foeIndex
+        mov c, a
+        ; not at column boundary -> skip bounce check
+        jmp foe_paint
 
 foe_move_indexoverrun:
-    ; {
-    ; Index = Index % 8
-    ani $7
-    ; save Index, update c
-    sta foeBlock + foeIndex
-    mov c, a
-    ; Column = Column + Direction
-    ; column in e
-    mov a, b
-    add e
-    sta foeBlock + foeColumn
-    mov e, a
-    ; }
+        ; {
+        ; Index = Index % 8
+        ani $7
+        ; save Index, update c
+        sta foeBlock + foeIndex
+        mov c, a
+        ; Column = Column + Direction
+        ; column in e
+        mov a, b
+        add e
+        sta foeBlock + foeColumn
+        mov e, a
+        ; }
 foe_move_CheckBounce:
-    ; check for bounce
-    ; we are here if Index == 0 || Index == 7
-    ; e = Column
-    lda foeBlock + foeRightStop
-    cmp e
-    jz foe_move_yes_bounce
+        ; check for bounce
+        ; we are here if Index == 0 || Index == 7
+        ; e = Column
+        lda foeBlock + foeRightStop
+        cmp e
+        jz foe_move_yes_bounce
 
-    ; emergency door stopper
-    jp fm_noemergency
-    dcr e
-    mov a, e
-    sta foeBlock + foeColumn
-    xra a
-    sta foeBlock + foeDirection
-    sta foeBlock + foeIndex
+        ; emergency door stopper
+        jp fm_noemergency
+        dcr e
+        mov a, e
+        sta foeBlock + foeColumn
+        xra a
+        sta foeBlock + foeDirection
+        sta foeBlock + foeIndex
 fm_noemergency:
-    lda foeBlock + foeLeftStop
-    cmp e
-    jnz foe_paint
-    ; yes, bounce
+        lda foeBlock + foeLeftStop
+        cmp e
+        jnz foe_paint
+        ; yes, bounce
 foe_move_yes_bounce:
-    ; Bounce = 1
-    mvi h, 1 
-    ; Direction = -Direction
-    mov a, b
-    cma 
-    inr a
-    sta foeBlock + foeDirection
-    ; do the Move() once again
-    jmp foe_Move
+        ; Bounce = 1
+        mvi h, 1 
+        ; Direction = -Direction
+        mov a, b
+        cma 
+        inr a
+        sta foeBlock + foeDirection
+        ; do the Move() once again
+        jmp foe_Move
 
-    ;; additional entry point 
-    ;; for sprites with precalculated position
-    ;; used for propellers
+        ;; additional entry point 
+        ;; for sprites with precalculated position
+        ;; used for propellers
 foe_paint_preload:
-    lhld foeBlock + foeColumn
-    mov e, l ; e = foeColumn
-    mov c, h ; c = foeIndex
-    mvi h, 0 ; bounce = 0
-    lda foeBlock + foeDirection
-    mov b, a
-    mvi h, 1 ; 
-    ;; foeBlock movement calculation ends here
+        lhld foeBlock + foeColumn
+        mov e, l ; e = foeColumn
+        mov c, h ; c = foeIndex
+        mvi h, 0 ; bounce = 0
+        lda foeBlock + foeDirection
+        mov b, a
+        mvi h, 1 ; 
+        ;; foeBlock movement calculation ends here
 
-    ;; actual paint
-    ;; Input e = column
+        ;; actual paint
+        ;; Input e = column
 foe_paint:
-    lda foeBlock + foeDirection ; reload direction again for static foes
-    mov b, a
-    ;; paint foe
-    ; e contains column
-    mov a, e
+        lda foeBlock + foeDirection ; reload direction again for static foes
+        mov b, a
+        ;; paint foe
+        ; e contains column
+        mov a, e
 
-    ; de = base addr ($8000 + foe.Y)
-    adi $80
-    mov d, a
-    lda foeBlock + foeY
-    mov e, a
+        ; de = base addr ($8000 + foe.Y)
+        adi $80
+        mov d, a
+        lda foeBlock + foeY
+        mov e, a
 
-    ; de == base address
-    ; c == index
-    ; b == Direction
-    xra a
-    ora b
-    jm  sprite_rtl
-    ; fallthrough to sprite_ltr
+        ; de == base address
+        ; c == index
+        ; b == Direction
+        xra a
+        ora b
+        jm  sprite_rtl
+        ; fallthrough to sprite_ltr
 
-    ;; c = Index
-    ;; de = column base address
-    ;; h = bounce
+        ;; c = Index
+        ;; de = column base address
+        ;; h = bounce
 sprite_ltr:
-    ; if (index != 0 || Bounce) regular();
-    xra a
-    ora c
-    ora h
-    jnz sprite_ltr_regular
+        ; if (index != 0 || Bounce) regular();
+        xra a
+        ora c
+        ora h
+        jnz sprite_ltr_regular
 
-    ; Index == 0, no bounce -> wipe previous column
-    dcr d
-    ; load dispatch table   
-    lhld foeBlock_LTR
-    jmp sprite_ltr_rtl_dispatchjump
+        ; Index == 0, no bounce -> wipe previous column
+        dcr d
+        ; load dispatch table   
+        lhld foeBlock_LTR
+        jmp sprite_ltr_rtl_dispatchjump
 
-    ;; Draw ship without prepending column for wiping
+        ;; Draw ship without prepending column for wiping
 sprite_ltr_regular:
-    ; load dispatch table   
-    lhld foeBlock_LTR
-    ; index 0..7 -> 1..8
-    inr c
-    jmp sprite_ltr_rtl_dispatchjump
+        ; load dispatch table   
+        lhld foeBlock_LTR
+        ; index 0..7 -> 1..8
+        inr c
+        jmp sprite_ltr_rtl_dispatchjump
 
-    ;; c = offset
-    ;; de = column base address
+        ;; c = offset
+        ;; de = column base address
 sprite_rtl:
 sprite_rtl_regular:
-    lhld foeBlock_RTL
+        lhld foeBlock_RTL
 
 sprite_ltr_rtl_dispatchjump:
-    mvi b, 0
-    mov a, c
-    rlc
-    mov c, a
-    dad b       
-    ;jmp [h]
-    mov a, m
-    inx h
-    mov h, m
-    mov l, a
-    lxi b, 0        ; b is a zero source
-    pchl
+        mvi b, 0
+        mov a, c
+        rlc
+        mov c, a
+        dad b       
+        ;jmp [h]
+        mov a, m
+        inx h
+        mov h, m
+        mov l, a
+        lxi b, 0        ; b is a zero source
+        pchl
 
         ; Animate explosion debris
         ; Called first after the main sprite has just been wiped out
