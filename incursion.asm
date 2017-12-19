@@ -156,6 +156,11 @@ game_roll
         shld $38
 
         mvi a, 5                ; black border
+        ;lda game_intro
+        lda preroll
+        ora a
+        jnz $+4
+        xra a
         out 2
 
         lda deathroll
@@ -306,6 +311,11 @@ preroll_loop
         call ClearBlinds
         jmp jamas
 
+        ; Calculate scroll
+        ; 1 or 2 times:
+        ;       Update random 
+        ;       Produce terrain
+        ;       Create a new foe
 PlayFieldRoll:
         call ScrollAccu         ; d = number of lines to advance
         mov a, d
@@ -561,17 +571,18 @@ drawblinds_fill:
     ;       foeTableIndex->contents
 cnf_prev        db 0
 CreateNewFoe:
-    ; ---- formerly end of UpdateLine
-    ; avoid creating sprites on roll overlap
-    lda frame_scroll
-    cpi $10
-    rc
-    cpi $f0
-    rnc
-    ; preroll and bridge 0 means only bridge can be generated
-    lda preroll
-    ora a
-    jz cnf_pre_regular
+        ; ---- formerly end of UpdateLine
+        ; avoid creating sprites on roll overlap
+        lda frame_scroll
+        cpi $10
+        rc
+        cpi $f0
+        rnc
+
+        ; preroll and bridge 0 means only bridge can be generated
+        lda preroll
+        ora a
+        jz cnf_pre_regular
 
         ; INTRO SPECIAL
         ;  a special entry pathway with no foes
@@ -595,53 +606,48 @@ CreateNewFoe:
         call GameSaveAtBridge       ; save game state at the bridge proper
         ret
 
-
 cnf_pre_regular
-    ; avoid getting called twice on the same line
-    lda cnf_prev
-    mov a, b
-    lda pf_blockline
-    cmp b
-    rz
-    sta cnf_prev
+        ; avoid getting called twice on the same line
+        lda cnf_prev
+        mov a, b
+        lda pf_blockline
+        cmp b
+        rz
+        sta cnf_prev
 
-    ; crossing a road/bridge? 
-    lda pf_bridgeflag 
-    ora a
-    jnz cnf_begin               ; always create bridge when it's time
+        ; crossing a road/bridge? 
+        lda pf_bridgeflag 
+        ora a
+        jnz cnf_begin               ; always create bridge when it's time
 
-    lda foe_clearance
-    dcr a
-    sta foe_clearance
-    rnz
+        lda foe_clearance
+        dcr a
+        sta foe_clearance
+        rnz
 
 cnf_begin
-    ;push psw
-
-    ; bridge?
-    lda pf_roadflag
-    ora a
-    jz cnf_notabridge
+        ; bridge?
+        lda pf_roadflag
+        ora a
+        jz cnf_notabridge
 cnf_onlybridge
-    ; check that we're on the right line for bridge
-    lda pf_blockline
-    cpi BLOCK_HEIGHT/2
-    jz cnf_preparetableoffset
-    ; do nothing if not
-    jmp CreatenewFoe_Exit
+        ; check that we're on the right line for bridge
+        lda pf_blockline
+        cpi BLOCK_HEIGHT/2
+        jz cnf_preparetableoffset
+        ; do nothing if not
+        jmp CreatenewFoe_Exit
 
-    ; not a bridge
+        ; not a bridge
 cnf_notabridge:
-    ; store clearance in case no foe is to be created
-    mvi a, CLEARANCE_DEFAULT
-    sta foe_clearance
+        ; store clearance in case no foe is to be created
+        mvi a, CLEARANCE_DEFAULT
+        sta foe_clearance
 
-    ; regular foe
-    lda randomHi
-    mov b, a
-    lda randomLo
-    cpi FOE_PROBABILITY_THRESH   ; higher value = probability higher
-    jnc CreateNewFoe_Exit
+        ; regular foe
+        lda randomLo
+        cpi FOE_PROBABILITY_THRESH   ; higher value = probability higher
+        jnc CreateNewFoe_Exit
 
 
         ; The foe box must fit between "left" and "left + water", i.e. "right".
@@ -732,7 +738,7 @@ cnf_notabridge:
         jz cnf_doublewater
         ; foe_left = width - (left+water)
         mov d, a
-        mov a, b
+
         lda randomLo        ; pick which side of the island for this foe
         ani $2
         jz cnf_preparetableoffset
@@ -2190,6 +2196,82 @@ showlayers:
     shld $e0f0
     shld $e0fe
     ret
+
+phex8        out $77
+             ret
+phex16       push psw
+             mov a, h
+             out $78
+             mov a, l
+             out $78
+             pop psw
+             ret
+
+pchar        out $79
+             ret
+
+cnf_debug_fuel          db 'FUEL', 0
+cnf_debug_copter        db 'CPTR', 0
+cnf_debug_sgame          db 'SGAME', 0
+cnf_debug_rgame          db 'RGAME', 0
+cnf_debug_line           db '____F', 0
+
+CNF_DBGA
+        push psw
+        push h
+        lxi h, cnf_debug_line
+        jmp CNF_DEBUG_generic
+
+DBG_FUEL
+        push psw
+        push h
+        lxi h, cnf_debug_fuel
+        jmp CNF_DEBUG_generic
+
+DBG_COPTER
+        push psw
+        push h
+        lxi h, cnf_debug_copter
+        jmp CNF_DEBUG_generic
+
+DBG_SGAME
+        push psw
+        push h
+        lxi h, cnf_debug_sgame
+        jmp CNF_DEBUG_generic
+
+DBG_RGAME
+        push psw
+        push h
+        lxi h, cnf_debug_rgame
+        jmp CNF_DEBUG_generic
+
+
+CNF_DEBUG_generic
+        lda frame_scroll
+        out $77
+
+        
+        lda randomLo
+        out $77
+        lda randomHi
+        out $77
+
+cnf_announce_lup
+        mov a, m
+        out $79
+        ora a
+        jz cnf_announce_end
+        inx h
+        jmp cnf_announce_lup
+cnf_announce_end
+
+        pop h
+        pop psw
+
+        ret
+
+
 
                 ; table of earth left boundaries
 pf_tableft      equ $7800

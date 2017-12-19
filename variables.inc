@@ -255,6 +255,8 @@ gamereset_foe_zero
                         ;  2. plane crosses the bridge, bridge&1 == 1
                         ;  3. plane dies, memento b restored
 GameSaveAtBridge
+                        call DBG_SGAME
+
                         lxi h, 0
                         dad sp
                         shld gsab_return+1
@@ -310,6 +312,19 @@ GameResetToBridge
                         shld game_fuel_lo
                         xra a
                         sta game_fuel_warning
+
+                        ; ------------------
+                        ; THIS IS RATHER HARD TO CATCH
+                        ; the reset game should have ++frame_scroll
+                        ; This probably should be fixed by changing from where
+                        ; GameResetToBridge is called.
+                        ;
+                        ; Side effects: reset levels look ALMOST EXACTLY
+                        ; like the originals, but NOT QUITE.
+                        ; -
+                        lxi h, frame_scroll
+                        inr m
+
                         ret
 
 grtb_copy_state
