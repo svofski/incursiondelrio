@@ -175,7 +175,7 @@ game_state_end
 
 ;;---------
 ;; NOT PART OF THE INTEGRAL STATE
-;; -------- -- 
+;;-------- -- 
 
 game_score:             db 0,0,0,0,0,0          ; unpacked bcd
 game_intro:             db 0
@@ -187,6 +187,8 @@ playerYaccu:		db 0
 
 game_fuel_lo:           db 255
 game_fuel_hi:           db 255                  ; warning at $40
+
+game_fuel_warning:      db 0
 
 ZeroScore
                         lxi h, 0
@@ -205,6 +207,8 @@ ZeroPlayerSpeed         lxi h, $ff00
 GameReset
                         mvi a, 1                ; set intro flag
                         sta game_intro
+                        xra a
+                        sta game_fuel_warning
                         lxi h, 0xffff
                         shld game_fuel_lo
                         call ZeroPlayerSpeed
@@ -304,6 +308,8 @@ GameResetToBridge
 
                         lxi h, 0xffff
                         shld game_fuel_lo
+                        xra a
+                        sta game_fuel_warning
                         ret
 
 grtb_copy_state

@@ -13,7 +13,7 @@ CH0_CTR_STFU		equ 00110000b
                         ;     11                LSB then MSB
                         ;       011             mode 3
                         ;          0            not BCD
-CH1_CTR_BEEP 		equ 01110010b
+CH1_CTR_BEEP 		equ 01110110b
 CH1_CTR_STFU		equ 01110000b
 
 CH2_CTR_BEEP 		equ 10110110b
@@ -42,6 +42,11 @@ snd_fuel
         shld snd_ch0_next
         lxi h, snd_fuel2_data
         shld snd_ch2_next
+        ret
+
+snd_fuel_low
+        mvi a, 40
+        sta snd_fwarn_ctr_next
         ret
 
 snd_full
@@ -75,6 +80,9 @@ snd_ch0_cur     dw 0
 snd_ch2_state   db 0
 snd_ch2_next    dw 0
 snd_ch2_cur     dw 0
+
+snd_fwarn_ctr_next      db 0
+snd_fwarn_ctr           dw 0
 
                 ; pitch, time, pitch, time, 0, 0
 snd_fuel_data:  
@@ -138,6 +146,15 @@ snd_foe_ded_data:
         db 130, 2
         db 0, 0
 
+snd_fuel_lo_data:
+        db 120, 4
+        db 60, 4
+        db 30, 4
+        db 15, 4
+        db 0, 20
+        db 0, 0
+
+
 snd_empty_data:
         db 0, 0
 
@@ -147,10 +164,12 @@ SoundInit:
         shld snd_ch2_cur
         shld snd_ch0_next
         shld snd_ch2_next
+        shld snd_fwarn_ctr
         mvi a, 0
         sta snd_ch0_state
         sta snd_ch2_state
-	ret
+        sta snd_fwarn_ctr_next
+        jmp SoundSound
 
 SoundSound:
         call snd_ch0_frame      ; kaboom
@@ -249,7 +268,7 @@ sch0_beep_silent
         ret
 
 ; ---------
-; CH2 string player
+; CH2 string player: if no string, then missile
 ; ----------
 snd_ch2_frame
         ; check if a beep is in progress, decrement and return if so
@@ -335,20 +354,51 @@ sch2_beep_silent
 
 
 snd_ch1_frame:
+        ; engine noise
         lxi h, sn_counter
         lda playerYspeed
-        ;ora a
-        ;rar
-         ; mov b, a
         ora a
         rar
-         ; add b
         add m
         mov m, a
         mvi a, 0
         ral
         out 1
-	ret
+
+        ; fuel warning
+        lhld snd_fwarn_ctr
+        mov a, h
+        ora l
+        jz sch1_fwarn_next
+        lxi d, $ff80
+        dad d
+        shld snd_fwarn_ctr
+        mov a, h
+        cpi 5
+        jc sch1_fwarn_next
+        cpi 14
+        jc sch1_fwarn_silent
+        mvi a, CH1_CTR_BEEP
+        out I8253_CONTROL
+        mov a, l
+        out I8253_CH1
+        mov a, h
+        out I8253_CH1
+        ret
+sch1_fwarn_next
+        lxi h, snd_fwarn_ctr_next
+        mov a, m
+        ora a
+        jz sch1_fwarn_silent
+        mvi m, 0
+        mov h, a
+        mvi l, 0
+        shld snd_fwarn_ctr
+        
+sch1_fwarn_silent
+        mvi a, CH1_CTR_STFU
+        out I8253_CONTROL
+        ret
 
 sn_counter:     db 0
 

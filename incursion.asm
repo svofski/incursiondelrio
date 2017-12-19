@@ -41,36 +41,39 @@ FOEID_DEBRIS_3          equ 34
 FOEID_DEBRIS_4          equ 35
 FOEID_DEBRIS_END        equ 36
 
-FOEID_WIPE_FLAG     equ $80 ; this bit set in id == foe needs to be wiped
+FOEID_WIPE_FLAG         equ $80 ; this bit set in id == foe needs to be wiped
 
-CLEARANCE_DEFAULT   equ 14
-CLEARANCE_BRIDGE    equ 32
-CLEARANCE_FUEL      equ 40
-CLEARANCE_BLOCK     equ 18
+CLEARANCE_DEFAULT       equ 14
+CLEARANCE_BRIDGE        equ 32
+CLEARANCE_FUEL          equ 40
+CLEARANCE_BLOCK         equ 18
 
-BRIDGE_COLUMN       equ 13
+BRIDGE_COLUMN           equ 13
 
-KEY_DOWN            equ $80
-KEY_RIGHT           equ $40
-KEY_UP              equ $20
-KEY_LEFT            equ $10
+KEY_DOWN                equ $80
+KEY_RIGHT               equ $40
+KEY_UP                  equ $20
+KEY_LEFT                equ $10
+
+FUEL_WARNING_ZERO       equ 1
+FUEL_WARNING_LOW        equ 2
 
         .org $100
 
         jmp _start
 clrscr:
-    di
-    lxi h, $8000
-    ; good for seeing sprite scratch area 
-    ; mvi b, $ff
-    mvi b, 0
+        di
+        lxi h, $8000
+        ; good for seeing sprite scratch area 
+        ; mvi b, $ff
+        mvi b, 0
 clearscreen:
-    xra a
-    mov m, b
-    inx h
-    ora h
-    jnz clearscreen
-    ret
+        xra a
+        mov m, b
+        inx h
+        ora h
+        jnz clearscreen
+        ret
 
 _start
         ; init stack pointer
@@ -108,10 +111,10 @@ pause_flag      db 0
 
         ; after deathroll
 MinusLife
+        call SoundInit
         call clrscr
         lda game_lives
         dcr a
-        ;jz $                    ; game over, BLK+SBR to restart
         jz NewGame
 
         push psw
@@ -213,13 +216,24 @@ normal_roll
 
         call PlayerSprite
 
+        lda game_fuel_warning
+        cpi FUEL_WARNING_ZERO
+        jz main_loop_player_ded
+        cpi FUEL_WARNING_LOW
+        cz snd_fuel_low
+
         ; could be just fuel, but usually ded
         call CollisionPlaneFoe
         jnc collision_survived
+main_loop_player_ded
         mvi a, 0
         sta playerYspeed
+        lda deathroll
+        ora a
+        jnz main_loop_player_ded_already
         mvi a, 50
         sta deathroll
+main_loop_player_ded_already
 
 collision_survived
         lda  frame_scroll
@@ -343,27 +357,48 @@ fuel_burn
         lda preroll
         ora a
         rnz
+
         lhld game_fuel_lo 
-        lxi d, $ffec
-        dad d
-        shld game_fuel_lo
+        mov a, h
+        ora l
+        rz
+
+        mov a, l
+        sui 30
+        mov l, a
+        mov a, h
+        sbi 0
+        mov h, a
+        shld game_fuel_lo 
+        jc fuel_burn_zero
+        cpi 40
+        rnc
+        mvi a, FUEL_WARNING_LOW
+        sta game_fuel_warning
         ret
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;                   V A R I A B L E S
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    .include variables.inc
+fuel_burn_zero
+        lxi h, 0
+        shld game_fuel_lo
+        mvi a, FUEL_WARNING_ZERO
+        sta game_fuel_warning
+        ret
 
-    .include sound.inc
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;                   V A R I A B L E S
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        .include variables.inc
 
-    .include player.inc
-    .include missile.inc
-    .include collider.inc
+        .include sound.inc
 
-    .include input.inc
+        .include player.inc
+        .include missile.inc
+        .include collider.inc
 
-    ;; ---------------------------------------------- -   - 
-    ;; Process foe with descriptor in DE
-    ;; ----------------------------------------------------------
+        .include input.inc
+
+        ;; ---------------------------------------------- -   - 
+        ;; Process foe with descriptor in DE
+        ;; ----------------------------------------------------------
 foe_in_de:
         push d
 

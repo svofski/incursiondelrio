@@ -8,10 +8,6 @@ BUGS AND PROBLEMS
 7. There are too many interceptor jets coming all at once. Their density
 should increase more gradually.
 
-8. No fuel low warning sound
-
-9. No death by lack of fuel
-
 10. Needs at least some kind of title screen. Maybe text on the grass
 before bridge.
 
@@ -36,5 +32,9 @@ Bridge 0 may be there. Road may be not. It should reset the game to beginning.
 
 4. An enemy does not get regenerated when the game is reset at a bridge if it
 is located too close to the bridge.
+
+8. No fuel low warning sound
+
+9. No death by lack of fuel
 
 
