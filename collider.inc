@@ -216,10 +216,11 @@ CollisionPlaneFoe
 
         mvi a, 16
         sta collision_width
-        ; okay what now
+
         ; precalculate player X
         lxi h, player_column
         call x_from_column_index
+        sui 8                   ; offset for plane centre
         sta collision_x
 
         lda frame_scroll

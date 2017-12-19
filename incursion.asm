@@ -141,7 +141,7 @@ game_roll
         lxi h, $76f3
         shld $38
 
-        xra a
+        mvi a, 5                ; black border
         out 2
 
         lda deathroll
@@ -251,6 +251,9 @@ preroll_loop
         sta $38
         ei
         hlt
+        mvi a, 5                ; black border
+        out 2
+
         mvi a, YSPEED_MAX
         sta playerYspeed
         ; scroll
