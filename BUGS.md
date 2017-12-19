@@ -1,14 +1,6 @@
 BUGS AND PROBLEMS
 =================
 
-2. Dying immediately after start destroys the game
-
-3. Dying after passing bridge 0 resets the game in a strange location. 
-Bridge 0 may be there. Road may be not. It should reset the game to beginning.
-
-4. An enemy does not get regenerated when the game is reset at a bridge if it
-is located too close to the bridge.
-
 5. FUEL double-channel sounds may sound out of sync
 
 6. No plane explosion animation 
@@ -25,6 +17,9 @@ before bridge.
 
 11. Transitions that are not pretty should be hidden by palette
 
+12. Collision of plane and terrain may register as collision with copter
+
+13. Extra life and sound
 
 Hopefully fixed:
 ================
@@ -33,4 +28,13 @@ Hopefully fixed:
   
 The copter does not get destroyed, and apparently collision goes on forever.
 Kaboom sound keeps sounding. This is very bad.
+
+2. Dying immediately after start destroys the game
+
+3. Dying after passing bridge 0 resets the game in a strange location. 
+Bridge 0 may be there. Road may be not. It should reset the game to beginning.
+
+4. An enemy does not get regenerated when the game is reset at a bridge if it
+is located too close to the bridge.
+
 

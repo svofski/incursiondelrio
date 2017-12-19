@@ -99,6 +99,7 @@ _start
 NewGame
         call SoundInit
         call clrscr
+        call ZeroScore
         call GameReset
         call GameSaveAtBridge   ; will save bridge 1
         jmp jamas
@@ -110,12 +111,22 @@ MinusLife
         call clrscr
         lda game_lives
         dcr a
-        jz $                    ; game over, BLK+SBR to restart
+        ;jz $                    ; game over, BLK+SBR to restart
+        jz NewGame
+
         push psw
-        call GameResetToBridge
-        mvi a, 25
-        sta preroll
+            lda game_intro
+            ora a                   ; bridge zero is special, reset game if ded before it
+            jz minuslife_regularbridge
+            call GameReset
+            jmp minuslife_a
+minuslife_regularbridge         ; died after a regular bridge, reset to it
+            call GameResetToBridge
+            mvi a, 25               ; preroll so that we're exactly at the bridge
+            sta preroll
+minuslife_a
         pop psw
+
         sta game_lives
 jamas:
         lda preroll
@@ -125,7 +136,7 @@ jamas:
         sta preroll
         ora a
         jnz preroll_loop
-        mvi a, 1                ; nice try but do it at the bridge 1 crossing
+        mvi a, 1
         sta pause_flag
         jmp preroll_loop
         
@@ -221,6 +232,8 @@ collision_survived
         lda pause_flag
         ora a
         jz not_paused
+
+        call ZeroPlayerSpeed
 
         lhld input_down
         mov a, h
@@ -524,26 +537,28 @@ CreateNewFoe:
     lda preroll
     ora a
     jz cnf_pre_regular
-    ; bridge 0 is a special entry pathway with no foes
-    lda game_bridge_bin
-    ora a
-    jnz cnf_pre_regular
-    ; make sure that the bridge is created, but no other foe
-    lda pf_roadflag
-    ora a
-    rz
-    ;jmp cnf_onlybridge
 
-    ; don't really create a bridge but set the until bridge count so that
-    ; it counts as a bridge
-    lda pf_blockline
-    cpi BLOCK_HEIGHT/2
-    rnz
-    mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
-    sta player_until_bridge
-    ;xra a
-    ;sta preroll
-    ret
+        ; INTRO SPECIAL
+        ;  a special entry pathway with no foes
+            
+        lda game_intro
+        ora a
+        jz cnf_pre_regular
+        ; make sure that the bridge is created, but no other foe
+        lda pf_roadflag
+        ora a
+        rz
+
+        ; INTRO SEQUENCE SPECIAL
+        ; don't really create a bridge but set player_until_bridge count so that
+        ; it counts as a bridge
+        lda pf_blockline
+        cpi BLOCK_HEIGHT/2
+        rnz
+        mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
+        sta player_until_bridge
+        call GameSaveAtBridge       ; save game state at the bridge proper
+        ret
 
 
 cnf_pre_regular
@@ -556,9 +571,9 @@ cnf_pre_regular
     sta cnf_prev
 
     ; crossing a road/bridge? 
-    lda pf_bridgeflag ;pf_roadflag
+    lda pf_bridgeflag 
     ora a
-    jnz cnf_begin       ; always create bridge when it's time
+    jnz cnf_begin               ; always create bridge when it's time
 
     lda foe_clearance
     dcr a
@@ -1989,6 +2004,10 @@ UpdateScore_BridgePass
         ; also update binary bridge counter
         lxi h, game_bridge_bin
         inr m
+
+        ; also clear intro flag
+        lxi h, game_intro
+        mvi m, 0
 
         ret
         ;

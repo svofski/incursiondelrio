@@ -77,8 +77,6 @@ game_initial_state
 initial_bridge          db 0, 0, 0
 initial_bridge_bin      db 0
 initial_lives           db 3
-initial_score           db 0, 0, 0, 0, 0, 0
-initial_fuel            dw 65535
 initial_random          dw $a814
 initial_frame_number    db 0
 initial_frame_scroll    db $ff
@@ -113,10 +111,6 @@ initial_collision:      db 0
 initial_player_col:	db 15
 initial_player_idx:   	db 4
 initial_player_dir:     db 0
-initial_playerXspeed:   db 0
-initial_playerXaccu:    db 255	
-initial_playerYspeed:   db YSPEED_DEFAULT
-initial_playerYaccu:    db 0
 initial_until_bridge:   db 0    ; lines until the bridge crossing is registered
 initial_foe_clearance:  db 0
 initial_deathroll:      db 0
@@ -129,9 +123,6 @@ game_state
 game_bridge:            db 0, 0, 0              ; unpacked bcd
 game_bridge_bin:        db 0                    ; binary bridge # for logic
 game_lives:             db 3
-game_score:             db 0,0,0,0,0,0          ; unpacked bcd
-game_fuel_lo:           db 255
-game_fuel_hi:           db 255                  ; warning at $40
 random:
 randomLo:	        db $14
 randomHi:	        db $a8
@@ -171,10 +162,6 @@ player_collision:       db 0
 player_column:		db 15
 player_index:   	db 4
 player_dir:	        db 0
-playerXspeed:		db 0
-playerXaccu:		db 255	
-playerYspeed:		db YSPEED_DEFAULT
-playerYaccu:		db 0
 player_until_bridge     db 0    ; lines until the bridge crossing is registered
 
 ; vertical clearance before next foe can be injected 
@@ -186,8 +173,42 @@ game_state_end_aligned  equ (.+8) and 0xfff8
                         .org game_state_end_aligned 
 game_state_end
 
+;;---------
+;; NOT PART OF THE INTEGRAL STATE
+;; -------- -- 
+
+game_score:             db 0,0,0,0,0,0          ; unpacked bcd
+game_intro:             db 0
+
+playerXspeed:		db 0
+playerXaccu:		db 255	
+playerYspeed:		db YSPEED_DEFAULT
+playerYaccu:		db 0
+
+game_fuel_lo:           db 255
+game_fuel_hi:           db 255                  ; warning at $40
+
+ZeroScore
+                        lxi h, 0
+                        shld game_score
+                        shld game_score + 2
+                        shld game_score + 4
+                        ret
+
+ZeroPlayerSpeed         lxi h, $ff00
+                        shld playerXspeed
+                        lxi h, YSPEED_MIN
+                        shld playerYspeed
+                        ret
+
                         ; Reset the game to its initial state
 GameReset
+                        mvi a, 1                ; set intro flag
+                        sta game_intro
+                        lxi h, 0xffff
+                        shld game_fuel_lo
+                        call ZeroPlayerSpeed
+
                         lxi h, game_initial_state
                         lxi d, game_state
                         mvi c, game_state_end - game_state
@@ -274,6 +295,7 @@ gsab_return             lxi sp, 0
                         ret
 GameResetToBridge
                         call ClearFoeTable
+                        call ZeroPlayerSpeed
                         call grtb_copy_state
 
                         ; reset player position
