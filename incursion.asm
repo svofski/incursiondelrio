@@ -349,7 +349,7 @@ PlayFieldRoll:
         lxi h, frame_scroll
         inr m
         call check_bridge_passing
-        call fuel_burn
+        ;call fuel_burn 2600 version seems to burn fuel by frame
         ;;;;;
         ret
 
@@ -373,7 +373,7 @@ fuel_burn
         rz
 
         mov a, l
-        sui 30
+        sui 40
         mov l, a
         mov a, h
         sbi 0
@@ -861,6 +861,11 @@ cnf_notfuel:
         lda game_bridge_bin
         cpi 6
         jm CreateNewFoe_Exit
+        cpi 12                   ; > 12 bridge full on
+        jp cnf_3
+        lda randomHi            ; make jets a bit less probable
+        cpi 16
+        jnc CreateNewFoe_Exit
 
 cnf_3:
         ; width

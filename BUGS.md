@@ -5,9 +5,6 @@ BUGS AND PROBLEMS
 
 6. No plane explosion animation 
 
-7. There are too many interceptor jets coming all at once. Their density
-should increase more gradually.
-
 10. Needs at least some kind of title screen. Maybe text on the grass
 before bridge.
 
@@ -37,4 +34,6 @@ is located too close to the bridge.
 
 9. No death by lack of fuel
 
+7. There are too many interceptor jets coming all at once. Their density
+should increase more gradually.
 
