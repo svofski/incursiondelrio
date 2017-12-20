@@ -246,7 +246,6 @@ collision_survived
 
         call PaintScore
 
-
         ; PAUSE
         lda pause_flag
         ora a
@@ -382,7 +381,8 @@ fuel_burn
         shld game_fuel_lo 
         jc fuel_burn_zero
         cpi 40
-        rnc
+        mvi a, 0
+        jnc $+5
         mvi a, FUEL_WARNING_LOW
         sta game_fuel_warning
         ret

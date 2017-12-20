@@ -255,8 +255,6 @@ gamereset_foe_zero
                         ;  2. plane crosses the bridge, bridge&1 == 1
                         ;  3. plane dies, memento b restored
 GameSaveAtBridge
-                        call DBG_SGAME
-
                         lxi h, 0
                         dad sp
                         shld gsab_return+1
