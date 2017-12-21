@@ -106,9 +106,13 @@ unb_makeisland:
     lda game_bridge_bin
     cpi 3
     jm unb_noisland
+
+    rar
+    jc unb_noisland             ; make islands only on even bridges
+    ral
     
-    ; make island a somewhat rare event before bridge 9
-    cpi 9
+    ; make island a somewhat rare event before bridge 14
+    cpi 14
     jp unb_regular_probability
 
     mov a, l

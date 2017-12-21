@@ -120,8 +120,8 @@ initial_preroll:        db 32
 game_state_aligned      equ (.+8) and 0xfff8
                         .org game_state_aligned
 game_state
-game_bridge:            db 0, 0, 0              ; unpacked bcd
-game_bridge_bin:        db 0                    ; binary bridge # for logic
+game_bridge:            db 0, 0, 0              ; unpacked bcd, updates when crossed
+game_bridge_bin:        db 0                    ; binary bridge #, updates when generated
 game_lives:             db 3
 random:
 randomLo:	        db $14
@@ -262,6 +262,10 @@ GameSaveAtBridge
                         lxi sp, game_state
                         lxi h, state_memento_a
                         lda game_bridge+2 ; it's bcd, but lsb 0 is good for odd/even
+                                          ; game_bridge_bin should not be used
+                                          ; because it reflects bridge area 
+                                          ; being generated. 
+                                          ; game_bridge is where the player is.
                         rar
                         jc $+6                  ; bridge&1 == 1 -> save to a
                         lxi h, state_memento_b  ; bridge&1 == 0 -> save to b

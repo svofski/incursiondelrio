@@ -603,6 +603,9 @@ CreateNewFoe:
         rnz
         mvi a, 256-BOTTOM_HEIGHT-TOP_HEIGHT
         sta player_until_bridge
+
+        lxi h, game_bridge_bin
+        inr m
         call GameSaveAtBridge       ; save game state at the bridge proper
         ret
 
@@ -824,6 +827,8 @@ cnf_L1:
         mvi a, CLEARANCE_BRIDGE
         sta foe_clearance
 
+        lxi h, game_bridge_bin
+        inr m
         call GameSaveAtBridge
 
         jmp CreateNewFoe_Exit
@@ -2047,9 +2052,9 @@ UpdateScore_BridgePass
         cmc
         mov m, a
 
-        ; also update binary bridge counter
-        lxi h, game_bridge_bin
-        inr m
+;        ; also update binary bridge counter
+;        lxi h, game_bridge_bin
+;        inr m
 
         ; also clear intro flag
         lxi h, game_intro

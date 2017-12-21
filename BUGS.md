@@ -14,6 +14,8 @@ before bridge.
 
 13. Extra life and sound
 
+15. No bridge explosion/rhythm of love flash
+
 Hopefully fixed:
 ================
 
@@ -36,4 +38,6 @@ is located too close to the bridge.
 
 7. There are too many interceptor jets coming all at once. Their density
 should increase more gradually.
+
+14. 2600 levels are alternating light: no islands, dark: with islands
 
