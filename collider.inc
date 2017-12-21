@@ -39,9 +39,9 @@ CollisionMissileFoe:
         mov m, a
         mov a, b
         cpi FOEID_BRIDGE
-        cz snd_bridge_ded
-        cnz snd_foe_ded
-        ret
+        jnz snd_foe_ded
+        call rhythm_of_love
+        jmp snd_bridge_ded
 
         ;
         ; Find a foe at collision_x, collision_y

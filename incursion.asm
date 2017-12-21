@@ -91,10 +91,12 @@ _start
         lxi h, $100
         shld 1
 
+        call select_palette_normal
+
         ; initial stuff
         ei
         hlt
-        call setpalette
+        call program_palette
         call showlayers
         call SoundInit
 
@@ -155,12 +157,14 @@ game_roll
         lxi h, $76f3
         shld $38
 
+        call program_palette
+
         mvi a, 5                ; black border
         ;lda game_intro
-        lda preroll
-        ora a
-        jnz $+4
-        xra a
+        ;lda preroll
+        ;ora a
+        ;jnz $+4
+        ;xra a
         out 2
 
         lda deathroll
@@ -455,20 +459,6 @@ foe_in_de:
         
         ret
 
-
-setpalette:
-    lxi h, palette_data+15
-    mvi c, 16
-palette_loop:
-    mov a, c
-    dcr a
-    out $2
-    mov a, m
-    out $c
-    dcr c
-    dcx h
-    jnz palette_loop
-    ret
 
     ;; ---------------------------------------------- -   - 
     ;; Clear the blinds at the top, leave 16+16 of black at sides
