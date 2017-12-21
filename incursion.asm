@@ -63,17 +63,46 @@ FUEL_WARNING_LOW        equ 2
         jmp _start
 clrscr:
         di
-        lxi h, $8000
-        ; good for seeing sprite scratch area 
-        ; mvi b, $ff
-        mvi b, 0
-clearscreen:
-        xra a
-        mov m, b
-        inx h
-        ora h
-        jnz clearscreen
+        lxi h, 0
+        dad sp
+        xchg
+
+        lxi h, 0
+        sphl
+        lxi b, 512
+        lxi h, 65535
+        mvi a, $b7 ; 'ora a'
+        sta clrscr_switch 
+clrscr_l:        
+        push h
+        push h
+        push h
+        push h
+        push h
+        push h
+        push h
+        push h
+
+        dcx b
+        mov a, b
+        ora c
+        jnz clrscr_l
+
+clrscr_switch:
+        ora a           ; self-modifying code: 'ora a' / 'stc'
+        jc clrscr_exit
+        mvi a, $37      ; 'stc'
+        sta clrscr_switch
+
+        lxi b, 1536
+        lxi h, 0
+        jmp clrscr_l
+clrscr_exit:
+        xchg
+        sphl
         ret
+
+        ; draw black borders after incomplete preroll at reset at a bridge
 
 _start
         ; init stack pointer
@@ -91,13 +120,14 @@ _start
         lxi h, $100
         shld 1
 
-        call select_palette_normal
+        ;call select_palette_normal
+        call select_palette_goth
 
         ; initial stuff
         ei
         hlt
         call program_palette
-        call showlayers
+        ;call showlayers
         call SoundInit
 
         ; NewGame -> preroll -> deathroll -> MinusLife -> preroll ->...
@@ -113,6 +143,8 @@ pause_flag      db 0
 
         ; after deathroll
 MinusLife
+        call select_palette_goth
+        call program_palette
         call SoundInit
         call clrscr
         lda game_lives
@@ -140,6 +172,7 @@ jamas:
         dcr a
         sta preroll
         ora a
+        cz select_palette_normal
         jnz preroll_loop
         mvi a, 1
         sta pause_flag
@@ -157,16 +190,6 @@ game_roll
         lxi h, $76f3
         shld $38
 
-        call program_palette
-
-        mvi a, 5                ; black border
-        ;lda game_intro
-        ;lda preroll
-        ;ora a
-        ;jnz $+4
-        ;xra a
-        out 2
-
         lda deathroll
         ora a
         jz normal_roll
@@ -174,6 +197,9 @@ game_roll
         sta deathroll
         jz MinusLife
 normal_roll
+        call program_palette
+        mvi a, 5                ; black border
+        out 2
 
         call KeyboardScan
 

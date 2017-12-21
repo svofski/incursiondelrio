@@ -8,7 +8,7 @@ player_ptr:	        dw player_bank_ltr_dispatch + 2; player_up_ltr_dispatch+2
 ;YSPEED_MIN	        equ 48
 YSPEED_DEFAULT		equ 96
 YSPEED_MAX	        equ 128
-YSPEED_MIN	        equ 56
+YSPEED_MIN	        equ 64
 
 ScrollAccu:
 	mvi d, 0
