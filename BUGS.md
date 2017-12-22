@@ -8,11 +8,6 @@ BUGS AND PROBLEMS
 10. Needs at least some kind of title screen. Maybe text on the grass
 before bridge.
 
-11. Transitions that are not pretty should be hidden by palette
-
-
-13. Extra life and sound
-
 
 Hopefully fixed:
 ================
@@ -42,3 +37,7 @@ should increase more gradually.
 15. No bridge explosion/rhythm of love flash
 
 12. Collision of plane and terrain may register as collision with copter
+
+11. Transitions that are not pretty should be hidden by palette
+
+13. Extra life and sound

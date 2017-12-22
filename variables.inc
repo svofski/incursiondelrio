@@ -190,11 +190,31 @@ game_fuel_hi:           db 255                  ; warning at $40
 
 game_fuel_warning:      db 0
 
+;;-----------
+;; TABLES AND CONSTANTS 
+;;------------ - - --   - 
+
+; How many points for each foe
+score_tbl
+        ;       NONE    SHIP    COPTER  COPTER  JET
+        db      0,      3,      6,      6,     $10,    0,      0,      0,
+        db      0,      0,      0,      0,      0,    0,      0,      0,
+        ;       BRIDGE  FUEL
+        db      $50,     8 
+
+
+
 ZeroScore
                         lxi h, 0
                         shld game_score
                         shld game_score + 2
                         shld game_score + 4
+
+                        ;mvi a, 9
+                        ;sta game_score+2
+                        ;sta game_score+3
+                        ;sta game_score+4
+
                         ret
 
 ZeroPlayerSpeed         lxi h, $ff00
@@ -225,6 +245,10 @@ gamereset_memcpy
                         jnz gamereset_memcpy
 
                         call ClearFoeTable
+
+                        ;mvi a, 9
+                        ;sta game_lives
+
                         ret
 
 ClearFoeTable

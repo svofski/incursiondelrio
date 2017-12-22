@@ -77,6 +77,7 @@ palette_loop:
         out $c
         dcr c
         out $c
+        out $c
         dcx h
         out $c
         jnz palette_loop

@@ -37,6 +37,13 @@ snd_missile_off
 
 snd_missile     db 0
 
+snd_life
+        lxi h, snd16_life_data
+        shld snd_extralife_ptr
+        lxi h, snd8_life_data
+        shld snd_ch2_next
+        ret
+
 snd_fuel
         lxi h, snd_fuel_data
         shld snd_ch0_next
@@ -83,6 +90,11 @@ snd_ch2_cur     dw 0
 
 snd_fwarn_ctr_next      db 0
 snd_fwarn_ctr           dw 0
+
+; 16-bit sound for extra life ditty
+snd_extralife_ptr dw 0
+snd_extralife_ctr db 0
+
 
                 ; pitch, time, pitch, time, 0, 0
 snd_fuel_data:  
@@ -153,6 +165,42 @@ snd_fuel_lo_data:
         db 15, 4
         db 0, 20
         db 0, 0
+
+snd16_life_data:
+        ; approximate a minor chord in C: 
+        ; 130.83 - 155.56 - 196.0 - 261.63 (yeah right)
+        dw 0
+        db 25
+        dw 1500000/130/2
+        db 10
+        dw 0
+        db 4
+        dw 1500000/155/2
+        db 10
+        dw 0
+        db 4
+        dw 1500000/196/2
+        db 10
+        dw 0
+        db 4
+        dw 1500000/261/2
+        db 15
+        dw 0
+        db 0
+
+snd8_life_data:
+        ; approximate a minor chord in C: 
+        ; 130.83 - 155.56 - 196.0 - 261.63 (yeah right)
+        db 0, 25
+        db 1500000/130/2/256, 4
+        db 0, 10
+        db 1500000/155/2/256, 4
+        db 0, 10
+        db 1500000/196/2/256, 4
+        db 0, 10
+        db 1500000/261/2/256, 3
+        db 0, 0
+
 
 
 snd_empty_data:
@@ -396,6 +444,52 @@ sch1_fwarn_next
         shld snd_fwarn_ctr
         
 sch1_fwarn_silent
+        ; extra life sound maybe then?
+
+        lxi h, snd_extralife_ctr
+        mov a, m
+        ora a
+        jz sch1_extralife_next  ; current sound over, next
+        dcr a
+        mov m, a                ; just sounding the current sound
+        ret
+
+sch1_extralife_next
+        lhld snd_extralife_ptr
+        mov a, h
+        ora l
+        jz sch1_total_silent    ; 0, no extra life ditty
+        
+        ; otherwise!
+        mov e, m
+        inx h
+        mov d, m                ; de = divider
+        inx h
+        mov a, m                ; a = duration, 0 = end
+        inx h
+        ora a
+        jnz sch1_extralife_nextpitch     ; play next pitch
+        lxi h, 0                
+        shld snd_extralife_ptr  ; ditty ptr = 0
+        jmp sch1_total_silent   ; stfu
+
+sch1_extralife_nextpitch
+        shld snd_extralife_ptr
+        sta snd_extralife_ctr
+        mvi a, CH1_CTR_BEEP
+        out I8253_CONTROL
+        ; if 0, stfu rather than fart
+        mov a, e
+        ora d
+        jz sch1_total_silent
+        ; otherwise play
+        mov a, e
+        out I8253_CH1
+        mov a, d
+        out I8253_CH1
+        ret
+
+sch1_total_silent
         mvi a, CH1_CTR_STFU
         out I8253_CONTROL
         ret

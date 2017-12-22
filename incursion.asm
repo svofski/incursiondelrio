@@ -2027,21 +2027,13 @@ paintfuel_l1
         mov m, a
         inr l
         mov m, a
-
-
         ret
-
-score_tbl
-        ;       NONE    SHIP    COPTER  COPTER  JET
-        db      0,      3,      6,      6,     $10,    0,      0,      0,
-        db      0,      0,      0,      0,      0,    0,      0,      0,
-        ;       BRIDGE  FUEL
-        db      $50,     8 
 
 UpdateScore_BridgePass
         lxi h, game_bridge + 2
         lxi d, 0xa00            ; d = 10, e = 0
         
+        ; Update game bridge in BCD
         mov a, m
         inr a
         cmp d
@@ -2071,6 +2063,10 @@ UpdateScore_BridgePass
 ;        ; also update binary bridge counter
 ;        lxi h, game_bridge_bin
 ;        inr m
+; NB: game_bridge_bin is used for game generation and is updated immediately
+; after the bridge had been generated because game should not depend on the
+; current position of the player (how far we have scrolled).
+;
 
         ; also clear intro flag
         lxi h, game_intro
@@ -2083,7 +2079,7 @@ UpdateScore_BridgePass
 UpdateScore_KillA
         cpi 18
         rp
-        lxi h, score_tbl
+        lxi h, score_tbl        ; load pointer to the scoring table
         mov c, a
         mvi b, 0
         dad b
@@ -2098,19 +2094,18 @@ UpdateScore_KillA
         ani $f
         mov b, a                ; second digit in b
 
-        ;mvi d, 10
         lxi d, 0xa00            ; d = 10, e = 0
         
         lxi h, game_score+4     ; the last digit is always 0, inflation
-        mov a, m
+        mov a, m                ; xxxx10
         add c
         cmp d
         jc $+4
         sub d
         cmc
         ; next 
-        mov m, a
-        dcx h                   ; m = &game_score[3]
+        mov m, a                
+        dcx h                   ; m = &game_score[3], xxx100
         mov a, m
         adc b                   ; second digit in b
         cmp d
@@ -2119,7 +2114,17 @@ UpdateScore_KillA
         cmc
         ; next
         mov m, a
-        dcx h                   ; m = &game_score[2]
+        dcx h                   ; m = &game_score[2], xx1000
+        mov a, m
+        adc e                   ; aci 0
+        cmp d
+        jc $+4
+        sub d
+        cmc
+        cc extra_life
+        ; next
+        mov m, a
+        dcx h                   ; m = &game_score[1], x10000 - extra life
         mov a, m
         adc e                   ; aci 0
         cmp d
@@ -2128,16 +2133,7 @@ UpdateScore_KillA
         cmc
         ; next
         mov m, a
-        dcx h                   ; m = &game_score[1]
-        mov a, m
-        adc e                   ; aci 0
-        cmp d
-        jc $+4
-        sub d
-        cmc
-        ; next
-        mov m, a
-        dcx h                   ; m = &game_score[0]
+        dcx h                   ; m = &game_score[0], 100000
         mov a, m
         adc e                   ; aci 0
         cmp d
@@ -2147,6 +2143,21 @@ UpdateScore_KillA
         ; 
         mov m, a
         ret
+
+extra_life
+        push psw
+        lda game_lives
+        cpi 9
+        jz too_much_lives
+        inr a
+        push h
+        call snd_life
+        pop h
+        sta game_lives
+too_much_lives
+        pop psw
+        ret
+
 
     .include random.inc
     .include palette.inc
