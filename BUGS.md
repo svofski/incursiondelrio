@@ -10,11 +10,9 @@ before bridge.
 
 11. Transitions that are not pretty should be hidden by palette
 
-12. Collision of plane and terrain may register as collision with copter
 
 13. Extra life and sound
 
-15. No bridge explosion/rhythm of love flash
 
 Hopefully fixed:
 ================
@@ -41,3 +39,6 @@ should increase more gradually.
 
 14. 2600 levels are alternating light: no islands, dark: with islands
 
+15. No bridge explosion/rhythm of love flash
+
+12. Collision of plane and terrain may register as collision with copter
