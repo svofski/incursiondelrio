@@ -185,6 +185,8 @@ playerXaccu:		db 255
 playerYspeed:		db YSPEED_DEFAULT
 playerYaccu:		db 0
 
+player_debris_animframe:db 0
+
 game_fuel_lo:           db 255
 game_fuel_hi:           db 255                  ; warning at $40
 
@@ -210,11 +212,19 @@ ZeroScore
                         shld game_score + 2
                         shld game_score + 4
 
-                        ;mvi a, 9
-                        ;sta game_score+2
-                        ;sta game_score+3
-                        ;sta game_score+4
+;                        mvi a, 9
+;                        sta game_score+0
+;                        sta game_score+1
+;                        sta game_score+2
+;                        sta game_score+3
+;                        sta game_score+4
 
+                        ret
+
+MaxoutScore             lxi h, $a0a
+                        shld game_score
+                        shld game_score + 2
+                        shld game_score + 4
                         ret
 
 ZeroPlayerSpeed         lxi h, $ff00

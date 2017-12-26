@@ -10777,6 +10777,75 @@ char_9_ltr6:
 char_9_ltr7:
   ; (shift 7 skipped)
 ;; end of sprite group char_9
+char_x_ltr_spritegroup:
+char_x_ltr_inf:
+  ; (shift -1 skipped)
+char_x_ltr0:
+	lxi b, $ff
+	mov l, e
+	mvi a, $40
+	add d
+	mov h, a
+;; white text
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+	dcr l
+	mov m, b
+	dcr l
+	mov m, b
+
+;; Mask layer 3 (e000)
+	mvi a, $60
+	add d
+	mov h, a
+	mov l, e
+	dcr l
+	mvi m, $e7
+	dcr l
+	mvi m, $c3
+	dcr l
+	mvi m, $c3
+	dcr l
+	mvi m, $e7
+	dcr l
+	mvi m, $e7
+	dcr l
+	mov m, c
+	dcr l
+	mvi m, $e7
+	dcr l
+	mov m, c
+	dcr l
+	mov m, c
+
+	ret
+char_x_ltr1:
+  ; (shift 1 skipped)
+char_x_ltr2:
+  ; (shift 2 skipped)
+char_x_ltr3:
+  ; (shift 3 skipped)
+char_x_ltr4:
+  ; (shift 4 skipped)
+char_x_ltr5:
+  ; (shift 5 skipped)
+char_x_ltr6:
+  ; (shift 6 skipped)
+char_x_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group char_x
 bridgeword_ltr_spritegroup:
 bridgeword_ltr_inf:
   ; (shift -1 skipped)

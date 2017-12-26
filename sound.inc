@@ -213,10 +213,12 @@ SoundInit:
         shld snd_ch0_next
         shld snd_ch2_next
         shld snd_fwarn_ctr
+        shld snd_extralife_ptr
         mvi a, 0
         sta snd_ch0_state
         sta snd_ch2_state
         sta snd_fwarn_ctr_next
+        sta snd_extralife_ctr
         jmp SoundSound
 
 SoundSound:
@@ -402,6 +404,11 @@ sch2_beep_silent
 
 
 snd_ch1_frame:
+        ; engine noise must stop but other sounds should go on
+        lda pause_flag
+        ora a
+        jnz snd_ch1_fuelcheck
+
         ; engine noise
         lxi h, sn_counter
         lda playerYspeed
@@ -413,6 +420,7 @@ snd_ch1_frame:
         ral
         out 1
 
+snd_ch1_fuelcheck:
         ; fuel warning
         lhld snd_fwarn_ctr
         mov a, h

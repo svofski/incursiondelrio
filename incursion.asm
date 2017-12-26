@@ -143,9 +143,9 @@ pause_flag      db 0
 
         ; after deathroll
 MinusLife
+        call SoundInit
         call select_palette_goth
         call program_palette
-        call SoundInit
         call clrscr
         lda game_lives
         dcr a
@@ -212,9 +212,7 @@ normal_roll
         lda frame_scroll
         out 3
 
-        lda pause_flag
-        ora a
-        cz SoundSound
+        call SoundSound
 
         ; keep interrupts enabled to make errors obvious
         ;ei
@@ -266,12 +264,18 @@ main_loop_player_ded
         lda deathroll
         ora a
         jnz main_loop_player_ded_already
+
+        ; totally ded, begin deathroll
         mvi a, 50
         sta deathroll
+        ; start player debris animation a bit later, so that it 
+        ; is out of sync with the debris of a copter it smashed against
+        mvi a, $f7      
+        sta player_debris_animframe     
 main_loop_player_ded_already
 
 collision_survived
-        lda  frame_scroll
+        lda frame_scroll
         sta frame_scroll_prev
 
         call PaintScore
@@ -1795,6 +1799,7 @@ dispatch_digit_tbl
         dw char_7_ltr0
         dw char_8_ltr0
         dw char_9_ltr0
+        dw char_x_ltr0
 dispatch_digit
         cpi $f
         rz
@@ -2098,6 +2103,8 @@ UpdateScore_KillA
         
         lxi h, game_score+4     ; the last digit is always 0, inflation
         mov a, m                ; xxxx10
+        cpi $a                  ; if the score has maxed out, just drop out
+        jz MaxoutScore
         add c
         cmp d
         jc $+4
@@ -2142,6 +2149,8 @@ UpdateScore_KillA
         cmc
         ; 
         mov m, a
+        ; if the score is overflown, set it all to !!!!!!
+        jc MaxoutScore
         ret
 
 extra_life

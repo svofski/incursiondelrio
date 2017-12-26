@@ -3,11 +3,8 @@ BUGS AND PROBLEMS
 
 5. FUEL double-channel sounds may sound out of sync
 
-6. No plane explosion animation 
-
 10. Needs at least some kind of title screen. Maybe text on the grass
 before bridge.
-
 
 Hopefully fixed:
 ================
@@ -41,3 +38,10 @@ should increase more gradually.
 11. Transitions that are not pretty should be hidden by palette
 
 13. Extra life and sound
+
+6. No plane explosion animation 
+
+16. score overflow to !!!!!!
+
+17. Sound may get stuck while resetting the game (e.g. get an extra life and 
+immediately die)

@@ -173,6 +173,8 @@ pm_right_m1:
 pm_Exit:
 	ret
 
+        ; Draw player sprite and detect collision by pixel overlap
+        ; NB during deathroll it must set player_collision to 0
 PlayerSprite:
         ; Precalculate player bitmap in d
         lhld player_ptr         ; load player base pointer
@@ -185,7 +187,53 @@ PlayerSprite:
         mov e, m        
         inx h
         mov d, m                ; de = &bitmap
+
+        ; good to know the location, but is it not a deathroll?
+        lda deathroll
+        ora a
+        jz psprite_not_ded
+
+        xra a
+        sta player_collision    ; player_collision = 0, otherwise it would keep on dying
+        ; for debris: de = column base, c = offset
+        lda player_column
+        adi $80-32              ; normally the debris are in $e000, offset them
+                                ; back to the white layer $c000
+        mov d, a
+        lda frame_scroll
+        adi PLAYER_Y 
+        mov e, a
+        lda player_index
+        mov c, a
+
+        lxi h, player_debris_animframe
+        inr m
+        mov a, m
+        ora a
+        rar             ; divide by 2 to slow down the anim
+        ; pick a frame of debris to display
+psprite_dispatch_debris
+        lxi h, debris1_ltr_dispatch
+        ora a
+        jz sprite_ltr_rtl_dispatchjump
+        lxi h, debris2_ltr_dispatch
+        cpi 1
+        jz sprite_ltr_rtl_dispatchjump
+        lxi h, debris3_ltr_dispatch
+        cpi 2
+        jz sprite_ltr_rtl_dispatchjump
+        lxi h, debris4_ltr_dispatch
+        cpi 3
+        jz sprite_ltr_rtl_dispatchjump
+        ; none of the above, the animation has ended
+        jmp wipe_debris
+
+        ret
+
         
+
+        
+psprite_not_ded:
         push d                  ; will need it three times
         push d
 
