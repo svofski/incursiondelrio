@@ -749,6 +749,64 @@ class BridgeWord(SingleBlindSprite):
            ' 4   4  4   4  4  4   4  4    4  4      ',
            ' 4444   4   4  4  4444    44444  44444  ',
            '                                        '];
+class LogoSprite(SingleBlindSprite):
+    def isOverBlinds(self):
+        return False
+
+    def isWhite(self):
+        return True
+
+
+class Logo1(LogoSprite): 
+
+            #       #       #       #       #
+    pic = ['4444  4 4   4 4444 4444     4444    4   4 4444 ',
+           '4   4 4 4   4 4    4   4    4   4  4 4  4 4   4',
+           '4444  4 4   4 444  4444     4444  4   4 4 4   4',
+           '4   4 4  4 4  4    4   4    4   4 44444 4 4   4',
+           '4   4 4   4   4444 4   4    4   4 4   4 4 4444 '];
+
+class BlitText(BlitSprite):
+    def getName(self): 
+        return type(self).__name__.lower()
+
+    def getDirections(self): return ['ltr']
+
+    def isDoubleWidth(false):
+        return False
+
+    def includeShift(self, shift):
+        return shift in [0]
+
+    def operator(self,dw):
+        return (~dw) & 0xffff
+
+
+class Logo2(BlitText): 
+    #       1       2       3       4       5       6       7       8
+    pic = ['                                         4              ',
+           ' 4444  4   4 4444    4      4444  4444 4   4   44       ',
+           ' 4   4 4  44 4   4  4 4     4   4 4    4  44  4  4      ',
+           ' 4444  4 4 4 4444  4   4    4444  4444 4 4 4  4  4      ',
+           ' 4     44  4 4   4 44444    4     4    44  4  4  4      ',
+           ' 4     4   4 4444  4   4    4     4444 4   4 444444     ',
+           '                                             4    4     ',
+           '                                                        '];
+
+
+
+class Logo3(BlitText): 
+            #       #       #       #       #
+    pic = ['                                                        ',
+           ' 444  4   4  444  4444  444  4  4 4     444   44  4 4444',
+           '4     4   4 4   4 4    4     4 4  4        4 4  4 4    4',
+           ' 444  4   4 4   4 444   444  44   4      44  4  4 4   4 ',
+           '    4  4 4  4   4 4        4 4 4  4     4    4  4 4   4 ',
+           ' 444    4    444  4     444  4  4 4     4444  44  4   4 ',
+           '                                                        ',
+           '                                                        '];
+
+
 class PlayerIcon(SingleBlindSprite):
     pic = ['   4    ',
            '   4    ',
@@ -790,6 +848,8 @@ _56789x().makeAll()
 
 BridgeWord().makeAll()
 PlayerIcon().makeAll()
+Logo2().makeAll()
+Logo3().makeAll()
 
 print '.list'
 

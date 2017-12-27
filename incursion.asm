@@ -61,6 +61,9 @@ FUEL_WARNING_LOW        equ 2
         .org $100
 
         jmp _start
+        db 'RIVER RAID INSPIRED GAME FOR VECTOR-06C HOME COMPUTER '
+        db 'SVOFSKI GMAIL COM 2017 '
+        db 'ORIGINAL BY CAROL SHAW 1982',26
 clrscr:
         di
         lxi h, 0
@@ -127,7 +130,6 @@ _start
         ei
         hlt
         call program_palette
-        ;call showlayers
         call SoundInit
 
         ; NewGame -> preroll -> deathroll -> MinusLife -> preroll ->...
@@ -152,15 +154,15 @@ MinusLife
         jz NewGame
 
         push psw
-            lda game_intro
-            ora a                   ; bridge zero is special, reset game if ded before it
-            jz minuslife_regularbridge
-            call GameReset
-            jmp minuslife_a
+        lda game_intro
+        ora a                   ; bridge zero is special, reset game if ded before it
+        jz minuslife_regularbridge
+        call GameReset
+        jmp minuslife_a
 minuslife_regularbridge         ; died after a regular bridge, reset to it
-            call GameResetToBridge
-            mvi a, 25               ; preroll so that we're exactly at the bridge
-            sta preroll
+        call GameResetToBridge
+        mvi a, 25               ; preroll so that we're exactly at the bridge
+        sta preroll
 minuslife_a
         pop psw
 
@@ -173,6 +175,7 @@ jamas:
         sta preroll
         ora a
         cz select_palette_normal
+        cz paint_game_logo
         jnz preroll_loop
         mvi a, 1
         sta pause_flag
@@ -1818,6 +1821,32 @@ dispatch_digit
 
 SCORE_BASELINE  equ 20
 
+        ; a modest game title on the initial screen
+paint_game_logo
+        push psw
+        lda game_intro
+        ora a
+        jz paint_game_logo_ret
+        ; display "РИВА РЕЙД"
+        lda frame_scroll
+        adi BOTTOM_HEIGHT + 24
+        mov e, a
+        mvi d, $83
+        lxi h, logo2_ltr0
+        call paint_logosprite
+
+        ; display "SVOFSKI 2017"
+        lda frame_scroll
+        adi BOTTOM_HEIGHT + 24
+        mov e, a
+        mvi d, $96
+        lxi h, logo3_ltr0
+        call paint_logosprite
+paint_game_logo_ret
+        pop psw
+        ret
+
+
         ; -----
         ; PAINT SCORE AND EVERYTHING IN THE BOTTOM PART
         ; ----- - 
@@ -2168,154 +2197,85 @@ too_much_lives
         ret
 
 
-    .include random.inc
-    .include palette.inc
-    .include ship.inc
-    .include wipes.inc
-    ;; Depuración y basura
-    ; pintar los colores
-showlayers:
-    lxi h, $ffff
-    ; 1 0 0 0
-    shld $81fe 
+        .include random.inc
+        .include palette.inc
+        .include ship.inc
+        .include wipes.inc
+        .include helpers.inc
 
-    ; 0 1 0 0 
-    shld $a2fe
-
-    ; 1 1 0 0
-    shld $83fe
-    shld $a3fe
-
-    ; 0 0 1 0
-    shld $c4fe
-
-    ; 1 0 1 0
-    shld $85fe  
-    shld $c5fe
-
-    ; 0 1 1 0
-    shld $a6fe  
-    shld $c6fe
-
-    ; 1 1 1 0
-    shld $87fe  
-    shld $a7fe
-    shld $c7fe
-
-    ; x x x 1
-    shld $e8fe  
-
-    ; test bounds
-    shld $8306
-    shld $8308
-    shld $830a
-    shld $830c
-    shld $830e
-    shld $8310
-    shld $8312
-
-    shld $9306
-    shld $9308
-    shld $930a
-    shld $930c
-    shld $930e
-    shld $9310
-    shld $9312
-
-    ; time marks
-    lxi h, $c0c0
-    shld $e000
-    shld $e010
-    shld $e020
-    shld $e030
-    shld $e040
-    shld $e050
-    shld $e060
-    shld $e070
-    shld $e080
-    shld $e090
-    shld $e0a0
-    shld $e0b0
-    shld $e0c0
-    shld $e0d0
-    shld $e0e0
-    shld $e0f0
-    shld $e0fe
-    ret
-
-phex8        out $77
-             ret
-phex16       push psw
-             mov a, h
-             out $78
-             mov a, l
-             out $78
-             pop psw
-             ret
-
-pchar        out $79
-             ret
-
-cnf_debug_fuel          db 'FUEL', 0
-cnf_debug_copter        db 'CPTR', 0
-cnf_debug_sgame          db 'SGAME', 0
-cnf_debug_rgame          db 'RGAME', 0
-cnf_debug_line           db '____F', 0
-
-CNF_DBGA
-        push psw
-        push h
-        lxi h, cnf_debug_line
-        jmp CNF_DEBUG_generic
-
-DBG_FUEL
-        push psw
-        push h
-        lxi h, cnf_debug_fuel
-        jmp CNF_DEBUG_generic
-
-DBG_COPTER
-        push psw
-        push h
-        lxi h, cnf_debug_copter
-        jmp CNF_DEBUG_generic
-
-DBG_SGAME
-        push psw
-        push h
-        lxi h, cnf_debug_sgame
-        jmp CNF_DEBUG_generic
-
-DBG_RGAME
-        push psw
-        push h
-        lxi h, cnf_debug_rgame
-        jmp CNF_DEBUG_generic
-
-
-CNF_DEBUG_generic
-        lda frame_scroll
-        out $77
-
-        
-        lda randomLo
-        out $77
-        lda randomHi
-        out $77
-
-cnf_announce_lup
-        mov a, m
-        out $79
-        ora a
-        jz cnf_announce_end
-        inx h
-        jmp cnf_announce_lup
-cnf_announce_end
-
-        pop h
-        pop psw
-
-        ret
+;phex8   out $77
+;        ret
+;phex16  push psw
+;        mov a, h
+;        out $78
+;        mov a, l
+;        out $78
+;        pop psw
+;        ret
+;
+;pchar   out $79
+;        ret
+;
+;cnf_debug_fuel          db 'FUEL', 0
+;cnf_debug_copter        db 'CPTR', 0
+;cnf_debug_sgame          db 'SGAME', 0
+;cnf_debug_rgame          db 'RGAME', 0
+;cnf_debug_line           db '____F', 0
+;
+;CNF_DBGA
+;        push psw
+;        push h
+;        lxi h, cnf_debug_line
+;        jmp CNF_DEBUG_generic
+;
+;DBG_FUEL
+;        push psw
+;        push h
+;        lxi h, cnf_debug_fuel
+;        jmp CNF_DEBUG_generic
+;
+;DBG_COPTER
+;        push psw
+;        push h
+;        lxi h, cnf_debug_copter
+;        jmp CNF_DEBUG_generic
+;
+;DBG_SGAME
+;        push psw
+;        push h
+;        lxi h, cnf_debug_sgame
+;        jmp CNF_DEBUG_generic
+;
+;DBG_RGAME
+;        push psw
+;        push h
+;        lxi h, cnf_debug_rgame
+;        jmp CNF_DEBUG_generic
+;
+;
+;CNF_DEBUG_generic
+;        lda frame_scroll
+;        out $77
+;
+;        
+;        lda randomLo
+;        out $77
+;        lda randomHi
+;        out $77
+;
+;cnf_announce_lup
+;        mov a, m
+;        out $79
+;        ora a
+;        jz cnf_announce_end
+;        inx h
+;        jmp cnf_announce_lup
+;cnf_announce_end
+;
+;        pop h
+;        pop psw
+;
+;        ret
 
 
 

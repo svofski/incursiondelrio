@@ -3,8 +3,6 @@ BUGS AND PROBLEMS
 
 5. FUEL double-channel sounds may sound out of sync
 
-10. Needs at least some kind of title screen. Maybe text on the grass
-before bridge.
 
 Hopefully fixed:
 ================
@@ -45,3 +43,6 @@ should increase more gradually.
 
 17. Sound may get stuck while resetting the game (e.g. get an extra life and 
 immediately die)
+
+10. Needs at least some kind of title screen. Maybe text on the grass
+before bridge.

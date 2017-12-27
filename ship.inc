@@ -11136,4 +11136,70 @@ playericon_ltr6:
 playericon_ltr7:
   ; (shift 7 skipped)
 ;; end of sprite group playericon
+logo2_ltr_dispatch:
+	dw logo2_ltr_inf
+	dw logo2_ltr0
+	dw logo2_ltr1
+	dw logo2_ltr2
+	dw logo2_ltr3
+	dw logo2_ltr4
+	dw logo2_ltr5
+	dw logo2_ltr6
+	dw logo2_ltr7
+logo2_ltr_spritegroup:
+logo2_ltr_inf:
+  ; (shift -1 skipped)
+logo2_ltr0:
+.list
+;; white pixels
+	dw $ff86, $ba86, $bebe, $ffff, $ffe8, $cba8, $6be8, $ffff, $ff7b, $b56e, $a06e, $ffff, $fff0, $f7f0, $f7f7, $ffff, $ffc2, $5ec2, $dec2, $ffff, $bfee, $cdad, $6de8, $fbff, $ff7f, $bfbf, $bf1f, $dfff, $ffff, $ffff, $ffff, $ffff,
+
+logo2_ltr1:
+  ; (shift 1 skipped)
+logo2_ltr2:
+  ; (shift 2 skipped)
+logo2_ltr3:
+  ; (shift 3 skipped)
+logo2_ltr4:
+  ; (shift 4 skipped)
+logo2_ltr5:
+  ; (shift 5 skipped)
+logo2_ltr6:
+  ; (shift 6 skipped)
+logo2_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group logo2
+logo3_ltr_dispatch:
+	dw logo3_ltr_inf
+	dw logo3_ltr0
+	dw logo3_ltr1
+	dw logo3_ltr2
+	dw logo3_ltr3
+	dw logo3_ltr4
+	dw logo3_ltr5
+	dw logo3_ltr6
+	dw logo3_ltr7
+logo3_ltr_spritegroup:
+logo3_ltr_inf:
+  ; (shift -1 skipped)
+logo3_ltr0:
+.list
+;; white pixels
+	dw $ff8d, $7d8d, $f68f, $ffff, $ffd8, $d7d7, $b778, $ffff, $ffc3, $5e47, $5fdf, $ffff, $ff1b, $fa19, $ea1b, $ffff, $ff5f, $dfdf, $df5f, $ffff, $ff1c, $eb9b, $7b0c, $ffff, $ffd0, $5e5d, $5ddd, $ffff, $ffff, $ffff, $ffff, $ffff,
+
+logo3_ltr1:
+  ; (shift 1 skipped)
+logo3_ltr2:
+  ; (shift 2 skipped)
+logo3_ltr3:
+  ; (shift 3 skipped)
+logo3_ltr4:
+  ; (shift 4 skipped)
+logo3_ltr5:
+  ; (shift 5 skipped)
+logo3_ltr6:
+  ; (shift 6 skipped)
+logo3_ltr7:
+  ; (shift 7 skipped)
+;; end of sprite group logo3
 .list
