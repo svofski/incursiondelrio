@@ -75,12 +75,19 @@ palette_loop:
         out $2
         mov a, m
         out $c
+        out $c
+        out $c
+        out $c
         dcr c
         out $c
         out $c
         dcx h
         out $c
+        out $c
         jnz palette_loop
+
+        mvi a, 5                        ; black border
+        out 2
         ret
 
 

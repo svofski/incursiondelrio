@@ -200,9 +200,7 @@ game_roll
         sta deathroll
         jz MinusLife
 normal_roll
-        call program_palette
-        mvi a, 5                ; black border
-        out 2
+        call program_palette    ; also set black border
 
         call KeyboardScan
 
@@ -210,8 +208,8 @@ normal_roll
         call MissileWipe
 
         ; scroll
-        mvi a, 88h
-        out 0
+        mvi a, 5
+        out 2
         lda frame_scroll
         out 3
 
@@ -319,14 +317,14 @@ preroll_loop
         sta $38
         ei
         hlt
-        mvi a, 5                ; black border
-        out 2
 
         mvi a, YSPEED_MAX
         sta playerYspeed
         ; scroll
         mvi a, 88h
         out 0
+        mvi a, 5
+        out 2
         lda frame_scroll
         out 3
 
