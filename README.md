@@ -15,9 +15,11 @@ You need:
  * bin2wav
  
 Steps:
- * get prettyasm, in prettyasm directory run ``npm install -g``
- * get bin2wav, in bin2wav directory run ``npm install -g``
- * in incursiondelrio directory: type ``make``
+ * get prettyasm: https://github.com/svofski/prettyasm
+ * in prettyasm directory run ``npm install -g``
+ * get bin2wav: https://github.com/svofski/bin2wav
+ * in bin2wav directory run ``npm install -g``
+ * in incursiondelrio directory type ``make``
  
 This should produce, among other things:
  * ``incursion.rom`` - uncompressed binary
