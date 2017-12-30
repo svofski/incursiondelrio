@@ -200,16 +200,15 @@ game_roll
         sta deathroll
         jz MinusLife
 normal_roll
-        call program_palette    ; also set black border
-
         call KeyboardScan
+        call program_palette    ; also set black border
 
         call PlayerWipe
         call MissileWipe
 
         ; scroll
-        mvi a, 5
-        out 2
+        ;mvi a, 5
+        ;out 2
         lda frame_scroll
         out 3
 
