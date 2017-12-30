@@ -1,11 +1,21 @@
 TARGET=incursion.rom
-OBJCOPY=gobjcopy
 PASMDIR=../prettyasm
 PASM=pasm
 CSS=listn.css
 NAV=navigate.js
 EXOMIZER=exomizer-2.0/src/exomizer
 BIN2WAV=bin2wav
+
+OBJCOPY := $(shell command -v gobjcopy 2>/dev/null)
+ifndef OBJCOPY
+    OBJCOPY := $(shell command -v objcopy 2>/dev/null)
+endif
+
+ifndef OBJCOPY
+    $(error You need gobjcopy or objcopy) 
+else
+    $(info Found objcopy: $(OBJCOPY))
+endif
 
 export OBJCOPY
 
