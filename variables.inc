@@ -67,6 +67,11 @@ input_left:             db 0
 input_fire:             db 0
 input_dummy:            db 0
 
+                        ; joystick port values in neutral state
+joyc_neutral:           db 0
+                        db 0
+                        db 0
+                        db 0
 
 tmp16                   dw 0
 

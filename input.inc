@@ -1,5 +1,31 @@
-JOYC1   equ     $2e
-JOYC2   equ     $2f
+JOYC1   equ     $0e
+JOYC2   equ     $0f
+JOYC3   equ     $2e
+JOYC4   equ     $2f
+
+        ;
+InputInit:
+        lxi h, joyc_neutral
+        in JOYC1
+        cma
+        mov m, a
+
+        inx h
+        in JOYC2
+        cma
+        mov m, a
+
+        inx h
+        in JOYC3
+        cma
+        mov m, a
+
+        inx h
+        in JOYC4
+        cma
+        mov m, a
+
+        ret
 
 ;; KeyboardScan
 ;;
@@ -20,14 +46,26 @@ KeyboardScan:
 	shld inputs+2
         shld inputs+4
 
-        ; any of the 2 joysticks "C" and Les Shadoks variant at $2e/$2f 
-        in $2e
-        mov b, a
+        lhld joyc_neutral       
+        xchg                    ; neutral: d=joy0e, e=joy0f, h=joy2e, l=joy2f
+        lhld joyc_neutral+2
+
+        in $0e                  ; read joy 1
+        xra d                   ; xor ~joy1_neutral
+        mov c, a                ; keep in c
+        in $0f                  ; read joy 2
+        xra e                   ; xor ~joy2_neutral
+        ana c                   ; and with previous value
+        mov c, a                ; keep in c
+        in $2e                  ; ... same for shadok joys
+        xra h
+        ana c
+        mov c, a
         in $2f
-        ana b
-        mov b, a
-        cma
-        jz ks_keyboard  ; if the sticks are silent, let keyboard speak
+        xra l
+        ana c                   ; a = and(all joysticks)
+
+        cma 
 
         mvi b, $ff
         lxi h, inputs+1 ; h = &inputs.right

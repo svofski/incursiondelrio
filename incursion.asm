@@ -108,6 +108,9 @@ _start
         ; init stack pointer
         lxi sp, $100
 
+        ; sample neutral joystick inputs
+        call InputInit
+
         ; enable interrupts
 
         ; write ret to rst 7 vector 
