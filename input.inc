@@ -1,3 +1,6 @@
+JOYC1   equ     $2e
+JOYC2   equ     $2f
+
 ;; KeyboardScan
 ;;
 ;; Scan keyboard and update global struct "inputs"
@@ -12,15 +15,56 @@
 ;; } inputs;
 ;;
 KeyboardScan:
+	lxi h, 0
+	shld inputs
+	shld inputs+2
+        shld inputs+4
+
+        ; any of the 2 joysticks "C" and Les Shadoks variant at $2e/$2f 
+        in $2e
+        mov b, a
+        in $2f
+        ana b
+        mov b, a
+        cma
+        jz ks_keyboard  ; if the sticks are silent, let keyboard speak
+
+        mvi b, $ff
+        lxi h, inputs+1 ; h = &inputs.right
+        rar             ; cf = right
+        jnc ksj_1
+        mov m, b 
+ksj_1:  inx h           ; 
+        inx h           ; h = &inputs.left
+        rar             ; cf = left
+        jnc ksj_2
+        mov m, b
+ksj_2:  dcx h           ; h = &inputs.up
+        rar             ; cf = up
+        jnc ksj_3
+        mov m, b
+ksj_3:  dcx h
+        dcx h           ; h = &inputs.down
+        rar             ; cf = down
+        jnc ksj_4
+        mov m, b
+ksj_4:  lxi h, inputs+4 ; h = &inputs.fire
+        rar
+        rar
+        rar             ; cf = fire1
+        jnc ksj_5
+        mov m, b
+ksj_5:
+        rar             ; cf = fire2
+        jnc ks_keyboard
+        mov m, b
+
+ks_keyboard:
 	mvi a, 10001010b
 	out 0
 	mvi a, $fe ; row 0
 	out 03
 	in 02
-	lxi h, 0
-	shld inputs
-	shld inputs+2
-        shld inputs+4
 
 	mvi b, $ff
 	lxi h, inputs   ; hl = &inputs.down

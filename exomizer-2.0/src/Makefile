@@ -1,6 +1,8 @@
 #
 # Makefile for exomizer
 #
+#CC=gcc
+
 WFLAGS = --std=c89 -Wall -Wstrict-prototypes
 CFLAGS = $(WFLAGS) -O3 -ffast-math -fomit-frame-pointer -fgcse -pedantic -D_XOPEN_SOURCE=500
 LDFLAGS = -s

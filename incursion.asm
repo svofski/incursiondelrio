@@ -1,8 +1,5 @@
 ; River Raid for Vector-06C
 
-        .binfile incursiondelrio.rom
-        .nodump
-        .nohex
                         
 BOTTOM_HEIGHT           equ 60
 TOP_HEIGHT              equ 16

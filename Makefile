@@ -5,6 +5,8 @@ CSS=listn.css
 NAV=navigate.js
 EXOMIZER=exomizer-2.0/src/exomizer
 BIN2WAV=bin2wav
+CC := $(or $(CC),gcc)
+
 
 OBJCOPY := $(shell command -v gobjcopy 2>/dev/null)
 ifndef OBJCOPY
@@ -27,7 +29,7 @@ exomize:
 	make -C exomize
 
 exomizer:
-	make -C exomizer-2.0/src
+	make -C exomizer-2.0/src CC=gcc
 
 $(CSS):	$(PASMDIR)/$(CSS)
 	ln -s $< .
@@ -38,7 +40,7 @@ $(NAV):	$(PASMDIR)/$(NAV)
 ship.inc:	makesprites.py
 	python makesprites.py > ship.inc
 
-incursion.rom:	incursion.asm ship.inc $(CSS) $(NAV)
+incursion.rom:	incursion.asm ship.inc collider.inc helpers.inc input.inc missile.inc palette.inc player.inc random.inc sound.inc updatenewblock.inc variables.inc wipes.inc $(CSS) $(NAV)
 	$(eval name=$(basename $@))
 	$(PASM) $< $(name).lst.html $(name).hex
 	$(OBJCOPY) -I ihex $(name).hex -O binary $(name).rom
