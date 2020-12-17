@@ -1,8 +1,5 @@
 TARGET=incursion.rom
-PASMDIR=../prettyasm
 PASM=pasm
-CSS=listn.css
-NAV=navigate.js
 EXOMIZER=exomizer-2.0/src/exomizer
 BIN2WAV=bin2wav
 CC := $(or $(CC),gcc)
@@ -31,19 +28,11 @@ exomize:
 exomizer:
 	make -C exomizer-2.0/src CC=gcc
 
-$(CSS):	$(PASMDIR)/$(CSS)
-	ln -s $< .
-
-$(NAV):	$(PASMDIR)/$(NAV)
-	ln -s $< .
-
 ship.inc:	makesprites.py
 	python makesprites.py > ship.inc
 
-incursion.rom:	incursion.asm ship.inc collider.inc helpers.inc input.inc missile.inc palette.inc player.inc random.inc sound.inc updatenewblock.inc variables.inc wipes.inc $(CSS) $(NAV)
-	$(eval name=$(basename $@))
-	$(PASM) $< $(name).lst.html $(name).hex
-	$(OBJCOPY) -I ihex $(name).hex -O binary $(name).rom
+incursion.rom:	incursion.asm ship.inc collider.inc helpers.inc input.inc missile.inc palette.inc player.inc random.inc sound.inc updatenewblock.inc variables.inc wipes.inc
+	$(PASM) $< $@ $(<F).lst
 
 incurzion.exo:	incursion.rom
 	$(EXOMIZER) raw $< -o $@

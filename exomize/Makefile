@@ -1,13 +1,11 @@
 all:	reloc.0100 deexo.a000
 
 reloc.0100:	reloc.asm
-	pasm reloc.asm /dev/null reloc.hex
-	$(OBJCOPY) -I ihex reloc.hex -O binary $@
+	pasm reloc.asm reloc.0100 /dev/null
 
 deexo.a000:	deexo.asm
 	cpp -P deexo.asm >deexo.asm.tmp
-	pasm deexo.asm.tmp /dev/null deexo.hex
-	$(OBJCOPY) -I ihex deexo.hex -O binary $@
+	pasm deexo.asm.tmp $@ /dev/null
 	rm -f deexo.asm.tmp
 
 clean:
